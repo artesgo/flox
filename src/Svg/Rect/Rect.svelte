@@ -27,8 +27,6 @@
    * @type {boolean}
    */
   export let draggable;
-  export let id;
-  let contextStore;
   let dragging;
 
   let _coord = spring({ x: 0, y: 0 });
@@ -39,6 +37,7 @@
         x: $_coord.x + e.detail.dx,
         y: $_coord.y + e.detail.dy,
       }));
+      update('drag', e.detail);
     }
   }
 
@@ -51,11 +50,6 @@
   function finishUpdate() {
     if (draggable) {
       dragging = false;
-      update('update', {
-        id,
-        x: $_coord.x,
-        y: $_coord.y
-      });
     }
   }
 

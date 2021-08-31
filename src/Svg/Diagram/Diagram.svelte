@@ -1,9 +1,10 @@
 <script>
+  import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import Svg from '../Svg.svelte';
   import Connector from '../Path/Connector.svelte';
-	import { pannable } from '../pannable';
-  import { onMount } from 'svelte';
+  import Rect from '../Rect/Rect.svelte';
+  import Text from '../Text/Text.svelte';
 
   export let id;
   export let rects;
@@ -82,11 +83,11 @@
     <Connector {...connection} svgProps={svgPathProps} />
   {/each}
   {#each $store as rect}
-    <rect x={rect.coord2D.x} y={rect.coord2D.y} {...rect.rect2D} {...rect.svgProps}
-      use:pannable
-      on:panmove={(e) => dragUpdate(e, rect)}
+    <Rect {...rect} draggable={true}
+      on:drag={(e) => dragUpdate(e, rect)}
     />
-      <!-- on:panend={() => finishUpdate()} -->
-      <!-- on:panstart={() => shouldUpdate()} -->
+    {#if !!rect.text}
+      <Text {...rect} />
+    {/if}
   {/each}
 </Svg> 

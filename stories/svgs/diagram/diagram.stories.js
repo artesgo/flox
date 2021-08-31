@@ -6,6 +6,32 @@ export default {
   component: DiagramStory,
 };
 
+let _rects = [];
+
+for (let i = 0; i < 100; i++) {
+  _rects.push(i);
+}
+
+_rects = _rects.map((i) => {
+  return {
+    connections: [1],
+    id: i+5,
+    rect2D: {
+      width: 20,
+      height: 20,
+    },
+    coord2D: {
+      x: 140,
+      y: i * 20,
+    },
+    svgProps: {
+      fill: '#FC0',
+      stroke: '#333',
+      'stroke-width': 2,
+    }
+  }
+})
+
 export const Diagram = () => ({
   Component: DiagramStory,
   props: {
@@ -65,19 +91,55 @@ export const Diagram = () => ({
         connections: [],
         id: 4,
         rect2D: {
-          width: 20,
+          width: 50,
           height: 20,
         },
         coord2D: {
           x: 140,
           y: 80,
         },
+        text: 'test',
+        padding: {
+          x: 4,
+          y: 4,
+        },
         svgProps: {
           fill: '#FC0',
           stroke: '#333',
           'stroke-width': 2,
         }
-      }
+      },
+    ],
+    svgPathProps: {
+      fill: 'none',
+      stroke: '#333',
+      'stroke-width': 2,
+    },
+  },
+});
+
+export const DiagramPerformance = () => ({
+  Component: DiagramStory,
+  props: {
+    rects: [
+      {
+        connections: [],
+        id: 1,
+        rect2D: {
+          width: 20,
+          height: 20,
+        },
+        coord2D: {
+          x: 20,
+          y: 20,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      ..._rects
     ],
     svgPathProps: {
       fill: 'none',
