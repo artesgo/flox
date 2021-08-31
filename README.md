@@ -55,3 +55,11 @@ To build static storybook site (default output folder is /docs for easly sharing
 ```bash
 npm run build-storybook
 ```
+
+Dependencies need to be explicitly added for windows
+
+## Jest Testing
+
+`SyntaxError: Cannot use import statement outside a module`
+
+@babel/cli @babel/core @babel/preset-env

@@ -1,22 +1,46 @@
-import svelte from 'rollup-plugin-svelte';
-import resolve from '@rollup/plugin-node-resolve';
 import {terser} from 'rollup-plugin-terser';
 import pkg from './package.json';
+import svelte from 'rollup-plugin-svelte';
+import resolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import sveld from 'sveld';
+import typescript from '@rollup/plugin-typescript';
 
-const name = pkg.name
-	.replace(/^(@\S+\/)?(svelte-)?(\S+)/, '$3')
-	.replace(/^\w/, m => m.toUpperCase())
-	.replace(/-\w/g, m => m[1].toUpperCase());
-
-export default {
-	input: 'src/index.js',
-	output: [
-		{ file: pkg.module, 'format': 'es' },
-    { file: pkg.main, 'format': 'umd', name },
-    { file: pkg.main.replace('.js','.min.js'), format: 'iife', name, plugins: [terser()]}
-	],
-	plugins: [
-		svelte(),
-		resolve()
-	]
-};
+export default ['es', 'umd'].map((format) => {
+	const UMD = format === 'umd';
+	return {
+		input: 'src',
+		inlineDynamicImports: true,
+		output: {
+			format,
+			file: UMD ? pkg.main : pkg.module,
+			name: UMD ? "artesgo-flox" : undefined,
+		},
+		plugins: [
+			svelte({
+				include: 'src/**/*.svelte',
+				emitCss: false
+			}),
+			resolve(),
+			commonjs(),
+			typescript(),
+			UMD && terser(),
+			UMD && sveld({
+				glob: true,
+				markdown: true,
+				markdownOptions: {
+					onAppend: (type, document, component) => {
+						if (type === "h1") {
+							"quote",
+							`${component.size} components exported from ${pkg.name}@${pkg.version}.`
+						}
+					}
+				},
+				json: true,
+				jsonOptions: {
+					outFile: "docs/src/COMPONENT_API.json"
+				}
+			})
+		]
+	}
+});

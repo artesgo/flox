@@ -1,0 +1,194 @@
+{
+  "total": 5,
+  "components": [
+    {
+      "moduleName": "Circle",
+      "filePath": "src\\Svg\\Arc\\Circle.svelte",
+      "props": [
+        {
+          "name": "circle2D",
+          "kind": "let",
+          "type": "Circle2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgProps",
+          "kind": "let",
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": [
+        {
+          "type": "{ cx: number; cy: number; r: number; }",
+          "name": "Circle2D",
+          "ts": "interface Circle2D { cx: number; cy: number; r: number; }"
+        }
+      ]
+    },
+    {
+      "moduleName": "Connector",
+      "filePath": "src\\Svg\\Path\\Connector.svelte",
+      "props": [
+        {
+          "name": "begin",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "end",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgProps",
+          "kind": "let",
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "horizontal",
+          "kind": "let",
+          "type": "boolean",
+          "value": "true",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": []
+    },
+    {
+      "moduleName": "Ellipse",
+      "filePath": "src\\Svg\\Arc\\Ellipse.svelte",
+      "props": [
+        {
+          "name": "ellipse2D",
+          "kind": "let",
+          "type": "Ellipse2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgProps",
+          "kind": "let",
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": [
+        {
+          "type": "{ cx: number; cy: number; rx: number; ry: number; }",
+          "name": "Ellipse2D",
+          "ts": "interface Ellipse2D { cx: number; cy: number; rx: number; ry: number; }"
+        }
+      ]
+    },
+    {
+      "moduleName": "Path",
+      "filePath": "src\\Svg\\Path\\Path.svelte",
+      "props": [
+        {
+          "name": "begin",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "end",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgProps",
+          "kind": "let",
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": []
+    },
+    {
+      "moduleName": "Svg",
+      "filePath": "src\\Svg\\Svg.svelte",
+      "props": [
+        {
+          "name": "width",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "height",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
+      "events": [],
+      "typedefs": [
+        {
+          "type": "{ x: number; y: number; }",
+          "name": "Coord2D",
+          "ts": "interface Coord2D { x: number; y: number; }"
+        },
+        {
+          "type": " 'round' | 'butt' | 'square'",
+          "name": "Linecap",
+          "ts": "type Linecap =  'round' | 'butt' | 'square'"
+        },
+        {
+          "type": "{\nfill: string;\n'stroke-width': number;\n'stroke-linecap': Linecap;\nstroke: string;\n}",
+          "name": "NativeSvgProps",
+          "ts": "interface NativeSvgProps {\nfill: string;\n'stroke-width': number;\n'stroke-linecap': Linecap;\nstroke: string;\n}"
+        }
+      ]
+    }
+  ]
+}
