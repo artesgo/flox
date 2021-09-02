@@ -29,14 +29,19 @@
   $: _begin.update(($animatedBegin) => begin);
   $: _end.update(($animatedEnd) => end);
 
+  let oneHalfX;
+  let oneHalfY;
+
   $: if (horizontal) {
-    let oneHalfX = ($_end.x - $_begin.x) / 2;
+    oneHalfX = ($_end.x - $_begin.x) / 2;
+    oneHalfY = ($_end.y - $_begin.y) / 2;
     path = `M${$_begin.x},${$_begin.y} L${$_begin.x + oneHalfX},${$_begin.y} L${$_begin.x + oneHalfX},${$_end.y} L${$_end.x},${$_end.y}`;    
   } else {
-    let oneHalfY = ($_end.y - $_begin.y) / 2;
+    oneHalfX = ($_end.x - $_begin.x) / 2;
+    oneHalfY = ($_end.y - $_begin.y) / 2;
     path = `M${$_begin.x},${$_begin.y} L${$_begin.x},${$_begin.y + oneHalfY} L${$_end.x},${$_begin.y + oneHalfY} L${$_end.x},${$_end.y}`;    
   }
 </script>
 
 <path d={path} {...svgProps} />
-<!-- <rect ></rect> -->
+<circle cx={$_begin.x + oneHalfX} cy={$_begin.y + oneHalfY} r={4} />

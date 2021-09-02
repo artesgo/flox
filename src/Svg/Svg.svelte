@@ -22,7 +22,7 @@
   let store = writable({x: 0, y: 0});
   export let width;
   export let height;
-  export let id = _prefix+`${_id++}`;
+  export let id = `${_prefix}${_id++}`;
   setContext(id, store);
 
   onMount(() => {

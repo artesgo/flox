@@ -168,6 +168,14 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "id",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
         }
       ],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],

@@ -148,3 +148,54 @@ export const DiagramPerformance = () => ({
     },
   },
 });
+
+export const ShortestConnection = () => ({
+  Component: DiagramStory,
+  props: {
+    rects: [
+      {
+        connections: [2],
+        id: 1,
+        rect2D: {
+          width: 20,
+          height: 20,
+          rx: 4,
+          ry: 4,
+        },
+        coord2D: {
+          x: 20,
+          y: 20,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [],
+        id: 2,
+        rect2D: {
+          width: 20,
+          height: 20,
+          rx: 40,
+          ry: 40,
+        },
+        coord2D: {
+          x: 120,
+          y: 100,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+    ],
+    svgPathProps: {
+      fill: 'none',
+      stroke: '#333',
+      'stroke-width': 2,
+    },
+  },
+});

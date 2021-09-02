@@ -19,6 +19,8 @@ export interface SvgProps {
   width?: undefined;
 
   height?: undefined;
+
+  id?: undefined;
 }
 
 export default class Svg extends SvelteComponentTyped<

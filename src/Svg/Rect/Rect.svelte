@@ -5,7 +5,7 @@
 
   let update = createEventDispatcher();
   /**
-   * @typedef {{width: number; height: number; }} Rect2D
+   * @typedef {{width: number; height: number; rx: number; ry: number }} Rect2D
    */
 
   /**

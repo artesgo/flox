@@ -128,6 +128,7 @@ export interface NativeSvgProps {
 | :-------- | :--------------- | :------- | :--- | ------------- | ----------- |
 | width     | <code>let</code> | No       | --   | --            | --          |
 | height    | <code>let</code> | No       | --   | --            | --          |
+| id        | <code>let</code> | No       | --   | --            | --          |
 
 ### Slots
 
