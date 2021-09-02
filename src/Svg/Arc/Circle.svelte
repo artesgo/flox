@@ -1,4 +1,6 @@
 <script>
+  import { onMount } from "svelte";
+  import { spring } from 'svelte/motion';
   /**
    * @typedef {{ cx: number; cy: number; r: number; }} Circle2D
    */
@@ -12,6 +14,14 @@
    * @type {import("../Svg").NativeSvgProps}
    */
   export let svgProps;
+  
+  let _circle = spring({ cx: 0, cy: 0, r: 0 });
+  
+  onMount(() => {
+    _circle.set({ ...circle2D });
+  });
+  
+  $: _circle.update($_circle => (circle2D));
 </script>
 
-<circle {...circle2D} {...svgProps} />
+<circle cx={$_circle.cx} cy={$_circle.cy} r={$_circle.r} {...svgProps} />

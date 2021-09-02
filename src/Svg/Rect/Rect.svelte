@@ -50,18 +50,25 @@
   function finishUpdate() {
     if (draggable) {
       dragging = false;
+      update('dragEnd');
     }
   }
 
   onMount(() => {
-    // contextStore = getContext(id);
     _coord.set({ ...coord2D });
   });
 </script>
 
 <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps}
   use:pannable
+  tabindex=0
   on:panstart={shouldUpdate}
   on:panmove={dragUpdate}
   on:panend={finishUpdate}
+  on:mouseover
+  on:focus
+  on:mouseleave
+  on:blur
+  on:dblclick
+  on:contextmenu
 />

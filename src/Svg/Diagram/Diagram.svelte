@@ -5,6 +5,7 @@
   import Connector from '../Path/Connector.svelte';
   import Rect from '../Rect/Rect.svelte';
   import Text from '../Text/Text.svelte';
+  import Circle from '../Arc/Circle.svelte';
 
   export let id;
   export let rects;
@@ -16,6 +17,9 @@
     ...rects
   ]);
   let connections = writable([]);
+  let dragging = false;
+  let focused = writable(null);
+  let mouseover = writable(null);
 
   // onMount > init > 1
   function getEndRect(connectorId) {
@@ -99,6 +103,7 @@
    * @param rect that is being dragged
    */
   function dragUpdate(e, rect) {
+    dragging = true;
     $store = [
       ...$store.map(r => {
         // this moves the rectangle being dragged
@@ -137,6 +142,10 @@
     ];
   }
 
+  function dragEnd() {
+    dragging = false;
+  }
+
   onMount(() => {
     $store = [...rects.map(r => {
       // create connection points for rects
@@ -149,23 +158,117 @@
           ...$connections,
           ...r.connections.map(connection => initConnectors(r, connection))
         ];
-        console.log($connections);
       }
       return r;
     })];
   });
+
+  function addAt(e) {
+    let s = [...$store];
+    let [sample, ...rest] = s.reverse();
+    let newRect = {
+      ...sample
+    }
+    newRect.coord2D = {
+      x: e.offsetX,
+      y: e.offsetY,
+    }
+    newRect.id = sample.id + 1;
+    $store = [...$store, newRect];
+  }
+
+  function focusRect(rect) {
+    if (!dragging) {
+      $focused = rect.id;
+    }
+  }
+  
+  function blurRect() {
+    if (!dragging) {
+      $focused = null;
+    }
+  }
+
+  function over(rect) {
+    if (!dragging) {
+      $mouseover = rect.id;
+    }
+  }
+
+  function out() {
+    if (!dragging) {
+      $mouseover = null;
+    }
+  }
+
+  function updateText(rect) {
+    rect.text = 'a';
+  }
+
+  function deleteRect(rect, event) {
+    $store = [
+      ...$store.filter(r => {
+        return r.id !== rect.id;
+      })
+    ];
+  }
 </script>
 
-<Svg {height} {width} {id}>
-  {#each $connections as connection}
-    <Connector {...connection} svgProps={svgPathProps} />
-  {/each}
-  {#each $store as rect}
-    <Rect {...rect} draggable={true}
-      on:drag={(e) => dragUpdate(e, rect)}
-    />
-    {#if !!rect.text}
-      <Text {...rect} />
-    {/if}
-  {/each}
-</Svg> 
+<div on:dblclick={addAt} on:contextmenu|preventDefault >
+  <Svg {height} {width} {id}>
+    {#each $connections as connection}
+      <Connector {...connection} svgProps={svgPathProps} />
+    {/each}
+    {#each $store as rect}
+      <g>
+        <Rect {...rect} draggable={true}
+          on:drag={(e) => dragUpdate(e, rect)}
+          on:dragEnd={dragEnd}
+          on:mouseover={() => focusRect(rect)}
+          on:mouseleave={() => blurRect(rect)}
+          on:focus={() => over(rect)}
+          on:blur={() => out(rect)}
+          on:dblclick={() => updateText(rect)}
+          on:contextmenu={(e) => deleteRect(rect, e)}
+        />
+        {#if !!rect.connectionPoints}
+          {#each Object.keys(rect.connectionPoints) as point}
+            <!-- TODO: below is not updating as rect is dragged -->
+            <Circle 
+              circle2D={{cx: rect.connectionPoints[point].x + rect.coord2D.x,
+              cy: rect.connectionPoints[point].y + rect.coord2D.y,
+              r: $focused === rect.id || $mouseover === rect.id ? 4 : 0}} />
+          {/each}
+        {/if}
+        {#if !!rect.text}
+          <Text {...rect} />
+        {/if}
+      </g>
+    {/each}
+  
+    <!-- Done -->
+    <!-- Render Shapes from data binding -->
+    <!-- Render Connections -->
+    <!-- dynamically update connection points -->
+    <!-- double click to add at mouse position -->
+    <!-- hover Rect to view attachment points -->
+    <!-- right click rect to delete -->
+
+    <!-- WIP -->
+    <!-- drag attachment points to create new Rect -->
+    <!-- drag attachment points to existing Rect -->
+
+    <!-- MVP -->
+    <!-- create drag and drop template for new objects -->
+    <!-- double click to edit text entry -->
+    <!-- right click connections to delete -->
+    
+    <!-- Next Version -->
+    <!-- drag and adjust connection midpoints -->
+    <!-- right click context menu -->
+    <!-- right click context menu settings -->
+    <!-- settings menu -->
+    <!-- settings menu radius, text entry -->
+    <!-- snap to grid -->
+  </Svg>
+</div>

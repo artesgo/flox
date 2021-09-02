@@ -154,7 +154,7 @@ export const ShortestConnection = () => ({
   props: {
     rects: [
       {
-        connections: [2],
+        connections: [],
         id: 1,
         rect2D: {
           width: 20,
@@ -173,7 +173,7 @@ export const ShortestConnection = () => ({
         }
       },
       {
-        connections: [],
+        connections: [1],
         id: 2,
         rect2D: {
           width: 20,
