@@ -12,6 +12,34 @@
   export let width;
   export let height;
   export let svgPathProps;
+  export let svgPropTemplate = {
+    fill: '#FC0',
+    stroke: '#333',
+    'stroke-width': 2,
+  };
+  export let templates = [{
+    rect2D: {
+      width: 20,
+      height: 20,
+      rx: 40,
+      ry: 40,
+    },
+    svgProps: svgPropTemplate
+  },{
+    rect2D: {
+      width: 20,
+      height: 20,
+      rx: 4,
+      ry: 4,
+    },
+    svgProps: svgPropTemplate
+  }, {
+    rect2D: {
+      width: 20,
+      height: 20,
+    },
+    svgProps: svgPropTemplate
+  }];
 
   let store = writable([
     ...rects
@@ -21,6 +49,7 @@
   let focused = writable(null);
   let mouseover = writable(null);
 
+  //#region initialization
   // onMount > init > 1
   function getEndRect(connectorId) {
     return rects.find(r => r.id === connectorId);
@@ -96,12 +125,9 @@
     let endRect = getEndRect(connectionId);
     return createConnector(rect, endRect);
   }
+  //#endregion
 
-  /**
-   * 
-   * @param e { x, y, dx, dy }
-   * @param rect that is being dragged
-   */
+  //#region dragging
   function dragUpdate(e, rect) {
     dragging = true;
     $store = [
@@ -127,7 +153,6 @@
     })];
 
     // check if closest has changed
-    
     $connections = [
       ...$connections.map(conn => {
         if (conn.begin.id === rect.id) {
@@ -145,6 +170,7 @@
   function dragEnd() {
     dragging = false;
   }
+  //#endregion
 
   onMount(() => {
     $store = [...rects.map(r => {
@@ -177,6 +203,7 @@
     $store = [...$store, newRect];
   }
 
+  //#region focus indicator
   function focusRect(rect) {
     if (!dragging) {
       $focused = rect.id;
@@ -201,12 +228,14 @@
       $focused = null;
     }
   }
+  //#endregion
 
   function updateText(rect, event) {
     event.stopPropagation();
     rect.text = 'a';
   }
 
+  //#region shape deletion
   function deleteRect(rect, event) {
     $store = [
       ...$store.filter(r => {
@@ -228,21 +257,63 @@
       })
     ]
   }
+  //#endregion
 
-  function createNewConnection(e) {
-    console.log('start', e);
+  //#region new connection via drag
+  let newConnectionStartRect;
+  function createNewConnection(e, rect, point) {
+    newConnectionStartRect = rect;
+    let connectionPreview = {
+      begin: {
+        ...addCoord2D(rect.connectionPoints[point], rect.coord2D),
+        id: rect.id
+      },
+      end: {
+        x: e.offsetX,
+        y: e.offsetY,
+        id: -999,
+      }
+    }
+    $connections = [
+      ...$connections,
+      connectionPreview
+    ]
   }
   
-  function endNewConnection(e) {
-    console.log('end', e);
+  function endNewConnection(e, rect) {
+    $connections = [
+      ...$connections.filter(conn => {
+        return conn.end.id !== -999;
+      })
+    ];
+    if (!!newConnectionStartRect && !!rect && rect.id !== newConnectionStartRect.id) {
+      let connection = createConnector(newConnectionStartRect, rect);
+      $connections = [
+        ...$connections,
+        connection
+      ];
+    }
+    newConnectionStartRect = null;
   }
 
-  function setMousePos(e) {
-    console.log('setMousePos', e);
+  function checkNewConnection(e) {
+    if (!!newConnectionStartRect) {
+      // find the preview connection and update it
+      $connections = [
+        ...$connections.map(conn => {
+          if (conn.end.id === -999) {
+            conn.end.x = e.offsetX
+            conn.end.y = e.offsetY
+          }
+          return conn;
+        })
+      ]
+    }
   }
+  //#endregion
 </script>
 
-<div on:dblclick={addAt} on:contextmenu|preventDefault on:mousemove={setMousePos}>
+<div on:dblclick={addAt} on:contextmenu|preventDefault on:mousemove={checkNewConnection} on:mouseup={endNewConnection}>
   <Svg {height} {width} {id}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
@@ -258,17 +329,17 @@
           on:blur={() => out(rect)}
           on:dblclick={(e) => updateText(rect, e)}
           on:contextmenu={(e) => deleteRect(rect, e)}
+          on:mouseup={(e) => {endNewConnection(e, rect)}}
         >
           {#if !!rect.connectionPoints}
             {#each Object.keys(rect.connectionPoints) as point}
               <Circle
-                on:mousedown={(e) => {createNewConnection(e)}}
-                on:mouseup={(e) => {endNewConnection(e)}}
+                on:mousedown={(e) => {createNewConnection(e, rect, point)}}
                 circle2D={{
                   cx: rect.connectionPoints[point].x + rect.coord2D.x,
                   cy: rect.connectionPoints[point].y + rect.coord2D.y,
                   r: $focused === rect.id ? 5 : 
-                    $mouseover === rect.id ? 2 : 0}} />
+                    $mouseover === rect.id ? 3 : 0}} />
             {/each}
           {/if}
         </Rect>
@@ -278,6 +349,15 @@
       </g>
     {/each}
   
+    <!-- template container -->
+    <Rect coord2D={{x: 1, y: 1}} rect2D={{width: 39, height: height - 2}} svgProps={{ fill: '#ffffffaa', stroke: '#333'}}></Rect>
+    {#each templates as template, index}
+      <Rect {...template} coord2D={{
+        x: 10,
+        y: index * 30 + 10
+      }} />
+    {/each}
+
     <!-- Done -->
     <!-- Render Shapes from data binding -->
     <!-- Render Connections -->
@@ -286,10 +366,11 @@
     <!-- hover Rect to view attachment points -->
     <!-- right click rect to delete -->
     <!-- right click connections to delete -->
+    <!-- drag attachment points to existing Rect -->
+    <!-- drag attachment point creates new connection preview -->
 
     <!-- WIP -->
     <!-- drag attachment points to create new Rect -->
-    <!-- drag attachment points to existing Rect -->
     <!-- double click to edit text entry -->
 
     <!-- MVP -->

@@ -41,7 +41,17 @@
     oneHalfY = ($_end.y - $_begin.y) / 2;
     path = `M${$_begin.x},${$_begin.y} L${$_begin.x},${$_begin.y + oneHalfY} L${$_end.x},${$_begin.y + oneHalfY} L${$_end.x},${$_end.y}`;    
   }
+
+  let radius = spring(4);
 </script>
 
-<path d={path} {...svgProps} />
-<circle on:contextmenu cx={$_begin.x + oneHalfX} cy={$_begin.y + oneHalfY} r={4} />
+<g>
+  <path d={path} {...svgProps} />
+  <circle cx={$_begin.x + oneHalfX} cy={$_begin.y + oneHalfY} r={$radius}
+    on:contextmenu
+    on:mouseover={() => radius.set(8)}
+    on:mouseleave={() => radius.set(4)}
+    on:focus
+    tabindex="-1"
+  />
+</g>

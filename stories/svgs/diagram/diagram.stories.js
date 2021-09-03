@@ -44,7 +44,7 @@ export const Diagram = () => ({
           height: 20,
         },
         coord2D: {
-          x: 20,
+          x: 40,
           y: 20,
         },
         svgProps: {
@@ -130,7 +130,7 @@ export const DiagramPerformance = () => ({
           height: 20,
         },
         coord2D: {
-          x: 20,
+          x: 40,
           y: 20,
         },
         svgProps: {
@@ -163,7 +163,7 @@ export const ShortestConnection = () => ({
           ry: 4,
         },
         coord2D: {
-          x: 20,
+          x: 40,
           y: 20,
         },
         svgProps: {

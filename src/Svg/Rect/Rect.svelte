@@ -60,18 +60,22 @@
 </script>
 
 <g
-  use:pannable
   tabindex=0
-  on:panstart={shouldUpdate}
-  on:panmove={dragUpdate}
-  on:panend={finishUpdate}
   on:mouseover
   on:focus
   on:mouseleave
   on:blur
+  on:mousedown
+  on:mouseup
   on:dblclick
   on:contextmenu>
-  <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps} />
+  <g 
+    use:pannable
+    on:panstart={shouldUpdate}
+    on:panmove={dragUpdate}
+    on:panend={finishUpdate}>
+    <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps} />
+  </g>
   <slot />
 </g>
 
