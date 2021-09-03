@@ -44,4 +44,4 @@
 </script>
 
 <path d={path} {...svgProps} />
-<circle cx={$_begin.x + oneHalfX} cy={$_begin.y + oneHalfY} r={4} />
+<circle on:contextmenu cx={$_begin.x + oneHalfX} cy={$_begin.y + oneHalfY} r={4} />

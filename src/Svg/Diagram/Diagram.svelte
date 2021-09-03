@@ -201,7 +201,8 @@
     }
   }
 
-  function updateText(rect) {
+  function updateText(rect, event) {
+    event.stopPropagation();
     rect.text = 'a';
   }
 
@@ -212,14 +213,23 @@
       })
     ];
   }
+
+  function deleteConnection(conn) {
+    $connections = [
+      ...$connections.filter(c => {
+        return !(c.begin.id === conn.begin.id &&
+          c.end.id === conn.end.id)
+      })
+    ]
+  }
 </script>
 
 <div on:dblclick={addAt} on:contextmenu|preventDefault >
   <Svg {height} {width} {id}>
-    {#each $connections as connection}
-      <Connector {...connection} svgProps={svgPathProps} />
+    {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
+      <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
     {/each}
-    {#each $store as rect}
+    {#each $store as rect (rect.id)}
       <g>
         <Rect {...rect} draggable={true}
           on:drag={(e) => dragUpdate(e, rect)}
@@ -228,7 +238,7 @@
           on:mouseleave={() => blurRect(rect)}
           on:focus={() => over(rect)}
           on:blur={() => out(rect)}
-          on:dblclick={() => updateText(rect)}
+          on:dblclick={(e) => updateText(rect, e)}
           on:contextmenu={(e) => deleteRect(rect, e)}
         />
         {#if !!rect.connectionPoints}
@@ -253,17 +263,18 @@
     <!-- double click to add at mouse position -->
     <!-- hover Rect to view attachment points -->
     <!-- right click rect to delete -->
+    <!-- right click connections to delete -->
 
     <!-- WIP -->
     <!-- drag attachment points to create new Rect -->
     <!-- drag attachment points to existing Rect -->
+    <!-- double click to edit text entry -->
 
     <!-- MVP -->
     <!-- create drag and drop template for new objects -->
-    <!-- double click to edit text entry -->
-    <!-- right click connections to delete -->
     
     <!-- Next Version -->
+    <!-- navigate canvas click and drag -->
     <!-- drag and adjust connection midpoints -->
     <!-- right click context menu -->
     <!-- right click context menu settings -->
