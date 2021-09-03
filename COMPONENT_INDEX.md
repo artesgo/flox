@@ -54,7 +54,9 @@ None.
 
 ### Events
 
-None.
+| Event name  | Type      | Detail |
+| :---------- | :-------- | :----- |
+| contextmenu | forwarded | --     |
 
 ## `Ellipse`
 

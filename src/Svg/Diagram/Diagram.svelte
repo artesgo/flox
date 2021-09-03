@@ -212,6 +212,11 @@
         return r.id !== rect.id;
       })
     ];
+    $connections = [
+      ...$connections.filter(conn => {
+        return conn.begin.id !== rect.id && conn.end.id !== rect.id;
+      })
+    ]
   }
 
   function deleteConnection(conn) {
@@ -243,7 +248,6 @@
         />
         {#if !!rect.connectionPoints}
           {#each Object.keys(rect.connectionPoints) as point}
-            <!-- TODO: below is not updating as rect is dragged -->
             <Circle 
               circle2D={{cx: rect.connectionPoints[point].x + rect.coord2D.x,
               cy: rect.connectionPoints[point].y + rect.coord2D.y,
