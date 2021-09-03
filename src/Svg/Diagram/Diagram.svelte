@@ -198,6 +198,7 @@
   function out() {
     if (!dragging) {
       $mouseover = null;
+      $focused = null;
     }
   }
 
@@ -227,9 +228,21 @@
       })
     ]
   }
+
+  function createNewConnection(e) {
+    console.log('start', e);
+  }
+  
+  function endNewConnection(e) {
+    console.log('end', e);
+  }
+
+  function setMousePos(e) {
+    console.log('setMousePos', e);
+  }
 </script>
 
-<div on:dblclick={addAt} on:contextmenu|preventDefault >
+<div on:dblclick={addAt} on:contextmenu|preventDefault on:mousemove={setMousePos}>
   <Svg {height} {width} {id}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
@@ -245,15 +258,20 @@
           on:blur={() => out(rect)}
           on:dblclick={(e) => updateText(rect, e)}
           on:contextmenu={(e) => deleteRect(rect, e)}
-        />
-        {#if !!rect.connectionPoints}
-          {#each Object.keys(rect.connectionPoints) as point}
-            <Circle 
-              circle2D={{cx: rect.connectionPoints[point].x + rect.coord2D.x,
-              cy: rect.connectionPoints[point].y + rect.coord2D.y,
-              r: $focused === rect.id || $mouseover === rect.id ? 4 : 0}} />
-          {/each}
-        {/if}
+        >
+          {#if !!rect.connectionPoints}
+            {#each Object.keys(rect.connectionPoints) as point}
+              <Circle
+                on:mousedown={(e) => {createNewConnection(e)}}
+                on:mouseup={(e) => {endNewConnection(e)}}
+                circle2D={{
+                  cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                  cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                  r: $focused === rect.id ? 5 : 
+                    $mouseover === rect.id ? 2 : 0}} />
+            {/each}
+          {/if}
+        </Rect>
         {#if !!rect.text}
           <Text {...rect} />
         {/if}
@@ -276,6 +294,9 @@
 
     <!-- MVP -->
     <!-- create drag and drop template for new objects -->
+    <!-- Edit Text Resizes Rect -->
+    <!-- Edit Text Constrain Width: Multiline -->
+    <!-- Edit Text Constrain Height: Single Line -->
     
     <!-- Next Version -->
     <!-- navigate canvas click and drag -->

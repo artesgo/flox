@@ -196,6 +196,7 @@ export const ShortestConnection = () => ({
       fill: 'none',
       stroke: '#333',
       'stroke-width': 2,
+      'stroke-linecap': 'round'
     },
   },
 });

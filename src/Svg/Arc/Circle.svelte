@@ -24,4 +24,8 @@
   $: _circle.update($_circle => (circle2D));
 </script>
 
-<circle cx={$_circle.cx} cy={$_circle.cy} r={$_circle.r} {...svgProps} />
+<circle 
+  cx={$_circle.cx} cy={$_circle.cy} r={$_circle.r >= 0 ? $_circle.r : 0} {...svgProps} 
+  on:mousedown
+  on:mouseup
+/>

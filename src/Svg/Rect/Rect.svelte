@@ -59,7 +59,7 @@
   });
 </script>
 
-<rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps}
+<g
   use:pannable
   tabindex=0
   on:panstart={shouldUpdate}
@@ -70,5 +70,13 @@
   on:mouseleave
   on:blur
   on:dblclick
-  on:contextmenu
-/>
+  on:contextmenu>
+  <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps} />
+  <slot />
+</g>
+
+<style>
+  g:focus {
+    outline: none;
+  }
+</style>
