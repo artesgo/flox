@@ -35,7 +35,10 @@ None.
 
 ### Events
 
-None.
+| Event name | Type      | Detail |
+| :--------- | :-------- | :----- |
+| mousedown  | forwarded | --     |
+| mouseup    | forwarded | --     |
 
 ## `Connector`
 
@@ -57,6 +60,7 @@ None.
 | Event name  | Type      | Detail |
 | :---------- | :-------- | :----- |
 | contextmenu | forwarded | --     |
+| focus       | forwarded | --     |
 
 ## `Ellipse`
 

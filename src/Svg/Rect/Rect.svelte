@@ -29,7 +29,12 @@
   export let draggable;
   let dragging;
 
-  let _coord = spring({ x: 0, y: 0 });
+  let _coord = spring(coord2D);
+
+  $: _coord.update($_coord => ({
+    x: coord2D.x,
+    y: coord2D.y
+  }));
 
   function dragUpdate(e) {
     if (dragging) {
@@ -50,7 +55,9 @@
   function finishUpdate() {
     if (draggable) {
       dragging = false;
-      update('dragEnd');
+      update('dragEnd', {
+        coord2D: $_coord
+      });
     }
   }
 

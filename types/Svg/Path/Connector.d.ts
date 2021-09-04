@@ -16,6 +16,9 @@ export interface ConnectorProps {
 
 export default class Connector extends SvelteComponentTyped<
   ConnectorProps,
-  { contextmenu: WindowEventMap["contextmenu"] },
+  {
+    contextmenu: WindowEventMap["contextmenu"];
+    focus: WindowEventMap["focus"];
+  },
   {}
 > {}

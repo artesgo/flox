@@ -13,4 +13,11 @@ export interface CircleProps {
   svgProps?: import("../Svg").NativeSvgProps;
 }
 
-export default class Circle extends SvelteComponentTyped<CircleProps, {}, {}> {}
+export default class Circle extends SvelteComponentTyped<
+  CircleProps,
+  {
+    mousedown: WindowEventMap["mousedown"];
+    mouseup: WindowEventMap["mouseup"];
+  },
+  {}
+> {}

@@ -25,7 +25,10 @@
         }
       ],
       "slots": [],
-      "events": [],
+      "events": [
+        { "type": "forwarded", "name": "mousedown", "element": "circle" },
+        { "type": "forwarded", "name": "mouseup", "element": "circle" }
+      ],
       "typedefs": [
         {
           "type": "{ cx: number; cy: number; r: number; }",
@@ -78,7 +81,8 @@
       ],
       "slots": [],
       "events": [
-        { "type": "forwarded", "name": "contextmenu", "element": "circle" }
+        { "type": "forwarded", "name": "contextmenu", "element": "circle" },
+        { "type": "forwarded", "name": "focus", "element": "circle" }
       ],
       "typedefs": []
     },

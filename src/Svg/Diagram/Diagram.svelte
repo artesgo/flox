@@ -17,29 +17,46 @@
     stroke: '#333',
     'stroke-width': 2,
   };
+
   export let templates = [{
+    connections: [],
     rect2D: {
       width: 20,
       height: 20,
       rx: 40,
-      ry: 40,
+      ry: 40
+    },
+    coord2D: {
+      x: 10,
+      y: 10,
     },
     svgProps: svgPropTemplate
   },{
+    connections: [],
     rect2D: {
       width: 20,
       height: 20,
       rx: 4,
       ry: 4,
     },
+    coord2D: {
+      x: 10,
+      y: 40,
+    },
     svgProps: svgPropTemplate
   }, {
+    connections: [],
     rect2D: {
       width: 20,
       height: 20,
     },
+    coord2D: {
+      x: 10,
+      y: 70,
+    },
     svgProps: svgPropTemplate
   }];
+  let _templates = [];
 
   let store = writable([
     ...rects
@@ -130,6 +147,7 @@
   //#region dragging
   function dragUpdate(e, rect) {
     dragging = true;
+
     $store = [
       ...$store.map(r => {
         // this moves the rectangle being dragged
@@ -170,11 +188,22 @@
   function dragEnd() {
     dragging = false;
   }
+
+  function dragEndTemplate(e, template) {
+    dragging = false;
+    addAt(e, template);
+    _templates = [...templates];
+  }
   //#endregion
 
+  let _nextId = 0;
   onMount(() => {
     $store = [...rects.map(r => {
       // create connection points for rects
+      if (r.id >= _nextId) {
+        _nextId = r.id;
+        _nextId++;
+      }
       r.connectionPoints = createConnectionPointOffsets(r);
     })];
     $store = [...rects.map(r => {
@@ -187,20 +216,39 @@
       }
       return r;
     })];
+
+    _templates = [...templates];
   });
 
-  function addAt(e) {
+  function addAt(e, template) {
     let s = [...$store];
-    let [sample, ...rest] = s.reverse();
-    let newRect = {
-      ...sample
+    let coord = {
+      x: 0,
+      y: 0,
     }
-    newRect.coord2D = {
-      x: e.offsetX,
-      y: e.offsetY,
+    if (!template) {
+      let [sample, ...rest] = s.reverse();
+      template = sample;
+      coord.x = e.offsetX;
+      coord.y = e.offsetY;
+    } else {
+      template.connectionPoints = createConnectionPointOffsets(template);
+      //#region prevents fuzzy connections
+      coord.x = Math.floor(e.detail.coord2D.x);
+      coord.y = Math.floor(e.detail.coord2D.y);
+      if (coord.x % 2 === 1) coord.x--;
+      if (coord.y % 2 === 1) coord.y--;
+      //#endregion
     }
-    newRect.id = sample.id + 1;
-    $store = [...$store, newRect];
+    if (coord.x > 40) {
+      let newRect = {
+        ...template
+      }
+      newRect.coord2D = coord;
+      newRect.id = _nextId++;
+      // resets template back to origin;
+      $store = [...$store, newRect];
+    }
   }
 
   //#region focus indicator
@@ -313,7 +361,11 @@
   //#endregion
 </script>
 
-<div on:dblclick={addAt} on:contextmenu|preventDefault on:mousemove={checkNewConnection} on:mouseup={endNewConnection}>
+<div on:dblclick={addAt}
+  on:contextmenu|preventDefault
+  on:mousemove={checkNewConnection}
+  on:mouseup={endNewConnection}
+>
   <Svg {height} {width} {id}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
@@ -350,12 +402,14 @@
     {/each}
   
     <!-- template container -->
-    <Rect coord2D={{x: 1, y: 1}} rect2D={{width: 39, height: height - 2}} svgProps={{ fill: '#ffffffaa', stroke: '#333'}}></Rect>
-    {#each templates as template, index}
-      <Rect {...template} coord2D={{
-        x: 10,
-        y: index * 30 + 10
-      }} />
+    <g class="no-events">
+      <Rect coord2D={{x: 1, y: 1}} rect2D={{width: 39, height: height - 2}} svgProps={{ fill: '#ffffffaa', stroke: '#333'}}></Rect>
+    </g>
+    {#each _templates as template}
+      <Rect rect2D={template.rect2D} coord2D={template.coord2D} svgProps={template.svgProps}
+        draggable={true}
+        on:dragEnd={(e) => dragEndTemplate(e, template)}
+      />
     {/each}
 
     <!-- Done -->
@@ -368,16 +422,19 @@
     <!-- right click connections to delete -->
     <!-- drag attachment points to existing Rect -->
     <!-- drag attachment point creates new connection preview -->
+    <!-- create drag and drop template for new objects -->
+    <!-- drag and drop new objects from template -->
 
     <!-- WIP -->
-    <!-- drag attachment points to create new Rect -->
     <!-- double click to edit text entry -->
 
     <!-- MVP -->
-    <!-- create drag and drop template for new objects -->
     <!-- Edit Text Resizes Rect -->
     <!-- Edit Text Constrain Width: Multiline -->
     <!-- Edit Text Constrain Height: Single Line -->
+    <!-- child elements: uml line item -->
+    <!-- Add Resize Handles -->
+    <!-- Resize Snap to Grid -->
     
     <!-- Next Version -->
     <!-- navigate canvas click and drag -->
@@ -387,5 +444,21 @@
     <!-- settings menu -->
     <!-- settings menu radius, text entry -->
     <!-- snap to grid -->
+
+    <!-- Nice to have -->
+    <!-- Custom Svg Objects -->
   </Svg>
 </div>
+
+<style>
+  .no-events {
+    pointer-events: none; /* prevent capturing clicks */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+  }
+</style>

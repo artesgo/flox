@@ -8,29 +8,33 @@ export default {
 
 let _rects = [];
 
-for (let i = 0; i < 100; i++) {
-  _rects.push(i);
-}
 
-_rects = _rects.map((i) => {
-  return {
-    connections: [1],
-    id: i+5,
-    rect2D: {
-      width: 20,
-      height: 20,
-    },
-    coord2D: {
-      x: 140,
-      y: i * 20,
-    },
-    svgProps: {
-      fill: '#FC0',
-      stroke: '#333',
-      'stroke-width': 2,
-    }
+function get50(startId, connection) {
+  let newRects = [];
+  for (let i = 0; i < 50; i++) {
+    newRects.push(i);
   }
-})
+  newRects = newRects.map((i) => {
+    return {
+      connections: [connection],
+      id: i+startId,
+      rect2D: {
+        width: 20,
+        height: 20,
+      },
+      coord2D: {
+        x: 140 + startId,
+        y: i * 20,
+      },
+      svgProps: {
+        fill: '#FC0',
+        stroke: '#333',
+        'stroke-width': 2,
+      }
+    }
+  })
+  return newRects;
+}
 
 export const Diagram = () => ({
   Component: DiagramStory,
@@ -118,7 +122,7 @@ export const Diagram = () => ({
   },
 });
 
-export const DiagramPerformance = () => ({
+export const DiagramPerformanceSingle = () => ({
   Component: DiagramStory,
   props: {
     rects: [
@@ -139,7 +143,74 @@ export const DiagramPerformance = () => ({
           'stroke-width': 2,
         }
       },
-      ..._rects
+      ...get50(2, 1)
+    ],
+    svgPathProps: {
+      fill: 'none',
+      stroke: '#333',
+      'stroke-width': 2,
+    },
+  },
+});
+
+export const DiagramPerformanceMulti = () => ({
+  Component: DiagramStory,
+  props: {
+    rects: [
+      {
+        connections: [],
+        id: 1,
+        rect2D: {
+          width: 20,
+          height: 20,
+        },
+        coord2D: {
+          x: 50,
+          y: 20,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [],
+        id: 2,
+        rect2D: {
+          width: 20,
+          height: 20,
+        },
+        coord2D: {
+          x: 50,
+          y: 50,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [],
+        id: 3,
+        rect2D: {
+          width: 20,
+          height: 20,
+        },
+        coord2D: {
+          x: 50,
+          y: 80,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      ...get50(4, 1),
+      ...get50(54, 2),
+      ...get50(104, 3),
     ],
     svgPathProps: {
       fill: 'none',
