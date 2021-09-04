@@ -7,6 +7,9 @@
   import Text from '../Text/Text.svelte';
   import Circle from '../Arc/Circle.svelte';
 
+  /**
+   * 
+   */
   export let id;
   export let rects;
   export let width;
