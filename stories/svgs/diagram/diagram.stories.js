@@ -6,9 +6,6 @@ export default {
   component: DiagramStory,
 };
 
-let _rects = [];
-
-
 function get50(startId, connection) {
   let newRects = [];
   for (let i = 0; i < 50; i++) {
@@ -256,6 +253,75 @@ export const ShortestConnection = () => ({
           x: 120,
           y: 100,
         },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+    ],
+    svgPathProps: {
+      fill: 'none',
+      stroke: '#333',
+      'stroke-width': 2,
+      'stroke-linecap': 'round'
+    },
+  },
+});
+
+export const Images = () => ({
+  Component: DiagramStory,
+  props: {
+    rects: [
+      {
+        connections: [],
+        id: 1,
+        rect2D: {
+          width: 20,
+          height: 20,
+          rx: 4,
+          ry: 4,
+        },
+        coord2D: {
+          x: 40,
+          y: 20,
+        },
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [1],
+        id: 2,
+        rect2D: {
+          width: 400,
+          height: 240,
+        },
+        coord2D: {
+          x: 120,
+          y: 100,
+        },
+        image: "/sun-and-moon.jpg",
+        svgProps: {
+          fill: '#FC0',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [1],
+        id: 3,
+        rect2D: {
+          width: 749,
+          height: 999,
+        },
+        coord2D: {
+          x: 120,
+          y: 100,
+        },
+        image: "https://i.redd.it/yju708hygml71.jpg",
         svgProps: {
           fill: '#FC0',
           stroke: '#333',

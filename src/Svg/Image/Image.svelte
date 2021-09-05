@@ -15,15 +15,7 @@
   /**
    * @type {string}
    */
-  export let text;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let padding = {
-    x: 0,
-    y: 0,
-  };
+  export let image;
 
   /**
    * @type {boolean}
@@ -31,18 +23,27 @@
   export let passThrough = false;
 
   let _coord = spring({ x: 0, y: 0 });
+  let _rect = spring({ width: 0, height: 0 });
 
   $: _coord.update($_coord => ({
-    x: coord2D.x + padding.x,
-    y: coord2D.y + (rect2D.height / 2) + padding.y
+    x: coord2D.x,
+    y: coord2D.y
   }));
   
+  $: _rect.update($_rect => ({
+    width: rect2D.width,
+    height: rect2D.height
+  }));
+
   onMount(() => {
     _coord.set($_coord => coord2D);
   });
 </script>
 
-<text class:no-events={passThrough} x={$_coord.x} y={$_coord.y}>{text}</text>
+<image class:no-events={passThrough} href={image} x={$_coord.x} y={$_coord.y}
+  width={$_rect.width}
+  height={$_rect.height}
+></image>
 
 <style>
   .no-events {

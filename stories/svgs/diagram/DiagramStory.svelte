@@ -4,4 +4,4 @@
   export let svgPathProps;
 </script>
 
-<Diagram width={600} height={600} id={'diagramStory'} {rects} {svgPathProps}/>
+<Diagram width={600} height={600} {rects} {svgPathProps} />

@@ -17,8 +17,10 @@
     stroke: '#333',
     'stroke-width': 3,
   }
+
+  export let draggable;
 </script>
 
 <Svg height={300} width={300}>
-  <Rect {rect2D} {svgProps} {coord2D} />
+  <Rect {rect2D} {svgProps} {coord2D} {draggable} />
 </Svg>

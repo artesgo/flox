@@ -5,12 +5,13 @@
   import Connector from '../Path/Connector.svelte';
   import Rect from '../Rect/Rect.svelte';
   import Text from '../Text/Text.svelte';
+  import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
 
+  //#region props
   /**
    * 
    */
-  export let id;
   export let rects;
   export let width;
   export let height;
@@ -34,7 +35,7 @@
       y: 10,
     },
     svgProps: svgPropTemplate
-  },{
+  }, {
     connections: [],
     rect2D: {
       width: 20,
@@ -59,8 +60,10 @@
     },
     svgProps: svgPropTemplate
   }];
-  let _templates = [];
+  //#endregion
 
+  //#region private props
+  let _templates = [];
   let store = writable([
     ...rects
   ]);
@@ -68,6 +71,7 @@
   let dragging = false;
   let focused = writable(null);
   let mouseover = writable(null);
+  //#endregion
 
   //#region initialization
   // onMount > init > 1
@@ -281,10 +285,13 @@
   }
   //#endregion
 
+  //#region text edit
   function updateText(rect, event) {
     event.stopPropagation();
     rect.text = 'a';
   }
+
+  //#endregion
 
   //#region shape deletion
   function deleteRect(rect, event) {
@@ -369,7 +376,7 @@
   on:mousemove={checkNewConnection}
   on:mouseup={endNewConnection}
 >
-  <Svg {height} {width} {id}>
+  <Svg {height} {width}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
     {/each}
@@ -397,10 +404,13 @@
                     $mouseover === rect.id ? 3 : 0}} />
             {/each}
           {/if}
+          {#if !!rect.image}
+            <Image {...rect} passThrough={true} />
+          {/if}
+          {#if !!rect.text}
+            <Text {...rect} passThrough={true} />
+          {/if}
         </Rect>
-        {#if !!rect.text}
-          <Text {...rect} />
-        {/if}
       </g>
     {/each}
   
@@ -427,9 +437,14 @@
     <!-- drag attachment point creates new connection preview -->
     <!-- create drag and drop template for new objects -->
     <!-- drag and drop new objects from template -->
+    <!-- Svg Images -->
 
     <!-- WIP -->
     <!-- double click to edit text entry -->
+
+    <!-- keyboard events -->
+    <!-- delete key, deletes shape / connection -->
+    <!-- enter key, edit mode for item -->
 
     <!-- MVP -->
     <!-- Edit Text Resizes Rect -->
@@ -438,6 +453,8 @@
     <!-- child elements: uml line item -->
     <!-- Add Resize Handles -->
     <!-- Resize Snap to Grid -->
+    <!-- Redo / Undo -->
+    <!-- Reorder Elements -->
     
     <!-- Next Version -->
     <!-- navigate canvas click and drag -->

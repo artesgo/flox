@@ -24,3 +24,23 @@ export const Rects = () => ({
     }
   },
 });
+
+export const DraggableRects = () => ({
+  Component: RectStory,
+  props: {
+    draggable: true,
+    rect2D: {
+      width: 20,
+      height: 20,
+    },
+    svgProps: {
+      fill: '#FC0',
+      stroke: '#333',
+      'stroke-width': 2,
+    },
+    coord2D: {
+      x: 40,
+      y: 20,
+    }
+  },
+});

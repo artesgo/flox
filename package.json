@@ -1,6 +1,6 @@
 {
   "name": "artesgo-flox",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "description": "Svelte Components",
   "svelte": "src/index.js",
   "main": "./lib/index.js",
@@ -90,8 +90,7 @@
     "lib",
     "types",
     "utilities",
-    "forms",
-    "prism.scss"
+    "forms"
   ],
   "husky": {
     "hooks": {

@@ -2,11 +2,11 @@
 import DuplicateDiagramStory from './DuplicateDiagramStory.svelte';
 
 export default {
-  title: 'Svg/Diagram',
+  title: 'Svg/Diagram/Multiple',
   component: DuplicateDiagramStory,
 };
 
-export const MultipleDiagrams = () => ({
+export const MultipleOnScreen = () => ({
   Component: DuplicateDiagramStory,
   props: {
     rects: [
