@@ -1,12 +1,19 @@
-import { Componenta } from './components';
 import { Svg } from './Svg';
 import { Circle, Ellipse } from './Svg/Arc';
 import { Path, Connector } from './Svg/Path';
+import { Rect } from './Svg/Rect';
+import { Image } from './Svg/Image';
+import { Diagram } from './Svg/Diagram';
+import { Text } from './Svg/Text';
+
 export {
-  Componenta,
   Svg,
   Circle,
+  Rect,
   Ellipse,
   Path,
   Connector,
+  Image,
+  Diagram,
+  Text
 }

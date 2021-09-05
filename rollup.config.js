@@ -4,7 +4,6 @@ import svelte from 'rollup-plugin-svelte';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import sveld from 'sveld';
-import typescript from '@rollup/plugin-typescript';
 
 export default ['es', 'umd'].map((format) => {
 	const UMD = format === 'umd';
@@ -23,7 +22,6 @@ export default ['es', 'umd'].map((format) => {
 			}),
 			resolve(),
 			commonjs(),
-			typescript(),
 			UMD && terser(),
 			UMD && sveld({
 				glob: true,

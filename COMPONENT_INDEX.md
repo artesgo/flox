@@ -4,9 +4,13 @@
 
 - [`Circle`](#circle)
 - [`Connector`](#connector)
+- [`Diagram`](#diagram)
 - [`Ellipse`](#ellipse)
+- [`Image`](#image)
 - [`Path`](#path)
+- [`Rect`](#rect)
 - [`Svg`](#svg)
+- [`Text`](#text)
 
 ---
 
@@ -62,6 +66,113 @@ None.
 | contextmenu | forwarded | --     |
 | focus       | forwarded | --     |
 
+## `Diagram`
+
+### Props
+
+| Prop name       | Kind             | Reactive | Type    | Default value | Description |
+| :-------------- | :--------------- | :------- | :------ | ------------- | ----------- |
+| rects           | <code>let</code> | No       | --      | --            | --          |
+| width           | <code>let</code> | No       | --      | --            | --          |
+| height          | <code>let</code> | No       | --      | --            | --          |
+| svgPathProps    | <code>let</code> | No       | --      | --            | --          |
+| svgPropTemplate | <code>let</code> | No       | <code>{ |
+
+     fill: '#FC0',
+     stroke: '#333',
+     'stroke-width': 2,
+
+}</code> | <code>{
+fill: '#FC0',
+stroke: '#333',
+'stroke-width': 2,
+}</code> | -- |
+| templates | <code>let</code> | No | <code>[{
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+rx: 40,
+ry: 40
+},
+coord2D: {
+x: 10,
+y: 10,
+},
+svgProps: svgPropTemplate
+}, {
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+rx: 4,
+ry: 4,
+},
+coord2D: {
+x: 10,
+y: 40,
+},
+svgProps: svgPropTemplate
+}, {
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+},
+coord2D: {
+x: 10,
+y: 70,
+},
+svgProps: svgPropTemplate
+}]</code> | <code>[{
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+rx: 40,
+ry: 40
+},
+coord2D: {
+x: 10,
+y: 10,
+},
+svgProps: svgPropTemplate
+}, {
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+rx: 4,
+ry: 4,
+},
+coord2D: {
+x: 10,
+y: 40,
+},
+svgProps: svgPropTemplate
+}, {
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+},
+coord2D: {
+x: 10,
+y: 70,
+},
+svgProps: svgPropTemplate
+}]</code> | -- |
+
+### Slots
+
+None.
+
+### Events
+
+| Event name  | Type      | Detail |
+| :---------- | :-------- | :----- |
+| contextmenu | forwarded | --     |
+
 ## `Ellipse`
 
 ### Types
@@ -90,6 +201,25 @@ None.
 
 None.
 
+## `Image`
+
+### Props
+
+| Prop name   | Kind             | Reactive | Type                                  | Default value      | Description |
+| :---------- | :--------------- | :------- | :------------------------------------ | ------------------ | ----------- |
+| coord2D     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --                 | --          |
+| rect2D      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --                 | --          |
+| image       | <code>let</code> | No       | <code>string</code>                   | --                 | --          |
+| passThrough | <code>let</code> | No       | <code>boolean</code>                  | <code>false</code> | --          |
+
+### Slots
+
+None.
+
+### Events
+
+None.
+
 ## `Path`
 
 ### Props
@@ -107,6 +237,49 @@ None.
 ### Events
 
 None.
+
+## `Rect`
+
+### Types
+
+```ts
+export interface Rect2D {
+  width: number;
+  height: number;
+  rx: number;
+  ry: number;
+}
+```
+
+### Props
+
+| Prop name | Kind             | Reactive | Type                                         | Default value | Description |
+| :-------- | :--------------- | :------- | :------------------------------------------- | ------------- | ----------- |
+| rect2D    | <code>let</code> | No       | <code>Rect2D</code>                          | --            | --          |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --            | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --            | --          |
+| draggable | <code>let</code> | No       | <code>boolean</code>                         | --            | --          |
+
+### Slots
+
+| Slot name | Default | Props | Fallback |
+| :-------- | :------ | :---- | :------- |
+| --        | Yes     | --    | --       |
+
+### Events
+
+| Event name  | Type       | Detail |
+| :---------- | :--------- | :----- |
+| mouseover   | forwarded  | --     |
+| focus       | forwarded  | --     |
+| mouseleave  | forwarded  | --     |
+| blur        | forwarded  | --     |
+| mousedown   | forwarded  | --     |
+| mouseup     | forwarded  | --     |
+| dblclick    | forwarded  | --     |
+| contextmenu | forwarded  | --     |
+| drag        | dispatched | --     |
+| dragEnd     | dispatched | --     |
 
 ## `Svg`
 
@@ -141,6 +314,31 @@ export interface NativeSvgProps {
 | Slot name | Default | Props | Fallback |
 | :-------- | :------ | :---- | :------- |
 | --        | Yes     | --    | --       |
+
+### Events
+
+None.
+
+## `Text`
+
+### Props
+
+| Prop name | Kind             | Reactive | Type                                  | Default value | Description |
+| :-------- | :--------------- | :------- | :------------------------------------ | ------------- | ----------- |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --            | --          |
+| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --            | --          |
+| text      | <code>let</code> | No       | <code>string</code>                   | --            | --          |
+| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{       |
+
+     x: 0,
+     y: 0,
+
+}</code> | -- |
+| passThrough | <code>let</code> | No | <code>boolean</code> | <code>false</code> | -- |
+
+### Slots
+
+None.
 
 ### Events
 

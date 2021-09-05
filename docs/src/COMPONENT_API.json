@@ -1,5 +1,5 @@
 {
-  "total": 5,
+  "total": 9,
   "components": [
     {
       "moduleName": "Circle",
@@ -87,6 +87,69 @@
       "typedefs": []
     },
     {
+      "moduleName": "Diagram",
+      "filePath": "src\\Svg\\Diagram\\Diagram.svelte",
+      "props": [
+        {
+          "name": "rects",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "width",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "height",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgPathProps",
+          "kind": "let",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgPropTemplate",
+          "kind": "let",
+          "type": "{\r     fill: '#FC0',\r     stroke: '#333',\r     'stroke-width': 2,\r   }",
+          "value": "{\r     fill: '#FC0',\r     stroke: '#333',\r     'stroke-width': 2,\r   }",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "templates",
+          "kind": "let",
+          "type": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: svgPropTemplate\r   }]",
+          "value": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: svgPropTemplate\r   }]",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [
+        { "type": "forwarded", "name": "contextmenu", "element": "div" }
+      ],
+      "typedefs": []
+    },
+    {
       "moduleName": "Ellipse",
       "filePath": "src\\Svg\\Arc\\Ellipse.svelte",
       "props": [
@@ -118,6 +181,52 @@
           "ts": "interface Ellipse2D { cx: number; cy: number; rx: number; ry: number; }"
         }
       ]
+    },
+    {
+      "moduleName": "Image",
+      "filePath": "src\\Svg\\Image\\Image.svelte",
+      "props": [
+        {
+          "name": "coord2D",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "rect2D",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "image",
+          "kind": "let",
+          "type": "string",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "passThrough",
+          "kind": "let",
+          "type": "boolean",
+          "value": "false",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": []
     },
     {
       "moduleName": "Path",
@@ -154,6 +263,68 @@
       "slots": [],
       "events": [],
       "typedefs": []
+    },
+    {
+      "moduleName": "Rect",
+      "filePath": "src\\Svg\\Rect\\Rect.svelte",
+      "props": [
+        {
+          "name": "rect2D",
+          "kind": "let",
+          "type": "Rect2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "coord2D",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "svgProps",
+          "kind": "let",
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "draggable",
+          "kind": "let",
+          "type": "boolean",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
+      "events": [
+        { "type": "forwarded", "name": "mouseover", "element": "g" },
+        { "type": "forwarded", "name": "focus", "element": "g" },
+        { "type": "forwarded", "name": "mouseleave", "element": "g" },
+        { "type": "forwarded", "name": "blur", "element": "g" },
+        { "type": "forwarded", "name": "mousedown", "element": "g" },
+        { "type": "forwarded", "name": "mouseup", "element": "g" },
+        { "type": "forwarded", "name": "dblclick", "element": "g" },
+        { "type": "forwarded", "name": "contextmenu", "element": "g" },
+        { "type": "dispatched", "name": "drag" },
+        { "type": "dispatched", "name": "dragEnd" }
+      ],
+      "typedefs": [
+        {
+          "type": "{width: number; height: number; rx: number; ry: number }",
+          "name": "Rect2D",
+          "ts": "interface Rect2D {width: number; height: number; rx: number; ry: number }"
+        }
+      ]
     },
     {
       "moduleName": "Svg",
@@ -203,6 +374,62 @@
           "ts": "interface NativeSvgProps {\nfill: string;\n'stroke-width': number;\n'stroke-linecap': Linecap;\nstroke: string;\n}"
         }
       ]
+    },
+    {
+      "moduleName": "Text",
+      "filePath": "src\\Svg\\Text\\Text.svelte",
+      "props": [
+        {
+          "name": "coord2D",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "rect2D",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "text",
+          "kind": "let",
+          "type": "string",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "padding",
+          "kind": "let",
+          "type": "import(\"../Svg\").Coord2D",
+          "value": "{\r     x: 0,\r     y: 0,\r   }",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "passThrough",
+          "kind": "let",
+          "type": "boolean",
+          "value": "false",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [],
+      "events": [],
+      "typedefs": []
     }
   ]
 }
