@@ -8,15 +8,21 @@
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
 
-  //#region props
   /**
-   * @type {{
+   * @typedef {{
    * connections: number[],
    * id: number,
+   * text: string,
+   * image: string,
    * rect2D: import("../Rect/Rect").Rect2D,
    * coord2D: import("../Svg").Coord2D,
    * svgPathProps: import("../Svg").NativeSvgProps,
-   * }[]}
+   * }[]} DiagramProps
+   */
+
+  //#region props
+  /**
+   * @type {DiagramProps[]}
    */
   export let rects = [];
   /** @type {number} */

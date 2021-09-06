@@ -96,7 +96,7 @@
         {
           "name": "rects",
           "kind": "let",
-          "type": "{\nconnections: number[],\nid: number,\nrect2D: import(\"../Rect/Rect\").Rect2D,\ncoord2D: import(\"../Svg\").Coord2D,\nsvgPathProps: import(\"../Svg\").NativeSvgProps,\n}[]",
+          "type": "DiagramProps[]",
           "value": "[]",
           "isFunction": false,
           "isFunctionDeclaration": false,
@@ -157,7 +157,13 @@
       "events": [
         { "type": "forwarded", "name": "contextmenu", "element": "div" }
       ],
-      "typedefs": []
+      "typedefs": [
+        {
+          "type": "{\nconnections: number[],\nid: number,\ntext: string,\nimage: string,\nrect2D: import(\"../Rect/Rect\").Rect2D,\ncoord2D: import(\"../Svg\").Coord2D,\nsvgPathProps: import(\"../Svg\").NativeSvgProps,\n}[]",
+          "name": "DiagramProps",
+          "ts": "type DiagramProps = {\nconnections: number[],\nid: number,\ntext: string,\nimage: string,\nrect2D: import(\"../Rect/Rect\").Rect2D,\ncoord2D: import(\"../Svg\").Coord2D,\nsvgPathProps: import(\"../Svg\").NativeSvgProps,\n}[]"
+        }
+      ]
     },
     {
       "moduleName": "Ellipse",

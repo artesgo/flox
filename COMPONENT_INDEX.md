@@ -68,25 +68,34 @@ None.
 
 ## `Diagram`
 
+### Types
+
+```ts
+export type DiagramProps = {
+  connections: number[];
+  id: number;
+  text: string;
+  image: string;
+  rect2D: import("../Rect/Rect").Rect2D;
+  coord2D: import("../Svg").Coord2D;
+  svgPathProps: import("../Svg").NativeSvgProps;
+}[];
+```
+
 ### Props
 
-| Prop name | Kind             | Reactive | Type    | Default value | Description |
-| :-------- | :--------------- | :------- | :------ | ------------- | ----------- |
-| rects     | <code>let</code> | No       | <code>{ |
+| Prop name       | Kind             | Reactive | Type                                         | Default value   | Description |
+| :-------------- | :--------------- | :------- | :------------------------------------------- | --------------- | ----------- |
+| rects           | <code>let</code> | No       | <code>DiagramProps[]</code>                  | <code>[]</code> | --          |
+| width           | <code>let</code> | No       | <code>number</code>                          | <code>0</code>  | --          |
+| height          | <code>let</code> | No       | <code>number</code>                          | <code>0</code>  | --          |
+| svgPathProps    | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --              | --          |
+| svgPropTemplate | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{         |
 
-connections: number[],
-id: number,
-rect2D: import("../Rect/Rect").Rect2D,
-coord2D: import("../Svg").Coord2D,
-svgPathProps: import("../Svg").NativeSvgProps,
-}[]</code> | <code>[]</code> | -- |
-| width | <code>let</code> | No | <code>number</code> | <code>0</code> | -- |
-| height | <code>let</code> | No | <code>number</code> | <code>0</code> | -- |
-| svgPathProps | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | -- | -- |
-| svgPropTemplate | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | <code>{
-fill: '#FFCC00',
-stroke: '#333',
-'stroke-width': 2,
+     fill: '#FFCC00',
+     stroke: '#333',
+     'stroke-width': 2,
+
 }</code> | -- |
 | templates | <code>let</code> | No | <code>[{
 connections: [],

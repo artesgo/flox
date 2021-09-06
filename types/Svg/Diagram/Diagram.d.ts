@@ -1,17 +1,21 @@
 /// <reference types="svelte" />
 import { SvelteComponentTyped } from "svelte";
 
+export type DiagramProps = {
+  connections: number[];
+  id: number;
+  text: string;
+  image: string;
+  rect2D: import("../Rect/Rect").Rect2D;
+  coord2D: import("../Svg").Coord2D;
+  svgPathProps: import("../Svg").NativeSvgProps;
+}[];
+
 export interface DiagramProps {
   /**
    * @default []
    */
-  rects?: {
-    connections: number[];
-    id: number;
-    rect2D: import("../Rect/Rect").Rect2D;
-    coord2D: import("../Svg").Coord2D;
-    svgPathProps: import("../Svg").NativeSvgProps;
-  }[];
+  rects?: DiagramProps[];
 
   /**
    * @default 0
