@@ -9,10 +9,19 @@ export interface Rect2D {
 }
 
 export interface RectProps {
+  /**
+   * @default {}
+   */
   rect2D?: Rect2D;
 
+  /**
+   * @default {}
+   */
   coord2D?: import("../Svg").Coord2D;
 
+  /**
+   * @default {}
+   */
   svgProps?: import("../Svg").NativeSvgProps;
 
   draggable?: boolean;

@@ -50,9 +50,9 @@ None.
 
 | Prop name  | Kind             | Reactive | Type                                         | Default value     | Description |
 | :--------- | :--------------- | :------- | :------------------------------------------- | ----------------- | ----------- |
-| begin      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --                | --          |
-| end        | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --                | --          |
-| svgProps   | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --                | --          |
+| begin      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code>   | --          |
+| end        | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code>   | --          |
+| svgProps   | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code>   | --          |
 | horizontal | <code>let</code> | No       | <code>boolean</code>                         | <code>true</code> | --          |
 
 ### Slots
@@ -70,19 +70,20 @@ None.
 
 ### Props
 
-| Prop name       | Kind             | Reactive | Type    | Default value | Description |
-| :-------------- | :--------------- | :------- | :------ | ------------- | ----------- |
-| rects           | <code>let</code> | No       | --      | --            | --          |
-| width           | <code>let</code> | No       | --      | --            | --          |
-| height          | <code>let</code> | No       | --      | --            | --          |
-| svgPathProps    | <code>let</code> | No       | --      | --            | --          |
-| svgPropTemplate | <code>let</code> | No       | <code>{ |
+| Prop name | Kind             | Reactive | Type    | Default value | Description |
+| :-------- | :--------------- | :------- | :------ | ------------- | ----------- |
+| rects     | <code>let</code> | No       | <code>{ |
 
-     fill: '#FC0',
-     stroke: '#333',
-     'stroke-width': 2,
-
-}</code> | <code>{
+connections: number[],
+id: number,
+rect2D: import("../Rect/Rect").Rect2D,
+coord2D: import("../Svg").Coord2D,
+svgPathProps: import("../Svg").NativeSvgProps,
+}[]</code> | <code>[]</code> | -- |
+| width | <code>let</code> | No | <code>number</code> | -- | -- |
+| height | <code>let</code> | No | <code>number</code> | -- | -- |
+| svgPathProps | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | -- | -- |
+| svgPropTemplate | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | <code>{
 fill: '#FC0',
 stroke: '#333',
 'stroke-width': 2,
@@ -188,10 +189,10 @@ export interface Ellipse2D {
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                         | Default value | Description |
-| :-------- | :--------------- | :------- | :------------------------------------------- | ------------- | ----------- |
-| ellipse2D | <code>let</code> | No       | <code>Ellipse2D</code>                       | --            | --          |
-| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --            | --          |
+| Prop name | Kind             | Reactive | Type                                         | Default value   | Description |
+| :-------- | :--------------- | :------- | :------------------------------------------- | --------------- | ----------- |
+| ellipse2D | <code>let</code> | No       | <code>Ellipse2D</code>                       | <code>{}</code> | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code> | --          |
 
 ### Slots
 
@@ -207,9 +208,9 @@ None.
 
 | Prop name   | Kind             | Reactive | Type                                  | Default value      | Description |
 | :---------- | :--------------- | :------- | :------------------------------------ | ------------------ | ----------- |
-| coord2D     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --                 | --          |
-| rect2D      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --                 | --          |
-| image       | <code>let</code> | No       | <code>string</code>                   | --                 | --          |
+| coord2D     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>    | --          |
+| rect2D      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>    | --          |
+| image       | <code>let</code> | No       | <code>string</code>                   | <code>''</code>    | --          |
 | passThrough | <code>let</code> | No       | <code>boolean</code>                  | <code>false</code> | --          |
 
 ### Slots
@@ -224,11 +225,11 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                         | Default value | Description |
-| :-------- | :--------------- | :------- | :------------------------------------------- | ------------- | ----------- |
-| begin     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --            | --          |
-| end       | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --            | --          |
-| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --            | --          |
+| Prop name | Kind             | Reactive | Type                                         | Default value   | Description |
+| :-------- | :--------------- | :------- | :------------------------------------------- | --------------- | ----------- |
+| begin     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code> | --          |
+| end       | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code> | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code> | --          |
 
 ### Slots
 
@@ -253,12 +254,12 @@ export interface Rect2D {
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                         | Default value | Description |
-| :-------- | :--------------- | :------- | :------------------------------------------- | ------------- | ----------- |
-| rect2D    | <code>let</code> | No       | <code>Rect2D</code>                          | --            | --          |
-| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | --            | --          |
-| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --            | --          |
-| draggable | <code>let</code> | No       | <code>boolean</code>                         | --            | --          |
+| Prop name | Kind             | Reactive | Type                                         | Default value   | Description |
+| :-------- | :--------------- | :------- | :------------------------------------------- | --------------- | ----------- |
+| rect2D    | <code>let</code> | No       | <code>Rect2D</code>                          | <code>{}</code> | --          |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code> | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code> | --          |
+| draggable | <code>let</code> | No       | <code>boolean</code>                         | --              | --          |
 
 ### Slots
 
@@ -303,11 +304,11 @@ export interface NativeSvgProps {
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type | Default value | Description |
-| :-------- | :--------------- | :------- | :--- | ------------- | ----------- |
-| width     | <code>let</code> | No       | --   | --            | --          |
-| height    | <code>let</code> | No       | --   | --            | --          |
-| id        | <code>let</code> | No       | --   | --            | --          |
+| Prop name | Kind             | Reactive | Type                | Default value | Description |
+| :-------- | :--------------- | :------- | :------------------ | ------------- | ----------- |
+| width     | <code>let</code> | No       | <code>number</code> | --            | --          |
+| height    | <code>let</code> | No       | <code>number</code> | --            | --          |
+| id        | <code>let</code> | No       | <code>string</code> | --            | --          |
 
 ### Slots
 
@@ -323,12 +324,12 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                  | Default value | Description |
-| :-------- | :--------------- | :------- | :------------------------------------ | ------------- | ----------- |
-| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --            | --          |
-| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | --            | --          |
-| text      | <code>let</code> | No       | <code>string</code>                   | --            | --          |
-| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{       |
+| Prop name | Kind             | Reactive | Type                                  | Default value   | Description |
+| :-------- | :--------------- | :------- | :------------------------------------ | --------------- | ----------- |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code> | --          |
+| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code> | --          |
+| text      | <code>let</code> | No       | <code>string</code>                   | <code>''</code> | --          |
+| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{         |
 
      x: 0,
      y: 0,

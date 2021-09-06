@@ -4,7 +4,6 @@
 </script>
 
 <script>
-  import { onMount } from "svelte";
   import { writable } from "svelte/store";
 	import { setContext } from 'svelte';
 
@@ -20,13 +19,13 @@
    */
 
   let store = writable({x: 0, y: 0});
-  export let width;
-  export let height;
+  /** @type {number} */
+  export let width = undefined;
+  /** @type {number} */
+  export let height = undefined;
+  /** @type {string} */
   export let id = `${_prefix}${_id++}`;
   setContext(id, store);
-
-  onMount(() => {
-  });
 </script>
 
 <svg {width} {height}>

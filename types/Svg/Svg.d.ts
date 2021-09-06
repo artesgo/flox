@@ -16,11 +16,11 @@ export interface NativeSvgProps {
 }
 
 export interface SvgProps {
-  width?: undefined;
+  width?: number;
 
-  height?: undefined;
+  height?: number;
 
-  id?: undefined;
+  id?: string;
 }
 
 export default class Svg extends SvelteComponentTyped<

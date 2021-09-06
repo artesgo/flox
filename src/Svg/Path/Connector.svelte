@@ -1,24 +1,13 @@
 <script>
   import { spring } from 'svelte/motion';
 
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let begin;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let end;
-
-  /**
-   * @type {import("../Svg").NativeSvgProps}
-   */
-  export let svgProps;
-
-  /**
-   * @type {boolean}
-   */
+  /** @type {import("../Svg").Coord2D} */
+  export let begin = {};
+  /** @type {import("../Svg").Coord2D} */
+  export let end = {};
+  /** @type {import("../Svg").NativeSvgProps} */
+  export let svgProps = {};
+  /** @type {boolean} */
   export let horizontal = true;
 
   let path;

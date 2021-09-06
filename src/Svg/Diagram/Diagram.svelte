@@ -10,14 +10,24 @@
 
   //#region props
   /**
-   * 
+   * @type {{
+   * connections: number[],
+   * id: number,
+   * rect2D: import("../Rect/Rect").Rect2D,
+   * coord2D: import("../Svg").Coord2D,
+   * svgPathProps: import("../Svg").NativeSvgProps,
+   * }[]}
    */
-  export let rects;
-  export let width;
-  export let height;
+  export let rects = [];
+  /** @type {number} */
+  export let width = 0;
+  /** @type {number} */
+  export let height = 0;
+  /** @type {import("../Svg").NativeSvgProps} */
   export let svgPathProps;
+  /** @type {import("../Svg").NativeSvgProps} */
   export let svgPropTemplate = {
-    fill: '#FC0',
+    fill: '#FFCC00',
     stroke: '#333',
     'stroke-width': 2,
   };
@@ -60,6 +70,8 @@
     },
     svgProps: svgPropTemplate
   }];
+
+  let selectedTemplate = 0;
   //#endregion
 
   //#region private props
@@ -228,25 +240,22 @@
   });
 
   function addAt(e, template) {
-    let s = [...$store];
     let coord = {
       x: 0,
       y: 0,
     }
-    if (!template) {
-      let [sample, ...rest] = s.reverse();
-      template = sample;
-      coord.x = e.offsetX;
-      coord.y = e.offsetY;
-    } else {
-      template.connectionPoints = createConnectionPointOffsets(template);
-      //#region prevents fuzzy connections
+    template.connectionPoints = createConnectionPointOffsets(template);
+    //#region prevents fuzzy connections
+    if (e.detail && e.detail.coord2D) {
       coord.x = Math.floor(e.detail.coord2D.x);
       coord.y = Math.floor(e.detail.coord2D.y);
-      if (coord.x % 2 === 1) coord.x--;
-      if (coord.y % 2 === 1) coord.y--;
-      //#endregion
+    } else {
+      coord.x = e.offsetX;
+      coord.y = e.offsetY;
     }
+    if (coord.x % 2 === 1) coord.x--;
+    if (coord.y % 2 === 1) coord.y--;
+    //#endregion
     if (coord.x > 40) {
       let newRect = {
         ...template
@@ -371,7 +380,7 @@
   //#endregion
 </script>
 
-<div on:dblclick={addAt}
+<div on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
   on:contextmenu|preventDefault
   on:mousemove={checkNewConnection}
   on:mouseup={endNewConnection}
@@ -418,9 +427,17 @@
     <g class="no-events">
       <Rect coord2D={{x: 1, y: 1}} rect2D={{width: 39, height: height - 2}} svgProps={{ fill: '#ffffffaa', stroke: '#333'}}></Rect>
     </g>
-    {#each _templates as template}
-      <Rect rect2D={template.rect2D} coord2D={template.coord2D} svgProps={template.svgProps}
+    {#each _templates as template, index}
+      {#if selectedTemplate === index}
+        <Rect {...template} draggable={false} svgProps={{
+          ...template.svgProps,
+          'stroke-width': template.svgProps['stroke-width'] + 2
+        }}></Rect>
+      {/if}
+      <Rect rect2D={template.rect2D} coord2D={template.coord2D} 
+        svgProps={template.svgProps}
         draggable={true}
+        on:mousedown={() => selectedTemplate = index}
         on:dragEnd={(e) => dragEndTemplate(e, template)}
       />
     {/each}
@@ -441,6 +458,7 @@
 
     <!-- WIP -->
     <!-- double click to edit text entry -->
+    <!-- fix type definitions -->
 
     <!-- keyboard events -->
     <!-- delete key, deletes shape / connection -->

@@ -1,7 +1,7 @@
 {
   "name": "artesgo-flox",
-  "version": "1.0.0-alpha.1",
-  "description": "Svelte Components",
+  "version": "1.0.0-alpha.4",
+  "description": "Svg Svelte Components",
   "svelte": "src/index.js",
   "main": "./lib/index.js",
   "module": "./lib/index.mjs",

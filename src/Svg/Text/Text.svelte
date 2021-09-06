@@ -2,32 +2,18 @@
   import { onMount } from 'svelte';
   import { spring } from 'svelte/motion';
   
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let coord2D;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let rect2D;
-
-  /**
-   * @type {string}
-   */
-  export let text;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
+  /** @type {import("../Svg").Coord2D} */
+  export let coord2D = {};
+  /** @type {import("../Svg").Coord2D} */
+  export let rect2D = {};
+  /** @type {string} */
+  export let text = '';
+  /** @type {import("../Svg").Coord2D} */
   export let padding = {
     x: 0,
     y: 0,
   };
-
-  /**
-   * @type {boolean}
-   */
+  /** @type {boolean} */
   export let passThrough = false;
 
   let _coord = spring({ x: 0, y: 0 });

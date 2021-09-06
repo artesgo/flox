@@ -2,10 +2,19 @@
 import { SvelteComponentTyped } from "svelte";
 
 export interface TextProps {
+  /**
+   * @default {}
+   */
   coord2D?: import("../Svg").Coord2D;
 
+  /**
+   * @default {}
+   */
   rect2D?: import("../Svg").Coord2D;
 
+  /**
+   * @default ''
+   */
   text?: string;
 
   /**

@@ -9,8 +9,14 @@ export interface Ellipse2D {
 }
 
 export interface EllipseProps {
+  /**
+   * @default {}
+   */
   ellipse2D?: Ellipse2D;
 
+  /**
+   * @default {}
+   */
   svgProps?: import("../Svg").NativeSvgProps;
 }
 

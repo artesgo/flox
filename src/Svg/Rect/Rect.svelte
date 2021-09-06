@@ -7,25 +7,13 @@
   /**
    * @typedef {{width: number; height: number; rx: number; ry: number }} Rect2D
    */
-
-  /**
-   * @type {Rect2D}
-   */
-  export let rect2D;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let coord2D;
-
-  /**
-   * @type {import("../Svg").NativeSvgProps}
-   */
-  export let svgProps;
-
-  /**
-   * @type {boolean}
-   */
+  /** @type {Rect2D} */
+  export let rect2D = {};
+  /** @type {import("../Svg").Coord2D} */
+  export let coord2D = {};
+  /** @type {import("../Svg").NativeSvgProps} */
+  export let svgProps = {};
+  /** @type {boolean} */
   export let draggable;
   let dragging;
 
@@ -74,6 +62,7 @@
   on:blur
   on:mousedown
   on:mouseup
+  on:click
   on:dblclick
   on:contextmenu>
   <g 

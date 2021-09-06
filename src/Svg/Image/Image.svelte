@@ -2,24 +2,13 @@
   import { onMount } from 'svelte';
   import { spring } from 'svelte/motion';
   
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let coord2D;
-
-  /**
-   * @type {import("../Svg").Coord2D}
-   */
-  export let rect2D;
-
-  /**
-   * @type {string}
-   */
-  export let image;
-
-  /**
-   * @type {boolean}
-   */
+  /** @type {import("../Svg").Coord2D} */
+  export let coord2D = {};
+  /** @type {import("../Svg").Coord2D} */
+  export let rect2D = {};
+  /** @type {string} */
+  export let image = '';
+  /** @type {boolean} */
   export let passThrough = false;
 
   let _coord = spring({ x: 0, y: 0 });
@@ -41,8 +30,8 @@
 </script>
 
 <image class:no-events={passThrough} href={image} x={$_coord.x} y={$_coord.y}
-  width={$_rect.width}
-  height={$_rect.height}
+  width={$_rect.width < 0 ? 0 : $_rect.width}
+  height={$_rect.height < 0 ? 0: $_rect.height}
 ></image>
 
 <style>
