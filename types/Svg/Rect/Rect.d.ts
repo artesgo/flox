@@ -36,6 +36,7 @@ export default class Rect extends SvelteComponentTyped<
     blur: WindowEventMap["blur"];
     mousedown: WindowEventMap["mousedown"];
     mouseup: WindowEventMap["mouseup"];
+    click: WindowEventMap["click"];
     dblclick: WindowEventMap["dblclick"];
     contextmenu: WindowEventMap["contextmenu"];
     drag: CustomEvent<any>;

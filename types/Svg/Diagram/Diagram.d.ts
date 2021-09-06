@@ -13,14 +13,20 @@ export interface DiagramProps {
     svgPathProps: import("../Svg").NativeSvgProps;
   }[];
 
+  /**
+   * @default 0
+   */
   width?: number;
 
+  /**
+   * @default 0
+   */
   height?: number;
 
   svgPathProps?: import("../Svg").NativeSvgProps;
 
   /**
-   * @default { fill: '#FC0', stroke: '#333', 'stroke-width': 2, }
+   * @default { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, }
    */
   svgPropTemplate?: import("../Svg").NativeSvgProps;
 

@@ -80,11 +80,11 @@ rect2D: import("../Rect/Rect").Rect2D,
 coord2D: import("../Svg").Coord2D,
 svgPathProps: import("../Svg").NativeSvgProps,
 }[]</code> | <code>[]</code> | -- |
-| width | <code>let</code> | No | <code>number</code> | -- | -- |
-| height | <code>let</code> | No | <code>number</code> | -- | -- |
+| width | <code>let</code> | No | <code>number</code> | <code>0</code> | -- |
+| height | <code>let</code> | No | <code>number</code> | <code>0</code> | -- |
 | svgPathProps | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | -- | -- |
 | svgPropTemplate | <code>let</code> | No | <code>import("../Svg").NativeSvgProps</code> | <code>{
-fill: '#FC0',
+fill: '#FFCC00',
 stroke: '#333',
 'stroke-width': 2,
 }</code> | -- |
@@ -277,6 +277,7 @@ export interface Rect2D {
 | blur        | forwarded  | --     |
 | mousedown   | forwarded  | --     |
 | mouseup     | forwarded  | --     |
+| click       | forwarded  | --     |
 | dblclick    | forwarded  | --     |
 | contextmenu | forwarded  | --     |
 | drag        | dispatched | --     |
