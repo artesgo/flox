@@ -4,8 +4,8 @@ import { SvelteComponentTyped } from "svelte";
 export interface Rect2D {
   width: number;
   height: number;
-  rx: number;
-  ry: number;
+  rx?: number;
+  ry?: number;
 }
 
 export interface RectProps {

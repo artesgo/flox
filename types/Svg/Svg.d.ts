@@ -9,10 +9,10 @@ export interface Coord2D {
 export type Linecap = "round" | "butt" | "square";
 
 export interface NativeSvgProps {
-  fill: string;
-  "stroke-width": number;
-  "stroke-linecap": Linecap;
-  stroke: string;
+  fill?: string;
+  "stroke-width"?: number;
+  "stroke-linecap"?: Linecap;
+  stroke?: string;
 }
 
 export interface SvgProps {

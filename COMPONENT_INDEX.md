@@ -71,45 +71,50 @@ None.
 ### Types
 
 ```ts
-export type DiagramProps = {
-  connections: number[];
+export type Rect2D = import("../Rect/Rect").Rect2D;
+
+export type Coord2D = import("../Svg").Coord2D;
+
+export type NativeSvgProps = import("../Svg").NativeSvgProps;
+
+export interface DiagramRect {
+  connections?: number[];
   id: number;
-  text: string;
-  image: string;
-  rect2D: import("../Rect/Rect").Rect2D;
-  coord2D: import("../Svg").Coord2D;
-  svgPathProps: import("../Svg").NativeSvgProps;
-}[];
+  text?: string;
+  image?: string;
+  rect2D: Rect2D;
+  coord2D: Coord2D;
+  svgProps?: NativeSvgProps;
+}
 ```
 
 ### Props
 
-| Prop name       | Kind             | Reactive | Type                                         | Default value   | Description |
-| :-------------- | :--------------- | :------- | :------------------------------------------- | --------------- | ----------- |
-| rects           | <code>let</code> | No       | <code>DiagramProps[]</code>                  | <code>[]</code> | --          |
-| width           | <code>let</code> | No       | <code>number</code>                          | <code>0</code>  | --          |
-| height          | <code>let</code> | No       | <code>number</code>                          | <code>0</code>  | --          |
-| svgPathProps    | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | --              | --          |
-| svgPropTemplate | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{         |
+| Prop name    | Kind             | Reactive | Type                        | Default value   | Description |
+| :----------- | :--------------- | :------- | :-------------------------- | --------------- | ----------- |
+| rects        | <code>let</code> | No       | <code>DiagramRect[]</code>  | <code>[]</code> | --          |
+| width        | <code>let</code> | No       | <code>number</code>         | <code>0</code>  | --          |
+| height       | <code>let</code> | No       | <code>number</code>         | <code>0</code>  | --          |
+| svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code> | --              | --          |
+| templates    | <code>let</code> | No       | <code>[{                    |
 
-     fill: '#FFCC00',
-     stroke: '#333',
-     'stroke-width': 2,
+     connections: [],
+     rect2D: {
+       width: 20,
+       height: 20,
+       rx: 40,
+       ry: 40
+     },
+     coord2D: {
+       x: 10,
+       y: 10,
+     },
+     svgProps: {
+       fill: '#FFCC00',
+       stroke: '#333',
+       'stroke-width': 2,
+     }
 
-}</code> | -- |
-| templates | <code>let</code> | No | <code>[{
-connections: [],
-rect2D: {
-width: 20,
-height: 20,
-rx: 40,
-ry: 40
-},
-coord2D: {
-x: 10,
-y: 10,
-},
-svgProps: svgPropTemplate
 }, {
 connections: [],
 rect2D: {
@@ -122,7 +127,11 @@ coord2D: {
 x: 10,
 y: 40,
 },
-svgProps: svgPropTemplate
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }, {
 connections: [],
 rect2D: {
@@ -133,7 +142,11 @@ coord2D: {
 x: 10,
 y: 70,
 },
-svgProps: svgPropTemplate
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }]</code> | <code>[{
 connections: [],
 rect2D: {
@@ -146,7 +159,11 @@ coord2D: {
 x: 10,
 y: 10,
 },
-svgProps: svgPropTemplate
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }, {
 connections: [],
 rect2D: {
@@ -159,7 +176,11 @@ coord2D: {
 x: 10,
 y: 40,
 },
-svgProps: svgPropTemplate
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }, {
 connections: [],
 rect2D: {
@@ -170,7 +191,11 @@ coord2D: {
 x: 10,
 y: 70,
 },
-svgProps: svgPropTemplate
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }]</code> | -- |
 
 ### Slots
@@ -256,8 +281,8 @@ None.
 export interface Rect2D {
   width: number;
   height: number;
-  rx: number;
-  ry: number;
+  rx?: number;
+  ry?: number;
 }
 ```
 
@@ -305,10 +330,10 @@ export interface Coord2D {
 export type Linecap = "round" | "butt" | "square";
 
 export interface NativeSvgProps {
-  fill: string;
-  "stroke-width": number;
-  "stroke-linecap": Linecap;
-  stroke: string;
+  fill?: string;
+  "stroke-width"?: number;
+  "stroke-linecap"?: Linecap;
+  stroke?: string;
 }
 ```
 

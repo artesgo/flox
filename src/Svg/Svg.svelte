@@ -11,10 +11,10 @@
    * @typedef {{ x: number; y: number; }} Coord2D
    * @typedef { 'round' | 'butt' | 'square'} Linecap
    * @typedef {{ 
-   * fill: string; 
-   * 'stroke-width': number; 
-   * 'stroke-linecap': Linecap; 
-   * stroke: string;
+   * fill?: string; 
+   * 'stroke-width'?: number; 
+   * 'stroke-linecap'?: Linecap; 
+   * stroke?: string;
    * }} NativeSvgProps
    */
 

@@ -8,35 +8,33 @@
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
 
+  /** @typedef {import("../Rect/Rect").Rect2D} Rect2D*/
+  /** @typedef {import("../Svg").Coord2D} Coord2D*/
+  /** @typedef {import("../Svg").NativeSvgProps} NativeSvgProps*/
+
   /**
    * @typedef {{
-   * connections: number[],
+   * connections?: number[],
    * id: number,
-   * text: string,
-   * image: string,
-   * rect2D: import("../Rect/Rect").Rect2D,
-   * coord2D: import("../Svg").Coord2D,
-   * svgPathProps: import("../Svg").NativeSvgProps,
-   * }[]} DiagramProps
+   * text?: string,
+   * image?: string,
+   * rect2D: Rect2D,
+   * coord2D: Coord2D,
+   * svgProps?: NativeSvgProps,
+   * }} DiagramRect
    */
 
   //#region props
   /**
-   * @type {DiagramProps[]}
+   * @type {DiagramRect[]}
    */
   export let rects = [];
   /** @type {number} */
   export let width = 0;
   /** @type {number} */
   export let height = 0;
-  /** @type {import("../Svg").NativeSvgProps} */
+  /** @type {NativeSvgProps} */
   export let svgPathProps;
-  /** @type {import("../Svg").NativeSvgProps} */
-  export let svgPropTemplate = {
-    fill: '#FFCC00',
-    stroke: '#333',
-    'stroke-width': 2,
-  };
 
   export let templates = [{
     connections: [],
@@ -50,7 +48,11 @@
       x: 10,
       y: 10,
     },
-    svgProps: svgPropTemplate
+    svgProps: {
+      fill: '#FFCC00',
+      stroke: '#333',
+      'stroke-width': 2,
+    }
   }, {
     connections: [],
     rect2D: {
@@ -63,7 +65,11 @@
       x: 10,
       y: 40,
     },
-    svgProps: svgPropTemplate
+    svgProps: {
+      fill: '#FFCC00',
+      stroke: '#333',
+      'stroke-width': 2,
+    }
   }, {
     connections: [],
     rect2D: {
@@ -74,7 +80,11 @@
       x: 10,
       y: 70,
     },
-    svgProps: svgPropTemplate
+    svgProps: {
+      fill: '#FFCC00',
+      stroke: '#333',
+      'stroke-width': 2,
+    }
   }];
 
   let selectedTemplate = 0;

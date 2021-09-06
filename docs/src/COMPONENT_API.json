@@ -96,7 +96,7 @@
         {
           "name": "rects",
           "kind": "let",
-          "type": "DiagramProps[]",
+          "type": "DiagramRect[]",
           "value": "[]",
           "isFunction": false,
           "isFunctionDeclaration": false,
@@ -126,17 +126,7 @@
         {
           "name": "svgPathProps",
           "kind": "let",
-          "type": "import(\"../Svg\").NativeSvgProps",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
-          "name": "svgPropTemplate",
-          "kind": "let",
-          "type": "import(\"../Svg\").NativeSvgProps",
-          "value": "{\r     fill: '#FFCC00',\r     stroke: '#333',\r     'stroke-width': 2,\r   }",
+          "type": "NativeSvgProps",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -145,8 +135,8 @@
         {
           "name": "templates",
           "kind": "let",
-          "type": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: svgPropTemplate\r   }]",
-          "value": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: svgPropTemplate\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: svgPropTemplate\r   }]",
+          "type": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
+          "value": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -159,9 +149,24 @@
       ],
       "typedefs": [
         {
-          "type": "{\nconnections: number[],\nid: number,\ntext: string,\nimage: string,\nrect2D: import(\"../Rect/Rect\").Rect2D,\ncoord2D: import(\"../Svg\").Coord2D,\nsvgPathProps: import(\"../Svg\").NativeSvgProps,\n}[]",
-          "name": "DiagramProps",
-          "ts": "type DiagramProps = {\nconnections: number[],\nid: number,\ntext: string,\nimage: string,\nrect2D: import(\"../Rect/Rect\").Rect2D,\ncoord2D: import(\"../Svg\").Coord2D,\nsvgPathProps: import(\"../Svg\").NativeSvgProps,\n}[]"
+          "type": "import(\"../Rect/Rect\").Rect2D",
+          "name": "Rect2D",
+          "ts": "type Rect2D = import(\"../Rect/Rect\").Rect2D"
+        },
+        {
+          "type": "import(\"../Svg\").Coord2D",
+          "name": "Coord2D",
+          "ts": "type Coord2D = import(\"../Svg\").Coord2D"
+        },
+        {
+          "type": "import(\"../Svg\").NativeSvgProps",
+          "name": "NativeSvgProps",
+          "ts": "type NativeSvgProps = import(\"../Svg\").NativeSvgProps"
+        },
+        {
+          "type": "{\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}",
+          "name": "DiagramRect",
+          "ts": "interface DiagramRect {\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}"
         }
       ]
     },
@@ -348,9 +353,9 @@
       ],
       "typedefs": [
         {
-          "type": "{width: number; height: number; rx: number; ry: number }",
+          "type": "{width: number; height: number; rx?: number; ry?: number }",
           "name": "Rect2D",
-          "ts": "interface Rect2D {width: number; height: number; rx: number; ry: number }"
+          "ts": "interface Rect2D {width: number; height: number; rx?: number; ry?: number }"
         }
       ]
     },
@@ -400,9 +405,9 @@
           "ts": "type Linecap =  'round' | 'butt' | 'square'"
         },
         {
-          "type": "{\nfill: string;\n'stroke-width': number;\n'stroke-linecap': Linecap;\nstroke: string;\n}",
+          "type": "{\nfill?: string;\n'stroke-width'?: number;\n'stroke-linecap'?: Linecap;\nstroke?: string;\n}",
           "name": "NativeSvgProps",
-          "ts": "interface NativeSvgProps {\nfill: string;\n'stroke-width': number;\n'stroke-linecap': Linecap;\nstroke: string;\n}"
+          "ts": "interface NativeSvgProps {\nfill?: string;\n'stroke-width'?: number;\n'stroke-linecap'?: Linecap;\nstroke?: string;\n}"
         }
       ]
     },
