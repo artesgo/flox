@@ -423,7 +423,7 @@
   on:contextmenu|preventDefault
   on:mousemove={checkNewConnection}
   on:mouseup={endNewConnection}
-  on:wheel={onWheel}
+  on:wheel|preventDefault={onWheel}
 >
   <Svg {height} {width} zoom={($_zoom / 100) * height}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
