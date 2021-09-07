@@ -90,12 +90,13 @@ export interface DiagramRect {
 
 ### Props
 
-| Prop name    | Kind             | Reactive | Type                        | Default value   | Description |
-| :----------- | :--------------- | :------- | :-------------------------- | --------------- | ----------- |
-| rects        | <code>let</code> | No       | <code>DiagramRect[]</code>  | <code>[]</code> | --          |
-| width        | <code>let</code> | No       | <code>number</code>         | <code>0</code>  | --          |
-| height       | <code>let</code> | No       | <code>number</code>         | <code>0</code>  | --          |
-| svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code> | --              | --          |
+| Prop name    | Kind             | Reactive | Type                        | Default value    | Description |
+| :----------- | :--------------- | :------- | :-------------------------- | ---------------- | ----------- |
+| zoom         | <code>let</code> | Yes      | <code>number</code>         | <code>100</code> | --          |
+| rects        | <code>let</code> | No       | <code>DiagramRect[]</code>  | <code>[]</code>  | --          |
+| width        | <code>let</code> | No       | <code>number</code>         | <code>0</code>   | --          |
+| height       | <code>let</code> | No       | <code>number</code>         | <code>0</code>   | --          |
+| svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code> | --               | --          |
 | templates    | <code>let</code> | No       | <code>[{                    |
 
      connections: [],
@@ -294,6 +295,7 @@ export interface Rect2D {
 | coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code> | --          |
 | svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code> | --          |
 | draggable | <code>let</code> | No       | <code>boolean</code>                         | --              | --          |
+| zoom      | <code>let</code> | No       | <code>number</code>                          | --              | --          |
 
 ### Slots
 
@@ -339,11 +341,18 @@ export interface NativeSvgProps {
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                | Default value | Description |
-| :-------- | :--------------- | :------- | :------------------ | ------------- | ----------- |
-| width     | <code>let</code> | No       | <code>number</code> | --            | --          |
-| height    | <code>let</code> | No       | <code>number</code> | --            | --          |
-| id        | <code>let</code> | No       | <code>string</code> | --            | --          |
+| Prop name | Kind             | Reactive | Type                 | Default value | Description |
+| :-------- | :--------------- | :------- | :------------------- | ------------- | ----------- |
+| width     | <code>let</code> | No       | <code>number</code>  | --            | --          |
+| height    | <code>let</code> | No       | <code>number</code>  | --            | --          |
+| id        | <code>let</code> | No       | <code>string</code>  | --            | --          |
+| zoom      | <code>let</code> | No       | <code>number</code>  | --            | --          |
+| offset    | <code>let</code> | No       | <code>Coord2D</code> | <code>{       |
+
+     x: 0,
+     y: 0,
+
+}</code> | -- |
 
 ### Slots
 

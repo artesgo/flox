@@ -141,11 +141,21 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "zoom",
+          "kind": "let",
+          "type": "number",
+          "value": "100",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": true
         }
       ],
       "slots": [],
       "events": [
-        { "type": "forwarded", "name": "contextmenu", "element": "div" }
+        { "type": "forwarded", "name": "contextmenu", "element": "span" }
       ],
       "typedefs": [
         {
@@ -335,6 +345,15 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "zoom",
+          "kind": "let",
+          "type": "number",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
         }
       ],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
@@ -385,6 +404,25 @@
           "name": "id",
           "kind": "let",
           "type": "string",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "zoom",
+          "kind": "let",
+          "type": "number",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "offset",
+          "kind": "let",
+          "type": "Coord2D",
+          "value": "{\r     x: 0,\r     y: 0,\r   }",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,

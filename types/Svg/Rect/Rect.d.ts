@@ -25,6 +25,8 @@ export interface RectProps {
   svgProps?: import("../Svg").NativeSvgProps;
 
   draggable?: boolean;
+
+  zoom?: number;
 }
 
 export default class Rect extends SvelteComponentTyped<

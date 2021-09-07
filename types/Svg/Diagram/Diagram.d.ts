@@ -92,6 +92,11 @@ export interface DiagramProps {
       };
     }
   ];
+
+  /**
+   * @default 100
+   */
+  zoom?: number;
 }
 
 export default class Diagram extends SvelteComponentTyped<

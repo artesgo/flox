@@ -21,6 +21,13 @@ export interface SvgProps {
   height?: number;
 
   id?: string;
+
+  zoom?: number;
+
+  /**
+   * @default { x: 0, y: 0, }
+   */
+  offset?: Coord2D;
 }
 
 export default class Svg extends SvelteComponentTyped<

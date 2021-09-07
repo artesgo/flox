@@ -15,6 +15,8 @@
   export let svgProps = {};
   /** @type {boolean} */
   export let draggable;
+  /** @type {number} */
+  export let zoom;
   let dragging;
 
   let _coord = spring(coord2D);
@@ -27,8 +29,8 @@
   function dragUpdate(e) {
     if (dragging) {
       _coord.update($_coord => ({
-        x: $_coord.x + e.detail.dx,
-        y: $_coord.y + e.detail.dy,
+        x: $_coord.x + (e.detail.dx * zoom / 100),
+        y: $_coord.y + (e.detail.dy * zoom / 100),
       }));
       update('drag', e.detail);
     }

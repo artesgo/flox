@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+  import { spring } from 'svelte/motion';
   import Svg from '../Svg.svelte';
   import Connector from '../Path/Connector.svelte';
   import Rect from '../Rect/Rect.svelte';
@@ -187,8 +188,8 @@
       ...$store.map(r => {
         // this moves the rectangle being dragged
         if (rect.id === r.id) {
-          r.coord2D.x += e.detail.dx;
-          r.coord2D.y += e.detail.dy;
+          r.coord2D.x += (e.detail.dx * zoom / 100);
+          r.coord2D.y += (e.detail.dy * zoom / 100);
         }
         return r;
       })
@@ -209,11 +210,11 @@
     $connections = [
       ...$connections.map(conn => {
         if (conn.begin.id === rect.id) {
-          conn.begin.x += e.detail.dx;
-          conn.begin.y += e.detail.dy;
+          conn.begin.x += (e.detail.dx * zoom / 100);
+          conn.begin.y += (e.detail.dy * zoom / 100);
         } else if (conn.end.id === rect.id) {
-          conn.end.x += e.detail.dx;
-          conn.end.y += e.detail.dy;
+          conn.end.x += (e.detail.dx * zoom / 100);
+          conn.end.y += (e.detail.dy * zoom / 100);
         }
         return conn;
       })
@@ -352,8 +353,8 @@
         id: rect.id
       },
       end: {
-        x: e.offsetX,
-        y: e.offsetY,
+        x: (e.offsetX * zoom / 100),
+        y: (e.offsetY * zoom / 100),
         id: -999,
       }
     }
@@ -385,8 +386,8 @@
       $connections = [
         ...$connections.map(conn => {
           if (conn.end.id === -999) {
-            conn.end.x = e.offsetX
-            conn.end.y = e.offsetY
+            conn.end.x = (e.offsetX * zoom / 100)
+            conn.end.y = (e.offsetY * zoom / 100)
           }
           return conn;
         })
@@ -394,14 +395,37 @@
     }
   }
   //#endregion
+
+  //#region zooming
+  /** @type {number} */
+  export let zoom = 100;
+  function onWheel(e) {
+    // scale smallest to 50% largest to 200%
+    if (e.deltaY < 0) {
+      if (zoom > 20) {
+        zoom -= 20;
+      }
+    } else {
+      zoom += 20;
+    }
+  }
+
+  function resetZoom() {
+    zoom = 100;
+  }
+
+  let _zoom = spring(0);
+  $: _zoom.update($_zoom => zoom);
+  //#endregion
 </script>
 
-<div on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
+<span on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
   on:contextmenu|preventDefault
   on:mousemove={checkNewConnection}
   on:mouseup={endNewConnection}
+  on:wheel={onWheel}
 >
-  <Svg {height} {width}>
+  <Svg {height} {width} zoom={($_zoom / 100) * height}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
     {/each}
@@ -452,6 +476,7 @@
       {/if}
       <Rect rect2D={template.rect2D} coord2D={template.coord2D} 
         svgProps={template.svgProps}
+        {zoom}
         draggable={true}
         on:mousedown={() => selectedTemplate = index}
         on:dragEnd={(e) => dragEndTemplate(e, template)}
@@ -471,10 +496,12 @@
     <!-- create drag and drop template for new objects -->
     <!-- drag and drop new objects from template -->
     <!-- Svg Images -->
+    <!-- zoom in and out -->
 
     <!-- WIP -->
     <!-- double click to edit text entry -->
-    <!-- fix type definitions -->
+    <!-- fix type definitions - reimported optionals -->
+    <!-- fix zoom should not alter templates -->
 
     <!-- keyboard events -->
     <!-- delete key, deletes shape / connection -->
@@ -485,6 +512,7 @@
     <!-- Edit Text Constrain Width: Multiline -->
     <!-- Edit Text Constrain Height: Single Line -->
     <!-- child elements: uml line item -->
+    <!-- paste image urls -->
     <!-- Add Resize Handles -->
     <!-- Resize Snap to Grid -->
     <!-- Redo / Undo -->
@@ -502,7 +530,7 @@
     <!-- Nice to have -->
     <!-- Custom Svg Objects -->
   </Svg>
-</div>
+</span>
 
 <style>
   .no-events {

@@ -25,9 +25,17 @@
   export let height = undefined;
   /** @type {string} */
   export let id = `${_prefix}${_id++}`;
+  /** @type {number} */
+  export let zoom;
+  /** @type {Coord2D} */
+  export let offset = {
+    x: 0,
+    y: 0,
+  };
+
   setContext(id, store);
 </script>
 
-<svg {width} {height}>
+<svg {width} {height} viewbox={`${offset.x} ${offset.y} ${zoom < 0 ? 0 : zoom} ${zoom < 0 ? 0 : zoom}`}>
   <slot></slot>
 </svg>
