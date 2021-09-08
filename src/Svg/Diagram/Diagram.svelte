@@ -8,6 +8,7 @@
   import Text from '../Text/Text.svelte';
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
+	import { pannable } from '../pannable';
 
   /** @typedef {import("../Rect/Rect").Rect2D} Rect2D*/
   /** @typedef {import("../Svg").Coord2D} Coord2D*/
@@ -181,6 +182,8 @@
   //#endregion
 
   //#region dragging
+  let creatingFromTemplate = false;
+
   function dragUpdate(e, rect) {
     dragging = true;
 
@@ -229,6 +232,12 @@
     dragging = false;
     addAt(e, template);
     _templates = [...templates];
+    creatingFromTemplate = false;
+  }
+
+  function selectTemplate(index) {
+    selectedTemplate = index;
+    creatingFromTemplate = true;
   }
   //#endregion
 
@@ -273,15 +282,13 @@
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
     //#endregion
-    if (coord.x > 40) {
-      let newRect = {
-        ...template
-      }
-      newRect.coord2D = coord;
-      newRect.id = _nextId++;
-      // resets template back to origin;
-      $store = [...$store, newRect];
+    let newRect = {
+      ...template
     }
+    newRect.coord2D = coord;
+    newRect.id = _nextId++;
+    // resets template back to origin;
+    $store = [...$store, newRect];
   }
 
   //#region focus indicator
@@ -353,8 +360,8 @@
         id: rect.id
       },
       end: {
-        x: (e.offsetX * zoom / 100),
-        y: (e.offsetY * zoom / 100),
+        x: (e.offsetX * zoom / 100) + offset.x,
+        y: (e.offsetY * zoom / 100) + offset.y,
         id: -999,
       }
     }
@@ -386,8 +393,8 @@
       $connections = [
         ...$connections.map(conn => {
           if (conn.end.id === -999) {
-            conn.end.x = (e.offsetX * zoom / 100)
-            conn.end.y = (e.offsetY * zoom / 100)
+            conn.end.x = ((e.offsetX) * zoom / 100) + offset.x
+            conn.end.y = ((e.offsetY) * zoom / 100) + offset.y
           }
           return conn;
         })
@@ -417,15 +424,70 @@
   let _zoom = spring(0);
   $: _zoom.update($_zoom => zoom);
   //#endregion
+
+  //#region copy / paste
+  function onKey(e) {
+    if (e.ctrlKey && e.key === "v") {
+      navigator.clipboard.readText().then(data => {
+        pasteImage(data);
+      })
+    }
+  }
+
+  function pasteImage(url) {
+    if (!!$focused) {
+      $store = [
+        ...$store.map(r => {
+          if (r.id === $focused) {
+            r.image = url;
+          }
+          return r;
+        })
+      ]
+    } else {
+      // paste at center of current coord
+    }
+  }
+  //#endregion
+
+  //#region panning workspace
+  let panning = false;
+  let offset = {
+    x: 0,
+    y: 0,
+  }
+  function startPan() {
+    panning = true;
+  }
+
+  function monitorPan(e) {
+    if (panning && !creatingFromTemplate && !dragging && !newConnectionStartRect) {
+      offset = {
+        x: offset.x - e.detail.dx,
+        y: offset.y - e.detail.dy,
+      }
+    }
+  }
+
+  function endPan() {
+    panning = false;
+  }
+  //#endregion
 </script>
 
 <span on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
+  use:pannable
+  on:panstart={startPan}
+  on:panmove={monitorPan}
+  on:panend={endPan}
   on:contextmenu|preventDefault
   on:mousemove={checkNewConnection}
   on:mouseup={endNewConnection}
   on:wheel|preventDefault={onWheel}
+  on:keydown={onKey}
+  tabindex="0"
 >
-  <Svg {height} {width} zoom={($_zoom / 100) * height}>
+  <Svg {height} {width} zoom={($_zoom / 100) * height} {offset}>
     {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
     {/each}
@@ -434,10 +496,10 @@
         <Rect {...rect} draggable={true}
           on:drag={(e) => dragUpdate(e, rect)}
           on:dragEnd={dragEnd}
-          on:mouseover={() => focusRect(rect)}
-          on:mouseleave={() => blurRect(rect)}
-          on:focus={() => over(rect)}
-          on:blur={() => out(rect)}
+          on:mouseover={() => over(rect)}
+          on:mouseleave={() => out(rect)}
+          on:focus={() => focusRect(rect)}
+          on:blur={() => blurRect(rect)}
           on:dblclick={(e) => updateText(rect, e)}
           on:contextmenu={(e) => deleteRect(rect, e)}
           on:mouseup={(e) => {endNewConnection(e, rect)}}
@@ -465,20 +527,26 @@
   
     <!-- template container -->
     <g class="no-events">
-      <Rect coord2D={{x: 1, y: 1}} rect2D={{width: 39, height: height - 2}} svgProps={{ fill: '#ffffffaa', stroke: '#333'}}></Rect>
+      <Rect coord2D={{x: 1, y: 1}} 
+        rect2D={{width: 39, height: height - 2}}
+        svgProps={{ fill: '#ffffffaa', stroke: '#333'}}>
+      </Rect>
     </g>
     {#each _templates as template, index}
       {#if selectedTemplate === index}
-        <Rect {...template} draggable={false} svgProps={{
+        <Rect {...template} draggable={false}
+          {zoom}
+          svgProps={{
           ...template.svgProps,
-          'stroke-width': template.svgProps['stroke-width'] + 2
+          'stroke-width': template.svgProps['stroke-width'] + 4,
+          stroke: '#F00'
         }}></Rect>
       {/if}
       <Rect rect2D={template.rect2D} coord2D={template.coord2D} 
         svgProps={template.svgProps}
-        {zoom}
         draggable={true}
-        on:mousedown={() => selectedTemplate = index}
+        {zoom}
+        on:mousedown={() => selectTemplate(index)}
         on:dragEnd={(e) => dragEndTemplate(e, template)}
       />
     {/each}
