@@ -273,11 +273,11 @@
     template.connectionPoints = createConnectionPointOffsets(template);
     //#region prevents fuzzy connections
     if (e.detail && e.detail.coord2D) {
-      coord.x = Math.floor(e.detail.coord2D.x);
-      coord.y = Math.floor(e.detail.coord2D.y);
+      coord.x = Math.floor(e.detail.coord2D.x) + offset.x;
+      coord.y = Math.floor(e.detail.coord2D.y) + offset.y;
     } else {
-      coord.x = e.offsetX;
-      coord.y = e.offsetY;
+      coord.x = (e.offsetX * zoom / 100) + offset.x;
+      coord.y = (e.offsetY * zoom / 100) + offset.y;
     }
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
@@ -456,6 +456,7 @@
     x: 0,
     y: 0,
   }
+
   function startPan() {
     panning = true;
   }
@@ -526,30 +527,32 @@
     {/each}
   
     <!-- template container -->
-    <g class="no-events">
-      <Rect coord2D={{x: 1, y: 1}} 
-        rect2D={{width: 39, height: height - 2}}
-        svgProps={{ fill: '#ffffffaa', stroke: '#333'}}>
-      </Rect>
-    </g>
-    {#each _templates as template, index}
-      {#if selectedTemplate === index}
-        <Rect {...template} draggable={false}
+    <g transform={`translate(${offset.x},${offset.y})`}>
+      <g class="no-events">
+        <Rect coord2D={{x: 1, y: 1}}
+          rect2D={{width: 39, height: height - 2}}
+          svgProps={{ fill: '#ffffffaa', stroke: '#333'}}>
+        </Rect>
+      </g>
+      {#each _templates as template, index}
+        {#if selectedTemplate === index}
+          <Rect {...template} draggable={false}
+            {zoom}
+            svgProps={{
+            ...template.svgProps,
+            'stroke-width': template.svgProps['stroke-width'] + 4,
+            stroke: '#F00'
+          }}></Rect>
+        {/if}
+        <Rect rect2D={template.rect2D} coord2D={template.coord2D}
+          svgProps={template.svgProps}
+          draggable={true}
           {zoom}
-          svgProps={{
-          ...template.svgProps,
-          'stroke-width': template.svgProps['stroke-width'] + 4,
-          stroke: '#F00'
-        }}></Rect>
-      {/if}
-      <Rect rect2D={template.rect2D} coord2D={template.coord2D} 
-        svgProps={template.svgProps}
-        draggable={true}
-        {zoom}
-        on:mousedown={() => selectTemplate(index)}
-        on:dragEnd={(e) => dragEndTemplate(e, template)}
-      />
-    {/each}
+          on:mousedown={() => selectTemplate(index)}
+          on:dragEnd={(e) => dragEndTemplate(e, template)}
+        />
+      {/each}
+    </g>
 
     <!-- Done -->
     <!-- Render Shapes from data binding -->
