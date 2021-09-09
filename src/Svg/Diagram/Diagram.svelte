@@ -262,6 +262,8 @@
       return r;
     })];
 
+    // TODO: Shrink templates to fit side panel
+
     _templates = [...templates];
   });
 
@@ -270,7 +272,6 @@
       x: 0,
       y: 0,
     }
-    template.connectionPoints = createConnectionPointOffsets(template);
     //#region prevents fuzzy connections
     if (e.detail && e.detail.coord2D) {
       coord.x = Math.floor(e.detail.coord2D.x) + offset.x;
@@ -283,8 +284,15 @@
     if (coord.y % 2 === 1) coord.y--;
     //#endregion
     let newRect = {
-      ...template
+      ...template,
+      rect2D: {
+        width: template.rect2D.width * 5,
+        height: template.rect2D.height * 5,
+        rx: template.rect2D.rx * 5,
+        ry: template.rect2D.ry * 5,
+      },
     }
+    newRect.connectionPoints = createConnectionPointOffsets(newRect);
     newRect.coord2D = coord;
     newRect.id = _nextId++;
     // resets template back to origin;
@@ -426,11 +434,23 @@
   //#endregion
 
   //#region copy / paste
+  let copiedTemplate;
   function onKey(e) {
-    if (e.ctrlKey && e.key === "v") {
-      navigator.clipboard.readText().then(data => {
-        pasteImage(data);
-      })
+    if (e.ctrlKey) {
+      if (e.key === "v") {
+        if (!!copiedTemplate) {
+
+          copiedTemplate = null;
+        } else {
+          navigator.clipboard.readText().then(data => {
+            pasteImage(data);
+          })
+        }
+      }
+      if (e.key === "c") {
+        // use selected shape as new template
+        copiedTemplate = $store.findIndex(r => r.id === $focused);
+      }
     }
   }
 
@@ -519,7 +539,7 @@
                   cx: rect.connectionPoints[point].x + rect.coord2D.x,
                   cy: rect.connectionPoints[point].y + rect.coord2D.y,
                   r: $focused === rect.id ? 5 * zoom / 50 : 
-                    $mouseover === rect.id ? 3 * zoom / 50 : 0}} />
+                    $mouseover === rect.id && $focused !== rect.id ? 3 * zoom / 50 : 0}} />
             {/each}
           {/if}
         </Rect>

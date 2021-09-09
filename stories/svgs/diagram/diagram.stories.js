@@ -16,8 +16,8 @@ function get50(startId, connection) {
       connections: [connection],
       id: i+startId,
       rect2D: {
-        width: 20,
-        height: 20,
+        width: 100,
+        height: 100,
       },
       coord2D: {
         x: 140 + startId,
@@ -41,8 +41,8 @@ export const Diagram = () => ({
         connections: [2, 3],
         id: 1,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 40,
@@ -58,8 +58,8 @@ export const Diagram = () => ({
         connections: [3],
         id: 2,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 120,
@@ -75,8 +75,8 @@ export const Diagram = () => ({
         connections: [],
         id: 3,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 40,
@@ -93,7 +93,7 @@ export const Diagram = () => ({
         id: 4,
         rect2D: {
           width: 50,
-          height: 20,
+          height: 100,
         },
         coord2D: {
           x: 140,
@@ -127,8 +127,8 @@ export const DiagramPerformanceSingle = () => ({
         connections: [],
         id: 1,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 40,
@@ -158,8 +158,8 @@ export const DiagramPerformanceMulti = () => ({
         connections: [],
         id: 1,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 50,
@@ -175,8 +175,8 @@ export const DiagramPerformanceMulti = () => ({
         connections: [],
         id: 2,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 50,
@@ -192,8 +192,8 @@ export const DiagramPerformanceMulti = () => ({
         connections: [],
         id: 3,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
         },
         coord2D: {
           x: 50,
@@ -226,8 +226,8 @@ export const ShortestConnection = () => ({
         connections: [],
         id: 1,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
           rx: 4,
           ry: 4,
         },
@@ -245,10 +245,10 @@ export const ShortestConnection = () => ({
         connections: [1],
         id: 2,
         rect2D: {
-          width: 20,
-          height: 20,
-          rx: 40,
-          ry: 40,
+          width: 100,
+          height: 100,
+          rx: 50,
+          ry: 50,
         },
         coord2D: {
           x: 120,
@@ -278,8 +278,8 @@ export const Images = () => ({
         connections: [],
         id: 1,
         rect2D: {
-          width: 20,
-          height: 20,
+          width: 100,
+          height: 100,
           rx: 4,
           ry: 4,
         },
