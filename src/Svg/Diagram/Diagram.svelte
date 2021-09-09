@@ -258,7 +258,10 @@
           ...$connections,
           ...r.connections.map(connection => initConnectors(r, connection))
         ];
+        // discard connections now that they are created and tracked via $connections;
+        r.connections = [];
       }
+
       return r;
     })];
 
@@ -363,7 +366,7 @@
         return !(c.begin.id === conn.begin.id &&
           c.end.id === conn.end.id)
       })
-    ]
+    ];
   }
   //#endregion
 
@@ -389,19 +392,28 @@
   }
   
   function endNewConnection(e, rect) {
-    $connections = [
-      ...$connections.filter(conn => {
-        return conn.end.id !== -999;
-      })
-    ];
-    if (!!newConnectionStartRect && !!rect && rect.id !== newConnectionStartRect.id) {
-      let connection = createConnector(newConnectionStartRect, rect);
+    if (!!newConnectionStartRect) {
       $connections = [
-        ...$connections,
-        connection
+        ...$connections.filter(conn => {
+          return conn.end.id !== -999;
+        })
       ];
+      // check for existing connections to the same rects
+      if (rect.connections.indexOf(newConnectionStartRect.id) !== -1) {
+        newConnectionStartRect = null;
+        return;
+      }
+  
+      // cannot connect to self
+      if (!!rect && rect.id !== newConnectionStartRect.id) {
+        let connection = createConnector(newConnectionStartRect, rect);
+        $connections = [
+          ...$connections,
+          connection
+        ];
+      }
+      newConnectionStartRect = null;
     }
-    newConnectionStartRect = null;
   }
 
   function checkNewConnection(e) {
