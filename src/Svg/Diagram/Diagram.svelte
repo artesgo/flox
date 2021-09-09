@@ -299,6 +299,16 @@
     $store = [...$store, newRect];
   }
 
+  $: getRadius = (rect) => {
+    if ($focused === rect.id) {
+      return 5;
+    }
+    if ($mouseover === rect.id) {
+      return 3;
+    }
+    return 0;
+  }
+
   //#region focus indicator
   function focusRect(rect) {
     if (!dragging) {
@@ -321,7 +331,6 @@
   function out() {
     if (!dragging) {
       $mouseover = null;
-      $focused = null;
     }
   }
   //#endregion
@@ -535,11 +544,11 @@
             {#each Object.keys(rect.connectionPoints) as point}
               <Circle
                 on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                svgProps={{fill: '#222222aa'}}
                 circle2D={{
                   cx: rect.connectionPoints[point].x + rect.coord2D.x,
                   cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                  r: $focused === rect.id ? 5 * zoom / 50 : 
-                    $mouseover === rect.id && $focused !== rect.id ? 3 * zoom / 50 : 0}} />
+                  r: getRadius(rect) * zoom / 50}} />
             {/each}
           {/if}
         </Rect>
@@ -588,30 +597,33 @@
     <!-- drag and drop new objects from template -->
     <!-- Svg Images -->
     <!-- zoom in and out -->
+    <!-- navigate canvas click and drag -->
+    <!-- paste image urls -->
 
     <!-- WIP -->
     <!-- double click to edit text entry -->
-    <!-- fix type definitions - reimported optionals -->
-    <!-- fix zoom should not alter templates -->
-    <!-- fix minimum size for shapes -->
+    <!-- Add Resize Handles -->
+
+    <!-- Fixes -->
+    <!-- type definitions - reimported optionals -->
+    <!-- zoom should not alter templates -->
+    <!-- minimum size for shapes -->
 
     <!-- keyboard events -->
     <!-- delete key, deletes shape / connection -->
     <!-- enter key, edit mode for item -->
+    <!-- F to focus a shape -->
 
     <!-- MVP -->
-    <!-- Edit Text Resizes Rect -->
+    <!-- Edit Text Resizes Font Size -->
     <!-- Edit Text Constrain Width: Multiline -->
     <!-- Edit Text Constrain Height: Single Line -->
     <!-- child elements: uml line item -->
-    <!-- paste image urls -->
-    <!-- Add Resize Handles -->
     <!-- Resize Snap to Grid -->
     <!-- Redo / Undo -->
     <!-- Reorder Elements -->
     
     <!-- Next Version -->
-    <!-- navigate canvas click and drag -->
     <!-- drag and adjust connection midpoints -->
     <!-- right click context menu -->
     <!-- right click context menu settings -->
