@@ -505,6 +505,12 @@
           on:contextmenu={(e) => deleteRect(rect, e)}
           on:mouseup={(e) => {endNewConnection(e, rect)}}
         >
+          {#if !!rect.image}
+            <Image {...rect} passThrough={true} />
+          {/if}
+          {#if !!rect.text}
+            <Text {...rect} passThrough={true} />
+          {/if}
           {#if !!rect.connectionPoints}
             {#each Object.keys(rect.connectionPoints) as point}
               <Circle
@@ -512,15 +518,9 @@
                 circle2D={{
                   cx: rect.connectionPoints[point].x + rect.coord2D.x,
                   cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                  r: $focused === rect.id ? 5 : 
-                    $mouseover === rect.id ? 3 : 0}} />
+                  r: $focused === rect.id ? 5 * zoom / 50 : 
+                    $mouseover === rect.id ? 3 * zoom / 50 : 0}} />
             {/each}
-          {/if}
-          {#if !!rect.image}
-            <Image {...rect} passThrough={true} />
-          {/if}
-          {#if !!rect.text}
-            <Text {...rect} passThrough={true} />
           {/if}
         </Rect>
       </g>
@@ -573,6 +573,7 @@
     <!-- double click to edit text entry -->
     <!-- fix type definitions - reimported optionals -->
     <!-- fix zoom should not alter templates -->
+    <!-- fix minimum size for shapes -->
 
     <!-- keyboard events -->
     <!-- delete key, deletes shape / connection -->
