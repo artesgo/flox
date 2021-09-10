@@ -304,10 +304,10 @@
 
   $: getRadius = (rect) => {
     if ($focused === rect.id) {
-      return 5;
+      return 10;
     }
     if ($mouseover === rect.id) {
-      return 3;
+      return 5;
     }
     return 0;
   }
@@ -398,8 +398,20 @@
           return conn.end.id !== -999;
         })
       ];
+
       // check for existing connections to the same rects
-      if (rect.connections.indexOf(newConnectionStartRect.id) !== -1) {
+      let found = $connections.find(conn => {
+        if (
+          (conn.begin.id === newConnectionStartRect.id && 
+          conn.end.id === rect.id) ||
+          (conn.begin.id === rect.id && 
+          conn.end.id === newConnectionStartRect.id)
+        ) {
+          return conn;
+        }
+      });
+
+      if (!!found) {
         newConnectionStartRect = null;
         return;
       }
@@ -438,11 +450,13 @@
   function onWheel(e) {
     // scale smallest to 50% largest to 200%
     if (e.deltaY < 0) {
-      if (zoom > 20) {
+      if (zoom > 40) {
         zoom -= 20;
       }
     } else {
-      zoom += 20;
+      if (zoom < 300) {
+        zoom += 20;
+      }
     }
   }
 
@@ -460,8 +474,9 @@
     if (e.ctrlKey) {
       if (e.key === "v") {
         if (!!copiedTemplate) {
-
           copiedTemplate = null;
+          // TODO: get mouse position
+          // addAt()
         } else {
           navigator.clipboard.readText().then(data => {
             pasteImage(data);
@@ -560,7 +575,7 @@
                 circle2D={{
                   cx: rect.connectionPoints[point].x + rect.coord2D.x,
                   cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                  r: getRadius(rect) * zoom / 50}} />
+                  r: getRadius(rect) * zoom / 125}} />
             {/each}
           {/if}
         </Rect>

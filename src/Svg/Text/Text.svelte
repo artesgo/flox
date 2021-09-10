@@ -24,7 +24,7 @@
   }));
   
   onMount(() => {
-    _coord.set($_coord => coord2D);
+    _coord.set({...coord2D});
   });
 </script>
 
