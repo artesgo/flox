@@ -6,6 +6,8 @@ import { Image } from './Svg/Image';
 import { Diagram } from './Svg/Diagram';
 import { Text } from './Svg/Text';
 
+import { InView } from './components/InView';
+
 export {
   Svg,
   Circle,
@@ -15,5 +17,6 @@ export {
   Connector,
   Image,
   Diagram,
-  Text
+  Text,
+  InView,
 }

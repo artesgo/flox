@@ -7,6 +7,7 @@
 - [`Diagram`](#diagram)
 - [`Ellipse`](#ellipse)
 - [`Image`](#image)
+- [`InView`](#inview)
 - [`Path`](#path)
 - [`Rect`](#rect)
 - [`Svg`](#svg)
@@ -138,6 +139,8 @@ connections: [],
 rect2D: {
 width: 20,
 height: 20,
+rx: 0,
+ry: 0,
 },
 coord2D: {
 x: 10,
@@ -187,6 +190,8 @@ connections: [],
 rect2D: {
 width: 20,
 height: 20,
+rx: 0,
+ry: 0,
 },
 coord2D: {
 x: 10,
@@ -241,16 +246,44 @@ None.
 
 ### Props
 
-| Prop name   | Kind             | Reactive | Type                                  | Default value      | Description |
-| :---------- | :--------------- | :------- | :------------------------------------ | ------------------ | ----------- |
-| coord2D     | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>    | --          |
-| rect2D      | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>    | --          |
-| image       | <code>let</code> | No       | <code>string</code>                   | <code>''</code>    | --          |
-| passThrough | <code>let</code> | No       | <code>boolean</code>                  | <code>false</code> | --          |
+| Prop name | Kind             | Reactive | Type                                  | Default value | Description |
+| :-------- | :--------------- | :------- | :------------------------------------ | ------------- | ----------- |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{       |
+
+     x: 0,
+     y: 0,
+
+}</code> | -- |
+| rect2D | <code>let</code> | No | <code>import("../Svg").Coord2D</code> | <code>{}</code> | -- |
+| image | <code>let</code> | No | <code>string</code> | <code>''</code> | -- |
+| id | <code>let</code> | No | <code>string&#124;number</code> | <code>''</code> | -- |
+| passThrough | <code>let</code> | No | <code>boolean</code> | <code>false</code> | -- |
+| trueSize | <code>let</code> | No | <code>boolean</code> | <code>true</code> | -- |
 
 ### Slots
 
 None.
+
+### Events
+
+| Event name | Type       | Detail |
+| :--------- | :--------- | :----- |
+| resize     | dispatched | --     |
+
+## `InView`
+
+### Props
+
+| Prop name | Kind             | Reactive | Type                 | Default value      | Description |
+| :-------- | :--------------- | :------- | :------------------- | ------------------ | ----------- |
+| visible   | <code>let</code> | Yes      | <code>boolean</code> | <code>false</code> | --          |
+| id        | <code>let</code> | No       | <code>string</code>  | <code>""</code>    | --          |
+
+### Slots
+
+| Slot name | Default | Props | Fallback |
+| :-------- | :------ | :---- | :------- |
+| --        | Yes     | --    | --       |
 
 ### Events
 

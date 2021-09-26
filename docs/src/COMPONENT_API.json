@@ -1,5 +1,5 @@
 {
-  "total": 9,
+  "total": 10,
   "components": [
     {
       "moduleName": "Circle",
@@ -135,8 +135,8 @@
         {
           "name": "templates",
           "kind": "let",
-          "type": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
-          "value": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
+          "type": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 0,\r       ry: 0,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
+          "value": "[{\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 40,\r       ry: 40\r     },\r     coord2D: {\r       x: 10,\r       y: 10,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 4,\r       ry: 4,\r     },\r     coord2D: {\r       x: 10,\r       y: 40,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }, {\r     connections: [],\r     rect2D: {\r       width: 20,\r       height: 20,\r       rx: 0,\r       ry: 0,\r     },\r     coord2D: {\r       x: 10,\r       y: 70,\r     },\r     svgProps: {\r       fill: '#FFCC00',\r       stroke: '#333',\r       'stroke-width': 2,\r     }\r   }]",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -223,7 +223,7 @@
           "name": "coord2D",
           "kind": "let",
           "type": "import(\"../Svg\").Coord2D",
-          "value": "{}",
+          "value": "{\r     x: 0,\r     y: 0,\r   }",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -250,6 +250,16 @@
           "reactive": false
         },
         {
+          "name": "id",
+          "kind": "let",
+          "type": "string|number",
+          "value": "''",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
           "name": "passThrough",
           "kind": "let",
           "type": "boolean",
@@ -258,9 +268,48 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "trueSize",
+          "kind": "let",
+          "type": "boolean",
+          "value": "true",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
         }
       ],
       "slots": [],
+      "events": [{ "type": "dispatched", "name": "resize" }],
+      "typedefs": []
+    },
+    {
+      "moduleName": "InView",
+      "filePath": "src\\components\\InView\\InView.svelte",
+      "props": [
+        {
+          "name": "id",
+          "kind": "let",
+          "type": "string",
+          "value": "\"\"",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "visible",
+          "kind": "let",
+          "type": "boolean",
+          "value": "false",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": true
+        }
+      ],
+      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [],
       "typedefs": []
     },

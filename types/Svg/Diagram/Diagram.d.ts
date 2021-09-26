@@ -36,7 +36,7 @@ export interface DiagramProps {
   svgPathProps?: NativeSvgProps;
 
   /**
-   * @default [{ connections: [], rect2D: { width: 20, height: 20, rx: 40, ry: 40 }, coord2D: { x: 10, y: 10, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }, { connections: [], rect2D: { width: 20, height: 20, rx: 4, ry: 4, }, coord2D: { x: 10, y: 40, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }, { connections: [], rect2D: { width: 20, height: 20, }, coord2D: { x: 10, y: 70, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }]
+   * @default [{ connections: [], rect2D: { width: 20, height: 20, rx: 40, ry: 40 }, coord2D: { x: 10, y: 10, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }, { connections: [], rect2D: { width: 20, height: 20, rx: 4, ry: 4, }, coord2D: { x: 10, y: 40, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }, { connections: [], rect2D: { width: 20, height: 20, rx: 0, ry: 0, }, coord2D: { x: 10, y: 70, }, svgProps: { fill: '#FFCC00', stroke: '#333', 'stroke-width': 2, } }]
    */
   templates?: [
     {
@@ -80,6 +80,8 @@ export interface DiagramProps {
       rect2D: {
         width: 20;
         height: 20;
+        rx: 0;
+        ry: 0;
       };
       coord2D: {
         x: 10;
