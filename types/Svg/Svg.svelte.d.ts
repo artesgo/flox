@@ -16,12 +16,24 @@ export interface NativeSvgProps {
 }
 
 export interface SvgProps {
+  /**
+   * @default undefined
+   */
   width?: number;
 
+  /**
+   * @default undefined
+   */
   height?: number;
 
+  /**
+   * @default undefined
+   */
   id?: string;
 
+  /**
+   * @default undefined
+   */
   zoom?: number;
 
   /**

@@ -8,8 +8,14 @@ export interface Circle2D {
 }
 
 export interface CircleProps {
+  /**
+   * @default undefined
+   */
   circle2D?: Circle2D;
 
+  /**
+   * @default undefined
+   */
   svgProps?: import("../Svg").NativeSvgProps;
 }
 

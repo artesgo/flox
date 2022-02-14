@@ -24,8 +24,14 @@ export interface RectProps {
    */
   svgProps?: import("../Svg").NativeSvgProps;
 
+  /**
+   * @default undefined
+   */
   draggable?: boolean;
 
+  /**
+   * @default undefined
+   */
   zoom?: number;
 }
 

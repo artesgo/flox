@@ -3,7 +3,7 @@
   "components": [
     {
       "moduleName": "Circle",
-      "filePath": "src\\Svg\\Arc\\Circle.svelte",
+      "filePath": "src/Svg/Arc/Circle.svelte",
       "props": [
         {
           "name": "circle2D",
@@ -24,6 +24,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [
         { "type": "forwarded", "name": "mousedown", "element": "circle" },
@@ -39,7 +40,7 @@
     },
     {
       "moduleName": "Connector",
-      "filePath": "src\\Svg\\Path\\Connector.svelte",
+      "filePath": "src/Svg/Path/Connector.svelte",
       "props": [
         {
           "name": "begin",
@@ -82,6 +83,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [
         { "type": "forwarded", "name": "contextmenu", "element": "circle" },
@@ -91,7 +93,7 @@
     },
     {
       "moduleName": "Diagram",
-      "filePath": "src\\Svg\\Diagram\\Diagram.svelte",
+      "filePath": "src/Svg/Diagram/Diagram.svelte",
       "props": [
         {
           "name": "rects",
@@ -153,6 +155,7 @@
           "reactive": true
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [
         { "type": "forwarded", "name": "contextmenu", "element": "span" }
@@ -182,7 +185,7 @@
     },
     {
       "moduleName": "Ellipse",
-      "filePath": "src\\Svg\\Arc\\Ellipse.svelte",
+      "filePath": "src/Svg/Arc/Ellipse.svelte",
       "props": [
         {
           "name": "ellipse2D",
@@ -205,6 +208,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [],
       "typedefs": [
@@ -217,7 +221,7 @@
     },
     {
       "moduleName": "Grid",
-      "filePath": "src\\components\\Grid\\Grid.svelte",
+      "filePath": "src/components/Grid/Grid.svelte",
       "props": [
         {
           "name": "rowTemplate",
@@ -250,13 +254,14 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [],
       "typedefs": []
     },
     {
       "moduleName": "GridItem",
-      "filePath": "src\\components\\Grid\\GridItem.svelte",
+      "filePath": "src/components/Grid/GridItem.svelte",
       "props": [
         {
           "name": "col",
@@ -299,13 +304,14 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [],
       "typedefs": []
     },
     {
       "moduleName": "Image",
-      "filePath": "src\\Svg\\Image\\Image.svelte",
+      "filePath": "src/Svg/Image/Image.svelte",
       "props": [
         {
           "name": "coord2D",
@@ -368,13 +374,14 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [{ "type": "dispatched", "name": "resize" }],
       "typedefs": []
     },
     {
       "moduleName": "InView",
-      "filePath": "src\\components\\InView\\InView.svelte",
+      "filePath": "src/components/InView/InView.svelte",
       "props": [
         {
           "name": "id",
@@ -397,13 +404,14 @@
           "reactive": true
         }
       ],
+      "moduleExports": [],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [],
       "typedefs": []
     },
     {
       "moduleName": "Path",
-      "filePath": "src\\Svg\\Path\\Path.svelte",
+      "filePath": "src/Svg/Path/Path.svelte",
       "props": [
         {
           "name": "begin",
@@ -436,13 +444,14 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [],
       "typedefs": []
     },
     {
       "moduleName": "Rect",
-      "filePath": "src\\Svg\\Rect\\Rect.svelte",
+      "filePath": "src/Svg/Rect/Rect.svelte",
       "props": [
         {
           "name": "rect2D",
@@ -493,6 +502,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [
         { "type": "forwarded", "name": "mouseover", "element": "g" },
@@ -517,7 +527,7 @@
     },
     {
       "moduleName": "Svg",
-      "filePath": "src\\Svg\\Svg.svelte",
+      "filePath": "src/Svg/Svg.svelte",
       "props": [
         {
           "name": "width",
@@ -566,6 +576,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
       "events": [],
       "typedefs": [
@@ -588,7 +599,7 @@
     },
     {
       "moduleName": "Text",
-      "filePath": "src\\Svg\\Text\\Text.svelte",
+      "filePath": "src/Svg/Text/Text.svelte",
       "props": [
         {
           "name": "coord2D",
@@ -641,6 +652,7 @@
           "reactive": false
         }
       ],
+      "moduleExports": [],
       "slots": [],
       "events": [],
       "typedefs": []

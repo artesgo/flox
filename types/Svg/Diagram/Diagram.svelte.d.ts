@@ -33,6 +33,9 @@ export interface DiagramProps {
    */
   height?: number;
 
+  /**
+   * @default undefined
+   */
   svgPathProps?: NativeSvgProps;
 
   /**
