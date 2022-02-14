@@ -22,13 +22,11 @@
     x: coord2D.x + padding.x,
     y: coord2D.y + (rect2D.height / 2) + padding.y
   }));
-  
-  onMount(() => {
-    _coord.set({...coord2D});
-  });
 </script>
 
-<text class:no-events={passThrough} x={$_coord.x} y={$_coord.y}>{text}</text>
+<text class:no-events={passThrough} x={$_coord.x} y={$_coord.y}>
+  {text}
+</text>
 
 <style>
   .no-events {

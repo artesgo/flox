@@ -15,8 +15,10 @@
     stroke: '#333',
     'stroke-width': 3,
   }
+
+  export let draggable;
 </script>
 
 <Svg height={300} width={300}>
-  <Circle {circle2D} {svgProps} />
+  <Circle {circle2D} {svgProps} {draggable} />
 </Svg>

@@ -7,6 +7,7 @@
   let _fade2;
   let _fly2;
   let _slide2;
+  let inviews = [1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0];
 </script>
 
 <div>
@@ -30,17 +31,18 @@
     </section>
   {/if}
 </InView>
+
 <div>
   <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </div>
 
-<InView id="slider" bind:visible={_slide}>
-  {#if _slide}
-    <section transition:slide={{ duration: 500 }}>
-      Slide in
-    </section>
-  {/if}
-</InView>
+  <InView id="slider" bind:visible={_slide}>
+    {#if _slide}
+      <section transition:slide={{ duration: 500 }}>
+        Slide in
+      </section>
+    {/if}
+  </InView>
 <div>
   <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 </div>

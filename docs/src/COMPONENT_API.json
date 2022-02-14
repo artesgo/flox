@@ -1,5 +1,5 @@
 {
-  "total": 10,
+  "total": 12,
   "components": [
     {
       "moduleName": "Circle",
@@ -214,6 +214,94 @@
           "ts": "interface Ellipse2D { cx: number; cy: number; rx: number; ry: number; }"
         }
       ]
+    },
+    {
+      "moduleName": "Grid",
+      "filePath": "src\\components\\Grid\\Grid.svelte",
+      "props": [
+        {
+          "name": "rowTemplate",
+          "kind": "let",
+          "type": "string",
+          "value": "'1fr'",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "colTemplate",
+          "kind": "let",
+          "type": "string",
+          "value": "'1fr'",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "height",
+          "kind": "let",
+          "type": "string",
+          "value": "'auto'",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
+      "events": [],
+      "typedefs": []
+    },
+    {
+      "moduleName": "GridItem",
+      "filePath": "src\\components\\Grid\\GridItem.svelte",
+      "props": [
+        {
+          "name": "col",
+          "kind": "let",
+          "type": "number",
+          "value": "1",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "row",
+          "kind": "let",
+          "type": "number",
+          "value": "1",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "colSpan",
+          "kind": "let",
+          "type": "number",
+          "value": "1",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
+          "name": "rowSpan",
+          "kind": "let",
+          "type": "number",
+          "value": "1",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        }
+      ],
+      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
+      "events": [],
+      "typedefs": []
     },
     {
       "moduleName": "Image",

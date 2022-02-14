@@ -7,6 +7,7 @@ import { Diagram } from './Svg/Diagram';
 import { Text } from './Svg/Text';
 
 import { InView } from './components/InView';
+import { Grid, GridItem } from './components/Grid';
 
 export {
   Svg,
@@ -19,4 +20,6 @@ export {
   Diagram,
   Text,
   InView,
+  Grid,
+  GridItem,
 }

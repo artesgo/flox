@@ -5,14 +5,9 @@
    * @typedef {{ cx: number; cy: number; r: number; }} Circle2D
    */
 
-  /**
-   * @type {Circle2D}
-   */
+  /** @type {Circle2D} */
   export let circle2D;
-
-  /**
-   * @type {import("../Svg").NativeSvgProps}
-   */
+  /** @type {import("../Svg").NativeSvgProps} */
   export let svgProps;
   
   let _circle = spring({ cx: 0, cy: 0, r: 0 });

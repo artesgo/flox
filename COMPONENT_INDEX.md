@@ -6,6 +6,8 @@
 - [`Connector`](#connector)
 - [`Diagram`](#diagram)
 - [`Ellipse`](#ellipse)
+- [`Grid`](#grid)
+- [`GridItem`](#griditem)
 - [`Image`](#image)
 - [`InView`](#inview)
 - [`Path`](#path)
@@ -237,6 +239,47 @@ export interface Ellipse2D {
 ### Slots
 
 None.
+
+### Events
+
+None.
+
+## `Grid`
+
+### Props
+
+| Prop name   | Kind             | Reactive | Type                | Default value       | Description |
+| :---------- | :--------------- | :------- | :------------------ | ------------------- | ----------- |
+| rowTemplate | <code>let</code> | No       | <code>string</code> | <code>'1fr'</code>  | --          |
+| colTemplate | <code>let</code> | No       | <code>string</code> | <code>'1fr'</code>  | --          |
+| height      | <code>let</code> | No       | <code>string</code> | <code>'auto'</code> | --          |
+
+### Slots
+
+| Slot name | Default | Props | Fallback |
+| :-------- | :------ | :---- | :------- |
+| --        | Yes     | --    | --       |
+
+### Events
+
+None.
+
+## `GridItem`
+
+### Props
+
+| Prop name | Kind             | Reactive | Type                | Default value  | Description |
+| :-------- | :--------------- | :------- | :------------------ | -------------- | ----------- |
+| col       | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
+| row       | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
+| colSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
+| rowSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
+
+### Slots
+
+| Slot name | Default | Props | Fallback |
+| :-------- | :------ | :---- | :------- |
+| --        | Yes     | --    | --       |
 
 ### Events
 

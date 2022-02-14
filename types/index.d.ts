@@ -6,5 +6,7 @@ export { default as Image } from "./Svg/Image/Image";
 export { default as Diagram } from "./Svg/Diagram/Diagram";
 export { default as Text } from "./Svg/Text/Text";
 export { default as InView } from "./components/InView/InView";
+export { default as Grid } from "./components/Grid/Grid";
 export { default as Ellipse } from "./Svg/Arc/Ellipse";
 export { default as Connector } from "./Svg/Path/Connector";
+export { default as GridItem } from "./components/Grid/GridItem";

@@ -18,7 +18,25 @@ export const Circle = () => ({
       y: 40,
       fill: '#FC0',
       stroke: '#333',
-      'stroke-width': 3,
+      'stroke-width': 2,
+    }
+  },
+});
+
+export const DraggableCircle = () => ({
+  Component: CircleStory,
+  props: {
+    draggable: true,
+    circle2D: {
+      cx: 22,
+      cy: 22,
+      r: 20,
+    }, svgProps: {
+      x: 30,
+      y: 40,
+      fill: '#FC0',
+      stroke: '#333',
+      'stroke-width': 2,
     }
   },
 });

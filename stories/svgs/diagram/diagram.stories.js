@@ -304,6 +304,7 @@ export const Images = () => ({
           x: 120,
           y: 100,
         },
+        trueSize: true,
         image: "/sun-and-moon.jpg",
         svgProps: {
           fill: '#FC0',

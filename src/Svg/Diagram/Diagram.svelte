@@ -77,6 +77,8 @@
     rect2D: {
       width: 20,
       height: 20,
+      rx: 0,
+      ry: 0,
     },
     coord2D: {
       x: 10,
@@ -478,9 +480,12 @@
           // TODO: get mouse position
           // addAt()
         } else {
-          navigator.clipboard.readText().then(data => {
-            pasteImage(data);
-          })
+          navigator.clipboard.readText()
+            .then(data => {
+              // check the copied text
+              pasteImage(data);
+              pasteText(data);
+            })
         }
       }
       if (e.key === "c") {
@@ -500,9 +505,34 @@
           return r;
         })
       ]
-    } else {
-      // paste at center of current coord
     }
+  }
+
+  function pasteText(text) {
+    console.log('paste' , text);
+    if (!!$focused) {
+      $store = [
+        ...$store.map(r => {
+          if (r.id === $focused) {
+            console.log('why no pasta');
+            r.text = text;
+          }
+          return r;
+        })
+      ]
+    }
+  }
+
+  function resize(size, rect) {
+    $store = [
+      ...$store.map(r => {
+        if (r.id === rect.id) {
+          r.rect2D = size.detail;
+          r.connectionPoints = createConnectionPointOffsets(r);
+        }
+        return r;
+      })
+    ]
   }
   //#endregion
 
@@ -562,7 +592,7 @@
           on:mouseup={(e) => {endNewConnection(e, rect)}}
         >
           {#if !!rect.image}
-            <Image {...rect} passThrough={true} />
+            <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
           {/if}
           {#if !!rect.text}
             <Text {...rect} passThrough={true} />

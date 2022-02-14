@@ -1,6 +1,12 @@
+<script context="module">
+  let _prefix = 'flox-img--'; 
+</script>
+
 <script>
-  import { onMount } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { spring } from 'svelte/motion';
+  
+  const resize = createEventDispatcher();
   
   /** @type {import("../Svg").Coord2D} */
   export let coord2D = {
@@ -11,11 +17,16 @@
   export let rect2D = {};
   /** @type {string} */
   export let image = '';
+  /** @type {string|number} */
+  export let id = '';
   /** @type {boolean} */
   export let passThrough = false;
+  /** @type {boolean} */
+  export let trueSize = true;
 
   let _coord = spring({ x: 0, y: 0 });
   let _rect = spring({ width: 0, height: 0 });
+  let hasImage = false;
 
   $: _coord.update($_coord => coord2D);
   
@@ -26,16 +37,31 @@
 
   onMount(() => {
     _coord.set({...coord2D});
+    if (trueSize) {
+      const img = new Image();
+      img.onload = (e) => {
+        hasImage = true;
+        let { width, height } = e.path[0];
+        resize('resize', {
+          width,
+          height
+        });
+      }
+      img.src = image;
+    }
   });
 </script>
 
-<image class:no-events={passThrough} href={image} 
-  x={isNaN($_coord.x) ? 0 : $_coord.x}
-  y={isNaN($_coord.y) ? 0 : $_coord.y}
-  width={$_rect.width < 0 ? 0 : $_rect.width}
-  height={$_rect.height < 0 ? 0: $_rect.height}
-  on:click={console.log($_coord)}
-></image>
+{#if hasImage || !trueSize}
+  <image 
+    id={`${_prefix}${id}`}
+    class:no-events={passThrough} href={image} 
+    x={$_coord.x}
+    y={$_coord.y}
+    width={$_rect.width < 0 ? 0 : $_rect.width}
+    height={$_rect.height < 0 ? 0: $_rect.height}
+  ></image>
+{/if}
 
 <style>
   .no-events {
