@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import { spring } from 'svelte/motion';
   
   /** @type {import("../Svg").Coord2D} */
@@ -10,11 +9,9 @@
   export let text = '';
   /** @type {import("../Svg").Coord2D} */
   export let padding = {
-    x: 0,
-    y: 0,
+    x: 5,
+    y: 5,
   };
-  /** @type {boolean} */
-  export let passThrough = false;
 
   let _coord = spring({ x: 0, y: 0 });
 
@@ -22,14 +19,21 @@
     x: coord2D.x + padding.x,
     y: coord2D.y + (rect2D.height / 2) + padding.y
   }));
+
+  // TODO: Resize text to container size
 </script>
 
-<text class:no-events={passThrough} x={$_coord.x} y={$_coord.y}>
-  {text}
-</text>
+<foreignObject 
+  x={$_coord.x} y={$_coord.y - (rect2D.height / 2)} 
+  width={rect2D.width - (padding.x * 2)} height={rect2D.height - (padding.y * 2)}>
+  <p>{text}</p>
+</foreignObject>
 
 <style>
-  .no-events {
+  foreignObject,
+  p {
+    padding: 0;
+    margin: 0;
     pointer-events: none; /* prevent capturing clicks */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

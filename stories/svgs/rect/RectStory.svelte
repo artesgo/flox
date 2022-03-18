@@ -1,5 +1,5 @@
 <script>
-	import Rect from '../../../src/Svg/Rect/Rect.svelte';
+	import DraggableRect from '../../../src/Svg/Rect/DraggableRect.svelte';
   import Svg from '../../../src/Svg/Svg.svelte';
 
   export let rect2D = {
@@ -22,5 +22,5 @@
 </script>
 
 <Svg height={300} width={300}>
-  <Rect {rect2D} {svgProps} {coord2D} {draggable} />
+  <DraggableRect {rect2D} {svgProps} {coord2D} {draggable} />
 </Svg>

@@ -1,10 +1,11 @@
 <script>
+	import Rect from './../Rect/Rect.svelte';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { spring } from 'svelte/motion';
   import Svg from '../Svg.svelte';
   import Connector from '../Path/Connector.svelte';
-  import Rect from '../Rect/Rect.svelte';
+  import DraggableRect from '../Rect/DraggableRect.svelte';
   import Text from '../Text/Text.svelte';
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
@@ -103,6 +104,9 @@
   let dragging = false;
   let focused = writable(null);
   let mouseover = writable(null);
+  // showConnection / resizing
+  let showConnections = true;
+  let resizing = false;
   //#endregion
 
   //#region initialization
@@ -341,11 +345,11 @@
   //#endregion
 
   //#region text edit
+  // TODO: this needs to be handled via store
   function updateText(rect, event) {
     event.stopPropagation();
     rect.text = 'a';
   }
-
   //#endregion
 
   //#region shape deletion
@@ -446,6 +450,17 @@
   }
   //#endregion
 
+  //#region resize shapes
+  function toggleResize() {
+    resizing = !resizing;
+    showConnections = !showConnections;
+  }
+
+  function resizeRect() {
+    
+  }
+  //#endregion
+
   //#region zooming
   /** @type {number} */
   export let zoom = 100;
@@ -483,8 +498,11 @@
           navigator.clipboard.readText()
             .then(data => {
               // check the copied text
-              pasteImage(data);
-              pasteText(data);
+              if (data.match(/\.(jpeg|jpg|gif|png)$/)) {
+                pasteImage(data);
+              } else {
+                pasteText(data);
+              }
             })
         }
       }
@@ -509,12 +527,10 @@
   }
 
   function pasteText(text) {
-    console.log('paste' , text);
     if (!!$focused) {
       $store = [
         ...$store.map(r => {
           if (r.id === $focused) {
-            console.log('why no pasta');
             r.text = text;
           }
           return r;
@@ -523,6 +539,7 @@
     }
   }
 
+  // img resize listener
   function resize(size, rect) {
     $store = [
       ...$store.map(r => {
@@ -580,7 +597,7 @@
     {/each}
     {#each $store as rect (rect.id)}
       <g>
-        <Rect {...rect} draggable={true}
+        <DraggableRect {...rect} draggable={true}
           on:drag={(e) => dragUpdate(e, rect)}
           on:dragEnd={dragEnd}
           on:mouseover={() => over(rect)}
@@ -589,7 +606,7 @@
           on:blur={() => blurRect(rect)}
           on:dblclick={(e) => updateText(rect, e)}
           on:contextmenu={(e) => deleteRect(rect, e)}
-          on:mouseup={(e) => {endNewConnection(e, rect)}}
+          on:mouseup={(e) => endNewConnection(e, rect)}
         >
           {#if !!rect.image}
             <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
@@ -598,39 +615,57 @@
             <Text {...rect} passThrough={true} />
           {/if}
           {#if !!rect.connectionPoints}
-            {#each Object.keys(rect.connectionPoints) as point}
-              <Circle
-                on:mousedown={(e) => {createNewConnection(e, rect, point)}}
-                svgProps={{fill: '#222222aa'}}
-                circle2D={{
-                  cx: rect.connectionPoints[point].x + rect.coord2D.x,
-                  cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                  r: getRadius(rect) * zoom / 125}} />
-            {/each}
+            {#if !showConnections}
+              {#each Object.keys(rect.connectionPoints) as point}
+                <Circle
+                  on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                  svgProps={{fill: '#222222aa'}}
+                  circle2D={{
+                    cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                    cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                    r: getRadius(rect) * zoom / 125}} />
+              {/each}
+            {/if}
+            {#if !resizing}
+              {#each Object.keys(rect.connectionPoints) as point}
+                {@const radius = getRadius(rect) * zoom / 125}
+                <Rect
+                  svgProps={{fill: '#222222aa'}}
+                  on:mousedown={(e) => {resizeRect(e, rect, point)}}
+                  rect2D={{
+                    coord2D: {
+                      x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
+                      y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
+                    },
+                    height: radius,
+                    width: radius
+                  }} />
+              {/each}
+            {/if}
           {/if}
-        </Rect>
+        </DraggableRect>
       </g>
     {/each}
   
     <!-- template container -->
     <g transform={`translate(${offset.x},${offset.y})`}>
       <g class="no-events">
-        <Rect coord2D={{x: 1, y: 1}}
+        <DraggableRect coord2D={{x: 1, y: 1}}
           rect2D={{width: 39, height: height - 2}}
           svgProps={{ fill: '#ffffffaa', stroke: '#333'}}>
-        </Rect>
+        </DraggableRect>
       </g>
       {#each _templates as template, index}
         {#if selectedTemplate === index}
-          <Rect {...template} draggable={false}
+          <DraggableRect {...template} draggable={false}
             {zoom}
             svgProps={{
             ...template.svgProps,
             'stroke-width': template.svgProps['stroke-width'] + 4,
             stroke: '#F00'
-          }}></Rect>
+          }}></DraggableRect>
         {/if}
-        <Rect rect2D={template.rect2D} coord2D={template.coord2D}
+        <DraggableRect rect2D={template.rect2D} coord2D={template.coord2D}
           svgProps={template.svgProps}
           draggable={true}
           {zoom}
@@ -687,11 +722,16 @@
     <!-- settings menu -->
     <!-- settings menu radius, text entry -->
     <!-- snap to grid -->
+    <!-- layers and object selector -->
+    <!-- object search -->
 
     <!-- Nice to have -->
     <!-- Custom Svg Objects -->
   </Svg>
 </span>
+<!-- TODO: shape props -->
+
+<!-- TODO: shape layer list -->
 
 <style>
   .no-events {

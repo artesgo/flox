@@ -24,7 +24,7 @@ function get50(startId, connection) {
         y: i * 20,
       },
       svgProps: {
-        fill: '#FC0',
+        fill: '#ffcc0033',
         stroke: '#333',
         'stroke-width': 2,
       }
@@ -49,7 +49,7 @@ export const Diagram = () => ({
           y: 20,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -66,7 +66,7 @@ export const Diagram = () => ({
           y: 120,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -83,7 +83,7 @@ export const Diagram = () => ({
           y: 80,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -105,7 +105,7 @@ export const Diagram = () => ({
           y: 4,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -135,7 +135,7 @@ export const DiagramPerformanceSingle = () => ({
           y: 20,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -166,7 +166,7 @@ export const DiagramPerformanceMulti = () => ({
           y: 20,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -288,7 +288,7 @@ export const Images = () => ({
           y: 20,
         },
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -307,7 +307,7 @@ export const Images = () => ({
         trueSize: true,
         image: "/sun-and-moon.jpg",
         svgProps: {
-          fill: '#FC0',
+          fill: '#ffcc0033',
           stroke: '#333',
           'stroke-width': 2,
         }
@@ -324,6 +324,55 @@ export const Images = () => ({
           y: 100,
         },
         image: "https://i.redd.it/yju708hygml71.jpg",
+        svgProps: {
+          fill: '#ffcc0033',
+          stroke: '#333',
+          'stroke-width': 2,
+        }
+      },
+      {
+        connections: [1],
+        id: 4,
+        rect2D: {
+          width: 749,
+          height: 999,
+        },
+        coord2D: {
+          x: 120,
+          y: 100,
+        },
+        image: "https://upload.wikimedia.org/wikipedia/commons/b/bf/A_Black_Star.png",
+        svgProps: {
+          fill: '#FfCc0000',
+        }
+      },
+    ],
+    svgPathProps: {
+      fill: 'none',
+      stroke: '#333',
+      'stroke-width': 2,
+      'stroke-linecap': 'square'
+    },
+  },
+});
+
+export const Resizing = () => ({
+  Component: DiagramStory,
+  props: {
+    rects: [
+      {
+        connections: [],
+        id: 1,
+        rect2D: {
+          width: 100,
+          height: 100,
+          rx: 4,
+          ry: 4,
+        },
+        coord2D: {
+          x: 60,
+          y: 60,
+        },
         svgProps: {
           fill: '#FC0',
           stroke: '#333',
