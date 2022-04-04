@@ -352,48 +352,23 @@ None.
 
 ## `Rect`
 
-### Types
-
-```ts
-export interface Rect2D {
-  width: number;
-  height: number;
-  rx?: number;
-  ry?: number;
-}
-```
-
 ### Props
 
 | Prop name | Kind             | Reactive | Type                                         | Default value          | Description |
 | :-------- | :--------------- | :------- | :------------------------------------------- | ---------------------- | ----------- |
-| rect2D    | <code>let</code> | No       | <code>Rect2D</code>                          | <code>{}</code>        | --          |
-| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>        | <code>{}</code>        | --          |
-| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>{}</code>        | --          |
-| draggable | <code>let</code> | No       | <code>boolean</code>                         | <code>undefined</code> | --          |
-| zoom      | <code>let</code> | No       | <code>number</code>                          | <code>undefined</code> | --          |
+| rect2D    | <code>let</code> | No       | <code>import("./").Rect2D</code>             | <code>{}</code>        | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>undefined</code> | --          |
 
 ### Slots
 
-| Slot name | Default | Props | Fallback |
-| :-------- | :------ | :---- | :------- |
-| --        | Yes     | --    | --       |
+None.
 
 ### Events
 
-| Event name  | Type       | Detail |
-| :---------- | :--------- | :----- |
-| mouseover   | forwarded  | --     |
-| focus       | forwarded  | --     |
-| mouseleave  | forwarded  | --     |
-| blur        | forwarded  | --     |
-| mousedown   | forwarded  | --     |
-| mouseup     | forwarded  | --     |
-| click       | forwarded  | --     |
-| dblclick    | forwarded  | --     |
-| contextmenu | forwarded  | --     |
-| drag        | dispatched | --     |
-| dragEnd     | dispatched | --     |
+| Event name | Type      | Detail |
+| :--------- | :-------- | :----- |
+| mousedown  | forwarded | --     |
+| mouseup    | forwarded | --     |
 
 ## `Svg`
 
@@ -444,18 +419,18 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                  | Default value   | Description |
-| :-------- | :--------------- | :------- | :------------------------------------ | --------------- | ----------- |
-| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code> | --          |
-| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code> | --          |
-| text      | <code>let</code> | No       | <code>string</code>                   | <code>''</code> | --          |
-| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{         |
+| Prop name | Kind             | Reactive | Type                                  | Default value          | Description |
+| :-------- | :--------------- | :------- | :------------------------------------ | ---------------------- | ----------- |
+| editing   | <code>let</code> | Yes      | <code>boolean</code>                  | <code>undefined</code> | --          |
+| text      | <code>let</code> | Yes      | <code>string</code>                   | <code>''</code>        | --          |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>        | --          |
+| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>        | --          |
+| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{                |
 
-     x: 0,
-     y: 0,
+     x: 5,
+     y: 5,
 
 }</code> | -- |
-| passThrough | <code>let</code> | No | <code>boolean</code> | <code>false</code> | -- |
 
 ### Slots
 
@@ -463,4 +438,6 @@ None.
 
 ### Events
 
-None.
+| Event name | Type       | Detail |
+| :--------- | :--------- | :----- |
+| updateText | dispatched | --     |

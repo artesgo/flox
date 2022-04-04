@@ -456,17 +456,7 @@
         {
           "name": "rect2D",
           "kind": "let",
-          "type": "Rect2D",
-          "value": "{}",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
-          "name": "coord2D",
-          "kind": "let",
-          "type": "import(\"../Svg\").Coord2D",
+          "type": "import(\"./\").Rect2D",
           "value": "{}",
           "isFunction": false,
           "isFunctionDeclaration": false,
@@ -477,25 +467,6 @@
           "name": "svgProps",
           "kind": "let",
           "type": "import(\"../Svg\").NativeSvgProps",
-          "value": "{}",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
-          "name": "draggable",
-          "kind": "let",
-          "type": "boolean",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
-          "name": "zoom",
-          "kind": "let",
-          "type": "number",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -503,27 +474,12 @@
         }
       ],
       "moduleExports": [],
-      "slots": [{ "name": "__default__", "default": true, "slot_props": "{}" }],
+      "slots": [],
       "events": [
-        { "type": "forwarded", "name": "mouseover", "element": "g" },
-        { "type": "forwarded", "name": "focus", "element": "g" },
-        { "type": "forwarded", "name": "mouseleave", "element": "g" },
-        { "type": "forwarded", "name": "blur", "element": "g" },
-        { "type": "forwarded", "name": "mousedown", "element": "g" },
-        { "type": "forwarded", "name": "mouseup", "element": "g" },
-        { "type": "forwarded", "name": "click", "element": "g" },
-        { "type": "forwarded", "name": "dblclick", "element": "g" },
-        { "type": "forwarded", "name": "contextmenu", "element": "g" },
-        { "type": "dispatched", "name": "drag" },
-        { "type": "dispatched", "name": "dragEnd" }
+        { "type": "forwarded", "name": "mousedown", "element": "rect" },
+        { "type": "forwarded", "name": "mouseup", "element": "rect" }
       ],
-      "typedefs": [
-        {
-          "type": "{width: number; height: number; rx?: number; ry?: number }",
-          "name": "Rect2D",
-          "ts": "interface Rect2D {width: number; height: number; rx?: number; ry?: number }"
-        }
-      ]
+      "typedefs": []
     },
     {
       "moduleName": "Svg",
@@ -629,32 +585,31 @@
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
-          "reactive": false
+          "reactive": true
         },
         {
           "name": "padding",
           "kind": "let",
           "type": "import(\"../Svg\").Coord2D",
-          "value": "{\r     x: 0,\r     y: 0,\r   }",
+          "value": "{\r     x: 5,\r     y: 5,\r   }",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
         },
         {
-          "name": "passThrough",
+          "name": "editing",
           "kind": "let",
           "type": "boolean",
-          "value": "false",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
-          "reactive": false
+          "reactive": true
         }
       ],
       "moduleExports": [],
       "slots": [],
-      "events": [],
+      "events": [{ "type": "dispatched", "name": "updateText" }],
       "typedefs": []
     }
   ]

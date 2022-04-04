@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { spring } from 'svelte/motion';
 	import { pannable } from '../pannable';
+  import Text from "../Text/Text.svelte";
 
   let update = createEventDispatcher();
   /**
@@ -17,8 +18,11 @@
   export let draggable;
   /** @type {number} */
   export let zoom;
-  let dragging;
+  /** @type {string}*/
+  export let text;
 
+  let dragging;
+  let editing;
   let _coord = spring(coord2D);
 
   $: _coord.update($_coord => ({
@@ -68,6 +72,10 @@
   on:mouseup
   on:click
   on:dblclick
+  on:dblclick={() => editing = true}
+  on:keydown
+  on:keyup
+  on:keypress
   on:contextmenu>
   <g 
     use:pannable
@@ -77,6 +85,7 @@
     <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps} />
   </g>
   <slot />
+  <Text {rect2D} {coord2D} bind:editing={editing} text={text} on:updateText/>
 </g>
 
 <style>

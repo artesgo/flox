@@ -97,7 +97,8 @@
 
   //#region private props
   let _templates = [];
-  let store = writable([
+  // creates a component instance store for each diagram
+  const store = writable([
     ...rects
   ]);
   let connections = writable([]);
@@ -190,7 +191,7 @@
   //#region dragging
   let creatingFromTemplate = false;
 
-  function dragUpdate(e, rect) {
+  function dragUpdate(rect, e) {
     dragging = true;
 
     $store = [
@@ -345,10 +346,21 @@
   //#endregion
 
   //#region text edit
-  // TODO: this needs to be handled via store
-  function updateText(rect, event) {
+  function updateText(rect, {detail}) {
+    $store = [
+      ...$store.map(r => {
+        if (r.id === rect.id) {
+          r.text = detail;
+        }
+        return r;
+      })
+    ];
+  }
+
+  function forwardEvent(rect, event) {
     event.stopPropagation();
-    rect.text = 'a';
+    event.preventDefault();
+    rect.editing = true;
   }
   //#endregion
 
@@ -397,7 +409,7 @@
     ]
   }
   
-  function endNewConnection(e, rect) {
+  function endNewConnection(rect) {
     if (!!newConnectionStartRect) {
       $connections = [
         ...$connections.filter(conn => {
@@ -471,7 +483,7 @@
         zoom -= 20;
       }
     } else {
-      if (zoom < 300) {
+      if (zoom < 600) {
         zoom += 20;
       }
     }
@@ -579,8 +591,9 @@
   //#endregion
 </script>
 
-<span on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
+<span
   use:pannable
+  on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
   on:panstart={startPan}
   on:panmove={monitorPan}
   on:panend={endPan}
@@ -596,55 +609,52 @@
       <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
     {/each}
     {#each $store as rect (rect.id)}
-      <g>
-        <DraggableRect {...rect} draggable={true}
-          on:drag={(e) => dragUpdate(e, rect)}
-          on:dragEnd={dragEnd}
-          on:mouseover={() => over(rect)}
-          on:mouseleave={() => out(rect)}
-          on:focus={() => focusRect(rect)}
-          on:blur={() => blurRect(rect)}
-          on:dblclick={(e) => updateText(rect, e)}
-          on:contextmenu={(e) => deleteRect(rect, e)}
-          on:mouseup={(e) => endNewConnection(e, rect)}
-        >
-          {#if !!rect.image}
-            <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
+      <DraggableRect {...rect} draggable={true}
+        on:dblclick={(e) => forwardEvent(rect, e)}
+        on:drag={(e) => dragUpdate(rect, e)}
+        on:dragEnd={dragEnd}
+        on:mouseover={() => over(rect)}
+        on:mouseleave={() => out(rect)}
+        on:focus={() => focusRect(rect)}
+        on:blur={() => blurRect(rect)}
+        on:contextmenu={(e) => deleteRect(rect, e)}
+        on:mouseup={() => endNewConnection(rect)}
+        on:updateText={(e) => updateText(rect, e)}
+      >
+        {#if !!rect.image}
+          <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
+        {/if}
+        
+        {#if !!rect.connectionPoints}
+          {#if showConnections}
+            {#each Object.keys(rect.connectionPoints) as point}
+              <Circle
+                on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                svgProps={{fill: '#222222aa'}}
+                circle2D={{
+                  cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                  cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                  r: getRadius(rect) * zoom / 125}} />
+            {/each}
           {/if}
-          {#if !!rect.text}
-            <Text {...rect} passThrough={true} />
+          {#if resizing}
+            {#each Object.keys(rect.connectionPoints) as point}
+              {@const radius = getRadius(rect) * zoom / 125}
+              <Rect
+                svgProps={{fill: '#222222aa'}}
+                on:mousedown={(e) => {resizeRect(e, rect, point)}}
+                rect2D={{
+                  coord2D: {
+                    x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
+                    y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
+                  },
+                  height: radius,
+                  width: radius
+                }} />
+            {/each}
           {/if}
-          {#if !!rect.connectionPoints}
-            {#if !showConnections}
-              {#each Object.keys(rect.connectionPoints) as point}
-                <Circle
-                  on:mousedown={(e) => {createNewConnection(e, rect, point)}}
-                  svgProps={{fill: '#222222aa'}}
-                  circle2D={{
-                    cx: rect.connectionPoints[point].x + rect.coord2D.x,
-                    cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                    r: getRadius(rect) * zoom / 125}} />
-              {/each}
-            {/if}
-            {#if !resizing}
-              {#each Object.keys(rect.connectionPoints) as point}
-                {@const radius = getRadius(rect) * zoom / 125}
-                <Rect
-                  svgProps={{fill: '#222222aa'}}
-                  on:mousedown={(e) => {resizeRect(e, rect, point)}}
-                  rect2D={{
-                    coord2D: {
-                      x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
-                      y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
-                    },
-                    height: radius,
-                    width: radius
-                  }} />
-              {/each}
-            {/if}
-          {/if}
-        </DraggableRect>
-      </g>
+        {/if}
+      </DraggableRect>
     {/each}
   
     <!-- template container -->
@@ -673,64 +683,10 @@
           on:dragEnd={(e) => dragEndTemplate(e, template)}
         />
       {/each}
-    </g>
-
-    <!-- Done -->
-    <!-- Render Shapes from data binding -->
-    <!-- Render Connections -->
-    <!-- dynamically update connection points -->
-    <!-- double click to add at mouse position -->
-    <!-- hover Rect to view attachment points -->
-    <!-- right click rect to delete -->
-    <!-- right click connections to delete -->
-    <!-- drag attachment points to existing Rect -->
-    <!-- drag attachment point creates new connection preview -->
-    <!-- create drag and drop template for new objects -->
-    <!-- drag and drop new objects from template -->
-    <!-- Svg Images -->
-    <!-- zoom in and out -->
-    <!-- navigate canvas click and drag -->
-    <!-- paste image urls -->
-
-    <!-- WIP -->
-    <!-- double click to edit text entry -->
-    <!-- Add Resize Handles -->
-
-    <!-- Fixes -->
-    <!-- type definitions - reimported optionals -->
-    <!-- zoom should not alter templates -->
-    <!-- minimum size for shapes -->
-
-    <!-- keyboard events -->
-    <!-- delete key, deletes shape / connection -->
-    <!-- enter key, edit mode for item -->
-    <!-- F to focus a shape -->
-
-    <!-- MVP -->
-    <!-- Edit Text Resizes Font Size -->
-    <!-- Edit Text Constrain Width: Multiline -->
-    <!-- Edit Text Constrain Height: Single Line -->
-    <!-- child elements: uml line item -->
-    <!-- Resize Snap to Grid -->
-    <!-- Redo / Undo -->
-    <!-- Reorder Elements -->
-    
-    <!-- Next Version -->
-    <!-- drag and adjust connection midpoints -->
-    <!-- right click context menu -->
-    <!-- right click context menu settings -->
-    <!-- settings menu -->
-    <!-- settings menu radius, text entry -->
-    <!-- snap to grid -->
-    <!-- layers and object selector -->
-    <!-- object search -->
-
-    <!-- Nice to have -->
-    <!-- Custom Svg Objects -->
+    </g> 
   </Svg>
 </span>
 <!-- TODO: shape props -->
-
 <!-- TODO: shape layer list -->
 
 <style>
