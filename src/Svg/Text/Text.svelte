@@ -45,7 +45,7 @@
      <!-- content here -->
     <textarea type="text" bind:value={text} bind:this={theInput} on:blur={blur}/>
   {:else}
-    <p>{text}</p>
+    <pre>{text}</pre>
   {/if}
 </foreignObject>
 
@@ -62,11 +62,19 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
   }
-  p {
+  pre {
     height: 100%;
     width: 100%;
+    padding: 0;
+    margin: 0;
   }
   textarea {
     pointer-events: all;
+    background: none;
+    outline: none;
+    border: none;
+    height: 100%;
+    width: 100%;
+    resize: none;
   }
 </style>

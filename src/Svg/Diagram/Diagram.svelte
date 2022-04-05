@@ -6,7 +6,6 @@
   import Svg from '../Svg.svelte';
   import Connector from '../Path/Connector.svelte';
   import DraggableRect from '../Rect/DraggableRect.svelte';
-  import Text from '../Text/Text.svelte';
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
 	import { pannable } from '../pannable';

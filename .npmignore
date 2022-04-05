@@ -1,0 +1,12 @@
+/.storybook
+/node_modules
+/public
+/test
+/stories
+
+jest.config.js
+package-lock.json
+postcss.config.js
+rollup.config.js
+svelte.config.cjs
+webpack.parts.js
