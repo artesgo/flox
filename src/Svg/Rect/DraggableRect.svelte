@@ -16,6 +16,8 @@
   export let svgProps = {};
   /** @type {boolean} */
   export let draggable;
+  /** @type {boolean} */
+  export let editable = true;
   /** @type {number} */
   export let zoom;
   /** @type {string}*/
@@ -72,7 +74,11 @@
   on:mouseup
   on:click
   on:dblclick
-  on:dblclick={() => editing = true}
+  on:dblclick={() => {
+    if (editable) {
+      editing = true;
+    }
+  }}
   on:keydown
   on:keyup
   on:keypress

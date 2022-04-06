@@ -93,32 +93,37 @@ export interface DiagramRect {
 
 ### Props
 
-| Prop name    | Kind             | Reactive | Type                        | Default value          | Description |
-| :----------- | :--------------- | :------- | :-------------------------- | ---------------------- | ----------- |
-| zoom         | <code>let</code> | Yes      | <code>number</code>         | <code>100</code>       | --          |
-| rects        | <code>let</code> | No       | <code>DiagramRect[]</code>  | <code>[]</code>        | --          |
-| width        | <code>let</code> | No       | <code>number</code>         | <code>0</code>         | --          |
-| height       | <code>let</code> | No       | <code>number</code>         | <code>0</code>         | --          |
-| svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code> | <code>undefined</code> | --          |
-| templates    | <code>let</code> | No       | <code>[{                    |
+| Prop name    | Kind             | Reactive | Type                                                                 | Default value          | Description |
+| :----------- | :--------------- | :------- | :------------------------------------------------------------------- | ---------------------- | ----------- |
+| zoom         | <code>let</code> | Yes      | <code>number</code>                                                  | <code>100</code>       | --          |
+| rects        | <code>let</code> | No       | <code>DiagramRect[]</code>                                           | <code>[]</code>        | --          |
+| width        | <code>let</code> | No       | <code>number</code>                                                  | <code>0</code>         | --          |
+| height       | <code>let</code> | No       | <code>number</code>                                                  | <code>0</code>         | --          |
+| svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code>                                          | <code>undefined</code> | --          |
+| show         | <code>let</code> | No       | <code>{template: boolean; controls: boolean; layers: boolean}</code> | <code>{                |
 
-     connections: [],
-     rect2D: {
-       width: 20,
-       height: 20,
-       rx: 40,
-       ry: 40
-     },
-     coord2D: {
-       x: 10,
-       y: 10,
-     },
-     svgProps: {
-       fill: '#FFCC00',
-       stroke: '#333',
-       'stroke-width': 2,
-     }
+     template: true,
+     controls: true,
+     layers: true,
 
+}</code> | -- |
+| templates | <code>let</code> | No | <code>[{
+connections: [],
+rect2D: {
+width: 20,
+height: 20,
+rx: 40,
+ry: 40
+},
+coord2D: {
+x: 10,
+y: 10,
+},
+svgProps: {
+fill: '#FFCC00',
+stroke: '#333',
+'stroke-width': 2,
+}
 }, {
 connections: [],
 rect2D: {

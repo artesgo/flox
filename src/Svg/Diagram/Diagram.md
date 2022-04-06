@@ -10,6 +10,8 @@ zoom in and out
 dynamically update connection points
 navigate canvas click and drag
 paste image urls
+shape layer list
+shape props
 
 ### Clicks
 double click to add at mouse position

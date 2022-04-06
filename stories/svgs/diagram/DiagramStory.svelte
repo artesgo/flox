@@ -2,20 +2,18 @@
 	import Diagram from '../../../src/Svg/Diagram/Diagram.svelte';
   export let rects;
   export let svgPathProps;
+  let clientHeight;
+  let clientWidth;
 </script>
 
-<section>
-  <div>
-    <Diagram width={600} height={600} {rects} {svgPathProps} />
-  </div>
+<section bind:clientHeight bind:clientWidth>
+  <Diagram width={clientWidth - 250} height={clientHeight} {rects} {svgPathProps} />
 </section>
 
 
 <style>
   section {
     display: flex;
-  }
-  div {
-    border: 1px solid black;
+    height: 90vh;
   }
 </style>
