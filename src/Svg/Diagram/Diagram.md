@@ -31,9 +31,6 @@ double click to edit text entry
 Add Resize Handles
 
 ## Fixes
-type definitions - reimported optionals
-zoom should not alter templates
-don't have drag drop feature for templates
 minimum size for shapes
 
 ## keyboard events

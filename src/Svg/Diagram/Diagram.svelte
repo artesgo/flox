@@ -1,4 +1,5 @@
 <script>
+	import { fly } from 'svelte/transition';
 	import DiagramLayers from './DiagramLayers.svelte';
 	import Rect from './../Rect/Rect.svelte';
   import { onMount } from 'svelte';
@@ -42,7 +43,7 @@
   export let show = {
     template: true,
     controls: true,
-    layers: true,
+    layers: false,
   };
 
   export let templates = [{
@@ -195,8 +196,6 @@
   //#endregion
 
   //#region dragging
-  let creatingFromTemplate = false;
-
   function dragUpdate(rect, e) {
     dragging = true;
 
@@ -246,12 +245,10 @@
     dragging = false;
     addAt(e, template);
     _templates = [...templates];
-    creatingFromTemplate = false;
   }
 
   function selectTemplate(index) {
     selectedTemplate = index;
-    creatingFromTemplate = true;
   }
   //#endregion
 
@@ -279,8 +276,6 @@
       return r;
     })];
 
-    // TODO: Shrink templates to fit side panel
-
     _templates = [...templates];
   });
 
@@ -294,8 +289,8 @@
       coord.x = Math.floor(e.detail.coord2D.x) + offset.x;
       coord.y = Math.floor(e.detail.coord2D.y) + offset.y;
     } else {
-      coord.x = (e.offsetX * zoom / 100) + offset.x;
-      coord.y = (e.offsetY * zoom / 100) + offset.y;
+      coord.x = (e.offsetX * height / width * zoom / 100) + offset.x;
+      coord.y = (e.offsetY * height / width * zoom / 100) + offset.y;
     }
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
@@ -453,7 +448,13 @@
     }
   }
 
+  let mouse = {
+    x: 0,
+    y: 0,
+  }
   function checkNewConnection(e) {
+    mouse.x = e.offsetX;
+    mouse.y = e.offsetY;
     if (!!newConnectionStartRect) {
       // find the preview connection and update it
       $connections = [
@@ -585,7 +586,7 @@
   }
 
   function monitorPan(e) {
-    if (panning && !creatingFromTemplate && !dragging && !newConnectionStartRect) {
+    if (panning && !dragging && !newConnectionStartRect) {
       offset = {
         x: offset.x - e.detail.dx,
         y: offset.y - e.detail.dy,
@@ -601,122 +602,137 @@
 </script>
 
 <section>
-{#if show.controls}
-  <div class="diagram-controls">
-    <button on:click={setResize}>Resize</button>
-    <button on:click={setConnections}>Connection</button>
-    <button on:click={resetZoom}>Reset Zoom</button>
-    <button on:click={() => onWheel({ deltaY: -1})}>Zoom In</button>
-    <button on:click={() => onWheel({ deltaY: 1})}>Zoom Out</button>
-    <button>Copy</button>
-    <button>Paste</button>
-  </div>
-{/if}
-<div class="diagram-wrapper">
-  {#if show.template}
-    <Svg {height} width={50}>
-      {#each _templates as template, index}
-        {#if selectedTemplate === index}
-          <DraggableRect {...template}
-            draggable={false}
-            editable={false}
-            on:mousedown={() => selectTemplate(index)}
-            {zoom}
-            svgProps={{
-            ...template.svgProps,
-            'stroke-width': template.svgProps['stroke-width'] + 4,
-            stroke: '#F00'
-          }}></DraggableRect>
-        {/if}
-        <DraggableRect rect2D={template.rect2D} coord2D={template.coord2D}
-          svgProps={template.svgProps}
-          draggable={false}
-          editable={false}
-          {zoom}
-          on:mousedown={() => selectTemplate(index)}
-        />
-      {/each}
-    </Svg>
+  {#if show.controls}
+    <div class="diagram-controls">
+      <button on:click={() => show.template =! show.template}>Templates</button>
+      <button on:click={setResize}>Resize</button>
+      <button on:click={setConnections}>Connection</button>
+      <button on:click={resetZoom}>Reset Zoom</button>
+      <button on:click={() => onWheel({ deltaY: -1})}>Zoom In</button>
+      <button on:click={() => onWheel({ deltaY: 1})}>Zoom Out</button>
+      <button>Copy</button>
+      <button>Paste</button>
+      <button on:click={() => show.layers =! show.layers}>Layers</button>
+    </div>
   {/if}
-  <span
-    use:pannable
-    on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
-    on:panstart={startPan}
-    on:panmove={monitorPan}
-    on:panend={endPan}
-    on:contextmenu|preventDefault
-    on:mousemove={checkNewConnection}
-    on:mouseup={endNewConnection}
-    on:wheel|preventDefault={onWheel}
-    on:keydown={onKey}
-    tabindex="0">
-    <Svg {height} {width} zoom={($_zoom / 100) * height} {offset}>
-      {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
-        <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
-      {/each}
-      {#each $store as rect (rect.id)}
-        <DraggableRect {...rect} draggable={true}
-          on:dblclick={(e) => forwardEvent(rect, e)}
-          on:drag={(e) => dragUpdate(rect, e)}
-          on:dragEnd={dragEnd}
-          on:mouseover={() => over(rect)}
-          on:mouseleave={() => out(rect)}
-          on:focus={() => focusRect(rect)}
-          on:blur={() => blurRect(rect)}
-          on:contextmenu={(e) => deleteRect(rect, e)}
-          on:mouseup={() => endNewConnection(rect)}
-          on:updateText={(e) => updateText(rect, e)}
-        >
-          {#if !!rect.image}
-            <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
-          {/if}
-          
-          {#if !!rect.connectionPoints}
-            {#if resizing}
-              {#each Object.keys(rect.connectionPoints) as point}
-                <Circle
-                  on:mousedown={(e) => {createNewConnection(e, rect, point)}}
-                  svgProps={{fill: '#222222aa'}}
-                  circle2D={{
-                    cx: rect.connectionPoints[point].x + rect.coord2D.x,
-                    cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                    r: getRadius(rect) * zoom / 125}} />
-              {/each}
+  <div class="diagram-wrapper">
+    {#if show.template}
+      <div class="diagram-templates" transition:fly={{duration: 300, y: -100}}>
+        <Svg {height} width={50}>
+          {#each _templates as template, index}
+            {#if selectedTemplate === index}
+              <DraggableRect {...template}
+                draggable={false}
+                editable={false}
+                on:mousedown={() => selectTemplate(index)}
+                {zoom}
+                svgProps={{
+                ...template.svgProps,
+                'stroke-width': template.svgProps['stroke-width'] + 4,
+                stroke: '#F00'
+              }}></DraggableRect>
             {/if}
-            {#if showConnections}
-              {#each Object.keys(rect.connectionPoints) as point}
-                {@const radius = getRadius(rect) * zoom / 125}
-                <Rect
-                  svgProps={{fill: '#222222aa'}}
-                  rect2D={{
-                    coord2D: {
-                      x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
-                      y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
-                    },
-                    height: radius,
-                    width: radius
-                  }} />
-              {/each}
+            <DraggableRect rect2D={template.rect2D} coord2D={template.coord2D}
+              svgProps={template.svgProps}
+              draggable={false}
+              editable={false}
+              {zoom}
+              on:mousedown={() => selectTemplate(index)}
+            />
+          {/each}
+        </Svg>
+      </div>
+    {/if}
+    <span
+      use:pannable
+      on:panstart={startPan}
+      on:panmove={monitorPan}
+      on:panend={endPan}
+      on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
+      on:contextmenu|preventDefault
+      on:mousemove={checkNewConnection}
+      on:mouseup={endNewConnection}
+      on:wheel|preventDefault={onWheel}
+      on:keydown={onKey}
+      tabindex="0">
+      <Svg {height} {width} zoom={($_zoom / 100) * height} {offset}>
+        {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
+          <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
+        {/each}
+        {#each $store as rect (rect.id)}
+          <DraggableRect {...rect} draggable={true}
+            on:dblclick={(e) => forwardEvent(rect, e)}
+            on:drag={(e) => dragUpdate(rect, e)}
+            on:dragEnd={dragEnd}
+            on:mouseover={() => over(rect)}
+            on:mouseleave={() => out(rect)}
+            on:focus={() => focusRect(rect)}
+            on:blur={() => blurRect(rect)}
+            on:contextmenu={(e) => deleteRect(rect, e)}
+            on:mouseup={() => endNewConnection(rect)}
+            on:updateText={(e) => updateText(rect, e)}
+          >
+            {#if !!rect.image}
+              <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
             {/if}
-          {/if}
-        </DraggableRect>
-      {/each}
-    </Svg>
-  </span>
-  {#if show.layers}
-  <div class="diagram-layers">
-    <DiagramLayers {store} bind:focused />
+            
+            {#if !!rect.connectionPoints}
+              {#if showConnections}
+                {#each Object.keys(rect.connectionPoints) as point}
+                  <Circle
+                    on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                    svgProps={{fill: '#222222aa'}}
+                    circle2D={{
+                      cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                      cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                      r: getRadius(rect) * zoom / 125}} />
+                {/each}
+              {/if}
+              {#if resizing}
+                {#each Object.keys(rect.connectionPoints) as point}
+                  {@const radius = getRadius(rect) * zoom / 125}
+                  <Rect
+                    svgProps={{fill: '#222222aa'}}
+                    rect2D={{
+                      coord2D: {
+                        x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
+                        y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
+                      },
+                      height: radius,
+                      width: radius
+                    }} />
+                {/each}
+              {/if}
+            {/if}
+          </DraggableRect>
+        {/each}
+      </Svg>
+    </span>
+    {#if show.layers}
+    <div class="diagram-layers" transition:fly={{duration: 300, y: -100}}>
+      <!-- <div>Offset: X: {offset.x} Y: {offset.y}</div>
+      <div>Mouse: X: {mouse.x} Y: {mouse.y}</div> -->
+      <DiagramLayers {store} bind:focused />
+    </div>
+    {/if}
   </div>
-  {/if}
-</div>
 </section>
 
 <style>
+  section {
+    overflow: hidden;
+    width: 100%;
+  }
   .diagram-wrapper {
     display: flex;
     height: 100%;
   }
   .diagram-layers {
+    position: absolute;
     overflow: scroll;
+    right: 0;
+  }
+  .diagram-templates {
+    position: absolute;
   }
 </style>
