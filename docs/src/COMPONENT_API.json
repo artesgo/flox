@@ -116,16 +116,6 @@
           "reactive": false
         },
         {
-          "name": "height",
-          "kind": "let",
-          "type": "number",
-          "value": "0",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
           "name": "svgPathProps",
           "kind": "let",
           "type": "NativeSvgProps",
@@ -138,7 +128,7 @@
           "name": "show",
           "kind": "let",
           "type": "{template: boolean; controls: boolean; layers: boolean}",
-          "value": "{\r     template: true,\r     controls: true,\r     layers: true,\r   }",
+          "value": "{\r     template: true,\r     controls: true,\r     layers: false,\r   }",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,

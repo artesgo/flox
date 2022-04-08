@@ -98,13 +98,12 @@ export interface DiagramRect {
 | zoom         | <code>let</code> | Yes      | <code>number</code>                                                  | <code>100</code>       | --          |
 | rects        | <code>let</code> | No       | <code>DiagramRect[]</code>                                           | <code>[]</code>        | --          |
 | width        | <code>let</code> | No       | <code>number</code>                                                  | <code>0</code>         | --          |
-| height       | <code>let</code> | No       | <code>number</code>                                                  | <code>0</code>         | --          |
 | svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code>                                          | <code>undefined</code> | --          |
 | show         | <code>let</code> | No       | <code>{template: boolean; controls: boolean; layers: boolean}</code> | <code>{                |
 
      template: true,
      controls: true,
-     layers: true,
+     layers: false,
 
 }</code> | -- |
 | templates | <code>let</code> | No | <code>[{

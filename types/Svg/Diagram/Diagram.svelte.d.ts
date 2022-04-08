@@ -29,17 +29,12 @@ export interface DiagramProps {
   width?: number;
 
   /**
-   * @default 0
-   */
-  height?: number;
-
-  /**
    * @default undefined
    */
   svgPathProps?: NativeSvgProps;
 
   /**
-   * @default { template: true, controls: true, layers: true, }
+   * @default { template: true, controls: true, layers: false, }
    */
   show?: { template: boolean; controls: boolean; layers: boolean };
 

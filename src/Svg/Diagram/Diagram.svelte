@@ -35,8 +35,6 @@
   export let rects = [];
   /** @type {number} */
   export let width = 0;
-  /** @type {number} */
-  export let height = 0;
   /** @type {NativeSvgProps} */
   export let svgPathProps;
   /** @type {{template: boolean; controls: boolean; layers: boolean}} */
@@ -289,8 +287,8 @@
       coord.x = Math.floor(e.detail.coord2D.x) + offset.x;
       coord.y = Math.floor(e.detail.coord2D.y) + offset.y;
     } else {
-      coord.x = (e.offsetX * height / width * zoom / 100) + offset.x;
-      coord.y = (e.offsetY * height / width * zoom / 100) + offset.y;
+      coord.x = (e.offsetX * zoom / 100) + offset.x;
+      coord.y = (e.offsetY * zoom / 100) + offset.y;
     }
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
@@ -618,7 +616,7 @@
   <div class="diagram-wrapper">
     {#if show.template}
       <div class="diagram-templates" transition:fly={{duration: 300, y: -100}}>
-        <Svg {height} width={50}>
+        <Svg height={width} width={50}>
           {#each _templates as template, index}
             {#if selectedTemplate === index}
               <DraggableRect {...template}
@@ -655,7 +653,7 @@
       on:wheel|preventDefault={onWheel}
       on:keydown={onKey}
       tabindex="0">
-      <Svg {height} {width} zoom={($_zoom / 100) * height} {offset}>
+      <Svg height={width} {width} zoom={($_zoom / 100) * width} {offset}>
         {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
           <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
         {/each}
