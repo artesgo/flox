@@ -11,6 +11,13 @@
   import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
 	import { pannable } from '../pannable';
+  import Magnifier from '../../assets/mono-icons/svg/search.svelte';
+  import ZoomIn from '../../assets/mono-icons/svg/zoom-in.svelte';
+  import ZoomOut from '../../assets/mono-icons/svg/zoom-out.svelte';
+  import Layers from '../../assets/mono-icons/svg/layers.svelte';
+  import Link from '../../assets/mono-icons/svg/link.svelte';
+  import Expand from '../../assets/mono-icons/svg/expand.svelte';
+  import Grid from '../../assets/mono-icons/svg/grid.svelte';
 
   /** @typedef {import("../Rect/Rect").Rect2D} Rect2D*/
   /** @typedef {import("../Svg").Coord2D} Coord2D*/
@@ -43,7 +50,6 @@
     controls: true,
     layers: false,
   };
-
   export let templates = [{
     connections: [],
     rect2D: {
@@ -96,11 +102,10 @@
       'stroke-width': 2,
     }
   }];
-
-  let selectedTemplate = 0;
   //#endregion
 
   //#region private props
+  let selectedTemplate = 0;
   let _templates = [];
   // creates a component instance store for each diagram
   const store = writable([
@@ -196,7 +201,6 @@
   //#region dragging
   function dragUpdate(rect, e) {
     dragging = true;
-
     $store = [
       ...$store.map(r => {
         // this moves the rectangle being dragged
@@ -241,7 +245,7 @@
   // deprecated
   function dragEndTemplate(e, template) {
     dragging = false;
-    addAt(e, template);
+    addAt(template);
     _templates = [...templates];
   }
 
@@ -277,19 +281,16 @@
     _templates = [...templates];
   });
 
-  function addAt(e, template) {
-    let coord = {
-      x: 0,
-      y: 0,
+  function getAdjustedCoords() {
+    return {
+      x: mouse.x * zoom / 100 + offset.x,
+      y: mouse.y * zoom / 100 + offset.y,
     }
+  }
+
+  function addAt(template) {
+    let coord = getAdjustedCoords();
     //#region prevents fuzzy connections
-    if (e.detail && e.detail.coord2D) {
-      coord.x = Math.floor(e.detail.coord2D.x) + offset.x;
-      coord.y = Math.floor(e.detail.coord2D.y) + offset.y;
-    } else {
-      coord.x = (e.offsetX * zoom / 100) + offset.x;
-      coord.y = (e.offsetY * zoom / 100) + offset.y;
-    }
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
     //#endregion
@@ -307,6 +308,11 @@
     newRect.id = _nextId++;
     // resets template back to origin;
     $store = [...$store, newRect];
+  }
+
+  function syncPosition(e) {
+    mouse.x = e.offsetX;
+    mouse.y = e.offsetY;
   }
 
   $: getRadius = (rect) => {
@@ -451,8 +457,6 @@
     y: 0,
   }
   function checkNewConnection(e) {
-    mouse.x = e.offsetX;
-    mouse.y = e.offsetY;
     if (!!newConnectionStartRect) {
       // find the preview connection and update it
       $connections = [
@@ -505,14 +509,22 @@
   //#endregion
 
   //#region copy / paste
+  /**
+   * @type {Rect2D}
+   */
   let copiedTemplate;
   function onKey(e) {
     if (e.ctrlKey) {
       if (e.key === "v") {
         if (!!copiedTemplate) {
-          copiedTemplate = null;
           // TODO: get mouse position
-          // addAt()
+          copiedTemplate.coord2D = getAdjustedCoords();
+          copiedTemplate.id = _nextId++;
+          $store = [
+            ...$store,
+            copiedTemplate
+          ]
+          copiedTemplate = cloneTemplate(copiedTemplate);
         } else {
           navigator.clipboard.readText()
             .then(data => {
@@ -527,7 +539,17 @@
       }
       if (e.key === "c") {
         // use selected shape as new template
-        copiedTemplate = $store.findIndex(r => r.id === $focused);
+        const found = $store.find(r => r.id === $focused);
+        copiedTemplate = cloneTemplate(found);
+      }
+    }
+  }
+
+  function cloneTemplate(template) {
+    return {
+      ...template,
+      coord2D: {
+        ...template.coord2D
       }
     }
   }
@@ -599,24 +621,29 @@
 
 </script>
 
-<section>
+<section on:mousemove={syncPosition}>
   {#if show.controls}
-    <div class="diagram-controls">
-      <button on:click={() => show.template =! show.template}>Templates</button>
-      <button on:click={setResize}>Resize</button>
-      <button on:click={setConnections}>Connection</button>
-      <button on:click={resetZoom}>Reset Zoom</button>
-      <button on:click={() => onWheel({ deltaY: -1})}>Zoom In</button>
-      <button on:click={() => onWheel({ deltaY: 1})}>Zoom Out</button>
-      <button>Copy</button>
-      <button>Paste</button>
-      <button on:click={() => show.layers =! show.layers}>Layers</button>
+    <div class="diagram-controls" class:controls-hidden={!show.controls}>
+      <button on:click={() => show.template =! show.template}
+        class:active={show.template}>
+        <Grid />
+      </button>
+      <button on:click={setResize}><Expand /></button>
+      <button on:click={setConnections}><Link /></button>
+      <button on:click={resetZoom}>
+        <Magnifier />
+      </button>
+      <button on:click={() => onWheel({ deltaY: -1})}><ZoomIn /></button>
+      <button on:click={() => onWheel({ deltaY: 1})}><ZoomOut /></button>
+      <button on:click={() => show.layers =! show.layers} class:active={show.layers}>
+        <Layers />
+      </button>
     </div>
   {/if}
   <div class="diagram-wrapper">
     {#if show.template}
       <div class="diagram-templates" transition:fly={{duration: 300, y: -100}}>
-        <Svg height={width} width={50}>
+        <Svg width={50}>
           {#each _templates as template, index}
             {#if selectedTemplate === index}
               <DraggableRect {...template}
@@ -646,7 +673,7 @@
       on:panstart={startPan}
       on:panmove={monitorPan}
       on:panend={endPan}
-      on:dblclick={(e) => addAt(e, templates[selectedTemplate])}
+      on:dblclick={() => addAt(templates[selectedTemplate])}
       on:contextmenu|preventDefault
       on:mousemove={checkNewConnection}
       on:mouseup={endNewConnection}
@@ -719,18 +746,34 @@
 <style>
   section {
     overflow: hidden;
-    width: 100%;
   }
   .diagram-wrapper {
     display: flex;
-    height: 100%;
+    overflow: hidden;
   }
   .diagram-layers {
     position: absolute;
     overflow: scroll;
+    top: 48px;
     right: 0;
   }
+  .diagram-controls,
   .diagram-templates {
     position: absolute;
+  }
+  .diagram-controls {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+  }
+  .diagram-templates {
+    top: 48px;
+  }
+  .controls-hidden.diagram-controls,
+  .controls-hidden.diagram-templates {
+    top: 24px;
+  }
+  .diagram-controls button {
+    background: none;
+    border: none;
   }
 </style>

@@ -12,6 +12,7 @@ navigate canvas click and drag
 paste image urls
 shape layer list
 shape props
++ Add Resize Handles
 
 ### Clicks
 double click to add at mouse position
@@ -26,25 +27,23 @@ drag and drop new objects from template
 ### Editing
 ---
 
-## WIP
-double click to edit text entry
-Add Resize Handles
-
 ## Fixes
 minimum size for shapes
 
 ## keyboard events
 delete key, deletes shape / connection
-enter key, edit mode for item
-Type to edit text
-Ctrl C
-Ctrl V
++ enter key, edit mode for item
++ double click, edit mode for item
++ Type to edit text
++ Ctrl C
++ Ctrl V
 Ctrl Z
 Ctrl Shift Z
 
 ## MVP
 Edit Text Resizes Font Size
-Edit Text Constrain Width: Multiline
++ Edit Text Constrain Width: Multiline
+  - Multiline constrain width, do not overflow container
 Edit Text Constrain Height: Single Line
 Resize Snap to Grid
 Redo / Undo

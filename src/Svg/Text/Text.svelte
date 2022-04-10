@@ -17,13 +17,13 @@
   export let editing;
   $: if (editing) {
     setTimeout(() => {
-      if (theInput) {
-        theInput.focus();
+      if (_input) {
+        _input.focus();
       }
     }, 0);
   }
 
-  let theInput;
+  let _input;
   let _coord = spring({ x: 0, y: 0 });
 
   $: _coord.update($_coord => ({
@@ -38,12 +38,12 @@
   }
 </script>
 
-<foreignObject 
-  x={$_coord.x} y={$_coord.y - (rect2D.height / 2)} 
+<foreignObject
+  x={$_coord.x} y={$_coord.y - (rect2D.height / 2)}
   width={rect2D.width - (padding.x * 2)} height={rect2D.height - (padding.y * 2)}>
   {#if editing}
-     <!-- content here -->
-    <textarea type="text" bind:value={text} bind:this={theInput} on:blur={blur}/>
+    <textarea
+      type="text" bind:value={text} bind:this={_input} on:blur={blur}/>
   {:else}
     <pre>{text}</pre>
   {/if}
@@ -68,6 +68,7 @@
     padding: 0;
     margin: 0;
     background: none;
+    white-space: pre-wrap;
   }
   textarea {
     pointer-events: all;
