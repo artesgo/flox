@@ -842,6 +842,7 @@
 <style>
   section {
     overflow: hidden;
+    position: relative;
   }
   .diagram-wrapper {
     display: flex;
