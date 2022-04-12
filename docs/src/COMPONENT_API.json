@@ -504,15 +504,6 @@
           "reactive": false
         },
         {
-          "name": "id",
-          "kind": "let",
-          "type": "string",
-          "isFunction": false,
-          "isFunctionDeclaration": false,
-          "constant": false,
-          "reactive": false
-        },
-        {
           "name": "zoom",
           "kind": "let",
           "type": "number",

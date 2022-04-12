@@ -117,6 +117,7 @@
   let mouseover = writable(null);
   // showConnection / resizing
   let showConnections = true;
+  let showResizing = false;
   let resizing = false;
   //#endregion
 
@@ -456,6 +457,7 @@
     x: 0,
     y: 0,
   }
+
   function checkNewConnection(e) {
     if (!!newConnectionStartRect) {
       // find the preview connection and update it
@@ -472,14 +474,32 @@
   }
   //#endregion
 
+  //#region resize
+  /**
+   * @type {Rect2d}
+   */
+  let resizeTarget;
+  let resizePoint;
+  function startResize(e, rect, point) {
+    resizing = true;
+    resizeTarget = rect;
+    resizePoint = point;
+  }
+  function endResize() {
+    resizing = false;
+    resizeTarget = null;
+  }
+
+  //#endregion
+
   //#region control toggles
   function setResize() {
-    resizing = true;
+    showResizing = true;
     showConnections = false;
   }
 
   function setConnections() {
-    resizing = false;
+    showResizing = false;
     showConnections = true;
   }
   //#endregion
@@ -606,10 +626,84 @@
   }
 
   function monitorPan(e) {
-    if (panning && !dragging && !newConnectionStartRect) {
+    if (panning && !dragging && !newConnectionStartRect && !resizing) {
       offset = {
         x: offset.x - e.detail.dx,
         y: offset.y - e.detail.dy,
+      }
+    }
+    if (resizing) {
+      // resize needs to take zoom into account
+      const coord = getAdjustedCoords();
+      switch (resizePoint) {
+        case 'top':
+          // resize coord.y + height
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                if (rect.rect2D.height - e.detail.dy > 100) {
+                  // this still moves the rect when it scales too small
+                  rect.coord2D.y = coord.y;
+                  if (rect.rect2D.height - e.detail.dy > 100) {
+                    rect.rect2D.height -= e.detail.dy;
+                  }
+                  rect.connectionPoints = createConnectionPointOffsets(rect);
+                }
+              }
+              return rect;
+            })
+          ]
+          break;
+        case 'left':
+          // resize coord.x + width
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                // this still moves the rect when it scales too small
+                rect.coord2D.x = coord.x;
+                if (rect.rect2D.width - e.detail.dx > 100) {
+                  rect.rect2D.width -= e.detail.dx;
+                }
+                rect.connectionPoints = createConnectionPointOffsets(rect);
+              }
+              return rect;
+            })
+          ]
+          break;
+        case 'bottom':
+          // resize height only
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                const height = coord.y - rect.coord2D.y;
+                if (height > 100) {
+                  rect.rect2D.height = height;
+                } else {
+                  rect.rect2D.height = 100;
+                }
+                rect.connectionPoints = createConnectionPointOffsets(rect);
+              }
+              return rect;
+            })
+          ]
+          break;
+        default:
+          // resize width only
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                const width = coord.x - resizeTarget.coord2D.x;
+                if (width > 100) {
+                  rect.rect2D.width = width;
+                } else {
+                  rect.rect2D.width = 100;
+                }
+                rect.connectionPoints = createConnectionPointOffsets(rect);
+              }
+              return rect;
+            })
+          ]
+          break;
       }
     }
   }
@@ -677,6 +771,7 @@
       on:contextmenu|preventDefault
       on:mousemove={checkNewConnection}
       on:mouseup={endNewConnection}
+      on:mouseup={() => endResize()}
       on:wheel|preventDefault={onWheel}
       on:keydown={onKey}
       tabindex="0">
@@ -713,10 +808,11 @@
                       r: getRadius(rect) * zoom / 125}} />
                 {/each}
               {/if}
-              {#if resizing}
+              {#if showResizing}
                 {#each Object.keys(rect.connectionPoints) as point}
                   {@const radius = getRadius(rect) * zoom / 125}
                   <Rect
+                    on:mousedown={(e) => startResize(e, rect, point)}
                     svgProps={{fill: '#222222aa'}}
                     rect2D={{
                       coord2D: {
@@ -753,10 +849,19 @@
   }
   .diagram-layers {
     position: absolute;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     top: 48px;
+    max-height: calc(100% - 48px);
     right: 0;
   }
+  .diagram-layers::-webkit-scrollbar {
+    width: 4px !important;
+  }
+  .diagram-layers::-webkit-scrollbar-thumb {
+    background: #ff3e00 !important;
+  }
+
   .diagram-controls,
   .diagram-templates {
     position: absolute;
@@ -768,8 +873,8 @@
   .diagram-templates {
     top: 48px;
   }
-  .controls-hidden.diagram-controls,
-  .controls-hidden.diagram-templates {
+  /* .controls-hidden.diagram-templates, */
+  .controls-hidden.diagram-controls {
     top: 24px;
   }
   .diagram-controls button {

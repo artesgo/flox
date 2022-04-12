@@ -56,6 +56,7 @@ specifiers:
   svelte-jester: ^1.7.0
   svelte-loader: ^3.1.2
   svelte-preprocess: ^4.10.3
+  svelte-youtube-embed: ^0.0.12
   ts-jest: ^26.0.0
   typescript: ^4.3.5
   webpack: ^4.46.0
@@ -117,6 +118,7 @@ devDependencies:
   svelte-jester: 1.8.2_jest@26.6.3+svelte@3.47.0
   svelte-loader: 3.1.2_svelte@3.47.0
   svelte-preprocess: 4.10.5_2b23716adc6a7ca45d725cd68045446d
+  svelte-youtube-embed: 0.0.12
   ts-jest: 26.5.6_jest@26.6.3+typescript@4.6.3
   typescript: 4.6.3
   webpack: 4.46.0
@@ -13508,6 +13510,10 @@ packages:
       strip-indent: 3.0.0
       svelte: 3.47.0
       typescript: 4.6.3
+    dev: true
+
+  /svelte-youtube-embed/0.0.12:
+    resolution: {integrity: sha512-TLyxa01Ivf2WBknvRsYFMKgFtYO+1v43LUQi1PonTuA5jGbzVlEn/yaBrvll3NslzNQNUzyqjDswyqbEylcKTQ==}
     dev: true
 
   /svelte/3.47.0:

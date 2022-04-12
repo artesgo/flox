@@ -26,10 +26,15 @@
   let dragging;
   let editing;
   let _coord = spring(coord2D);
+  let _rect = spring(rect2D);
 
   $: _coord.update($_coord => ({
     x: coord2D.x,
     y: coord2D.y
+  }));
+  $: _rect.update($_rect => ({
+    width: rect2D.width,
+    height: rect2D.height
   }));
 
   function dragUpdate(e) {
@@ -88,7 +93,7 @@
     on:panstart={shouldUpdate}
     on:panmove={dragUpdate}
     on:panend={finishUpdate}>
-    <rect x={$_coord.x} y={$_coord.y} {...rect2D} {...svgProps} />
+    <rect {...rect2D} x={$_coord.x} y={$_coord.y} width={$_rect.width} height={$_rect.height} {...svgProps} />
   </g>
   <slot />
   <Text {rect2D} {coord2D} bind:editing={editing} text={text} on:updateText/>

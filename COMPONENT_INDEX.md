@@ -400,7 +400,6 @@ export interface NativeSvgProps {
 | :-------- | :--------------- | :------- | :------------------- | ---------------------- | ----------- |
 | width     | <code>let</code> | No       | <code>number</code>  | <code>undefined</code> | --          |
 | height    | <code>let</code> | No       | <code>number</code>  | <code>undefined</code> | --          |
-| id        | <code>let</code> | No       | <code>string</code>  | <code>undefined</code> | --          |
 | zoom      | <code>let</code> | No       | <code>number</code>  | <code>undefined</code> | --          |
 | offset    | <code>let</code> | No       | <code>Coord2D</code> | <code>{                |
 

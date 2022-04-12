@@ -29,11 +29,6 @@ export interface SvgProps {
   /**
    * @default undefined
    */
-  id?: string;
-
-  /**
-   * @default undefined
-   */
   zoom?: number;
 
   /**
