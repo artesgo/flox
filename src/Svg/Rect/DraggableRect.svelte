@@ -6,7 +6,7 @@
 
   let update = createEventDispatcher();
   /**
-   * @typedef {{width: number; height: number; x?: number; y?: number }} Rect2D
+   * @typedef {{width: number; height: number;}} Rect2D
    */
   /** @type {Rect2D} */
   export let rect2D = {};
@@ -61,12 +61,6 @@
       });
     }
   }
-
-  // onMount(() => {
-  //   _coord.set({ ...coord2D });
-  // });
-
-  // TODO: resizeable
 </script>
 
 <g
@@ -88,7 +82,7 @@
   on:keyup
   on:keypress
   on:contextmenu>
-  <g 
+  <g
     use:pannable
     on:panstart={shouldUpdate}
     on:panmove={dragUpdate}

@@ -626,12 +626,19 @@
   }
 
   function monitorPan(e) {
+    // apply offset 
     if (panning && !dragging && !newConnectionStartRect && !resizing) {
       offset = {
-        x: offset.x - e.detail.dx,
-        y: offset.y - e.detail.dy,
+        x: (offset.x - (e.detail.dx * zoom / 100)),
+        y: (offset.y - (e.detail.dy * zoom / 100)),
       }
     }
+
+    monitorResizing(e);
+  }
+
+  // use mouse position and check for resizing event
+  function monitorResizing(e) {
     if (resizing) {
       // resize needs to take zoom into account
       const coord = getAdjustedCoords();
@@ -645,7 +652,7 @@
                   // this still moves the rect when it scales too small
                   rect.coord2D.y = coord.y;
                   if (rect.rect2D.height - e.detail.dy > 100) {
-                    rect.rect2D.height -= e.detail.dy;
+                    rect.rect2D.height -= e.detail.dy * zoom / 100;
                   }
                   rect.connectionPoints = createConnectionPointOffsets(rect);
                 }
@@ -662,7 +669,7 @@
                 // this still moves the rect when it scales too small
                 rect.coord2D.x = coord.x;
                 if (rect.rect2D.width - e.detail.dx > 100) {
-                  rect.rect2D.width -= e.detail.dx;
+                  rect.rect2D.width -= e.detail.dx * zoom / 100;
                 }
                 rect.connectionPoints = createConnectionPointOffsets(rect);
               }
