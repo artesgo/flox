@@ -725,18 +725,15 @@
 <section on:mousemove={syncPosition}>
   {#if show.controls}
     <div class="diagram-controls" class:controls-hidden={!show.controls}>
-      <button on:click={() => show.template =! show.template}
-        class:active={show.template}>
+      <button class:active={show.template} on:click={() => show.template =! show.template} aria-label="Toggle Templates">
         <Grid />
       </button>
-      <button on:click={setResize}><Expand /></button>
-      <button on:click={setConnections}><Link /></button>
-      <button on:click={resetZoom}>
-        <Magnifier />
-      </button>
-      <button on:click={() => onWheel({ deltaY: -1})}><ZoomIn /></button>
-      <button on:click={() => onWheel({ deltaY: 1})}><ZoomOut /></button>
-      <button on:click={() => show.layers =! show.layers} class:active={show.layers}>
+      <button class:active={showResizing} on:click={setResize} aria-label="Resize"><Expand /></button>
+      <button class:active={showConnections} on:click={setConnections} aria-label="Connections"><Link /></button>
+      <button class:active={zoom === 100} on:click={resetZoom} aria-label="Reset Zoom"><Magnifier /></button>
+      <button on:click={() => onWheel({ deltaY: -1})} aria-label="Zoom in"><ZoomIn /></button>
+      <button on:click={() => onWheel({ deltaY: 1})} aria-label="Zoom out"><ZoomOut /></button>
+      <button class:active={show.layers} on:click={() => show.layers =! show.layers} aria-label="Toggle Layers">
         <Layers />
       </button>
     </div>
@@ -800,7 +797,7 @@
             on:updateText={(e) => updateText(rect, e)}
           >
             {#if !!rect.image}
-              <Image {...rect} passThrough={true} on:resize={(e) => resize(e, rect)} />
+              <Image {...rect} passThrough={true} />
             {/if}
             
             {#if !!rect.connectionPoints}
@@ -888,5 +885,8 @@
   .diagram-controls button {
     background: none;
     border: none;
+  }
+  button.active {
+    background: lightgrey;
   }
 </style>

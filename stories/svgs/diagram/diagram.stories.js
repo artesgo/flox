@@ -316,8 +316,8 @@ export const Images = () => ({
         connections: [1],
         id: 3,
         rect2D: {
-          width: 749,
-          height: 999,
+          width: 375,
+          height: 500,
         },
         coord2D: {
           x: 120,
@@ -334,8 +334,8 @@ export const Images = () => ({
         connections: [1],
         id: 4,
         rect2D: {
-          width: 749,
-          height: 999,
+          width: 333,
+          height: 333,
         },
         coord2D: {
           x: 120,
