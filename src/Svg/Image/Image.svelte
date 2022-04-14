@@ -6,15 +6,15 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { spring } from 'svelte/motion';
   
-  const resize = createEventDispatcher();
+  const resizeEvent = createEventDispatcher();
   
   /** @type {import("../Svg").Coord2D} */
   export let coord2D = {
     x: 0,
     y: 0,
   };
-  /** @type {import("../Svg").Coord2D} */
-  export let rect2D = {};
+  /** @type {import("../Rect/DraggableRect").Rect2D} */
+  export let rect2D;
   /** @type {string} */
   export let image = '';
   /** @type {string|number} */
@@ -37,23 +37,29 @@
 
   onMount(() => {
     _coord.set({...coord2D});
+
+    // 
     if (trueSize) {
-      const img = new Image();
-      img.onload = (e) => {
-        hasImage = true;
-        let { width, height } = e.path[0];
-        resize('resize', {
-          width,
-          height
-        });
-      }
-      img.src = image;
+      resizeToTrueSize();
     }
   });
+
+  function resizeToTrueSize() {
+    const img = new Image();
+    img.onload = (e) => {
+      hasImage = true;
+      let { width, height } = e.path[0];
+      resizeEvent('resize', {
+        width,
+        height
+      });
+    }
+    img.src = image;
+  }
 </script>
 
 {#if hasImage || !trueSize}
-  <image 
+  <image
     id={`${_prefix}${id}`}
     class:no-events={passThrough} href={image} 
     x={$_coord.x}

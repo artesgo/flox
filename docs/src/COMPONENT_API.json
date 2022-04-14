@@ -326,8 +326,7 @@
         {
           "name": "rect2D",
           "kind": "let",
-          "type": "import(\"../Svg\").Coord2D",
-          "value": "{}",
+          "type": "import(\"../Rect/DraggableRect\").Rect2D",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -456,8 +455,7 @@
         {
           "name": "rect2D",
           "kind": "let",
-          "type": "import(\"./\").Rect2D",
-          "value": "{}",
+          "type": "import(\"./DraggableRect\").Rect2D",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -561,7 +559,7 @@
         {
           "name": "rect2D",
           "kind": "let",
-          "type": "import(\"../Svg\").Coord2D",
+          "type": "import(\"../Rect/DraggableRect\").Rect2D",
           "value": "{}",
           "isFunction": false,
           "isFunctionDeclaration": false,

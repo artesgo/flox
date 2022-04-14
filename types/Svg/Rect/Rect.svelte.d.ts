@@ -3,9 +3,9 @@ import { SvelteComponentTyped } from "svelte";
 
 export interface RectProps {
   /**
-   * @default {}
+   * @default undefined
    */
-  rect2D?: import("./").Rect2D;
+  rect2D?: import("./DraggableRect").Rect2D;
 
   /**
    * @default undefined

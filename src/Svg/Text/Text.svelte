@@ -4,7 +4,7 @@
 
   /** @type {import("../Svg").Coord2D} */
   export let coord2D = {};
-  /** @type {import("../Svg").Coord2D} */
+  /** @type {import("../Rect/DraggableRect").Rect2D} */
   export let rect2D = {};
   /** @type {string} */
   export let text = '';

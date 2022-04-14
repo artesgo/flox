@@ -10,7 +10,7 @@ export interface TextProps {
   /**
    * @default {}
    */
-  rect2D?: import("../Svg").Coord2D;
+  rect2D?: import("../Rect/DraggableRect").Rect2D;
 
   /**
    * @default ''

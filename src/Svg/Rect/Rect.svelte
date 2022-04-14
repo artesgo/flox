@@ -1,8 +1,8 @@
 <script>
   import { spring } from 'svelte/motion';
 
-  /** @type {import("./").Rect2D} */
-  export let rect2D = {};
+  /** @type {import("./DraggableRect").Rect2D} */
+  export let rect2D;
   /** @type {import("../Svg").NativeSvgProps} */
   export let svgProps;
 

@@ -8,9 +8,9 @@ export interface ImageProps {
   coord2D?: import("../Svg").Coord2D;
 
   /**
-   * @default {}
+   * @default undefined
    */
-  rect2D?: import("../Svg").Coord2D;
+  rect2D?: import("../Rect/DraggableRect").Rect2D;
 
   /**
    * @default ''

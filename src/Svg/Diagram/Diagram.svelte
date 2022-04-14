@@ -797,7 +797,7 @@
             on:updateText={(e) => updateText(rect, e)}
           >
             {#if !!rect.image}
-              <Image {...rect} passThrough={true} />
+              <Image {...rect} passThrough={true} trueSize={false} on:resize={(e) => resize(e, rect)} />
             {/if}
             
             {#if !!rect.connectionPoints}

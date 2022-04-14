@@ -301,7 +301,7 @@ None.
      y: 0,
 
 }</code> | -- |
-| rect2D | <code>let</code> | No | <code>import("../Svg").Coord2D</code> | <code>{}</code> | -- |
+| rect2D | <code>let</code> | No | <code>import("../Rect/DraggableRect").Rect2D</code> | <code>undefined</code> | -- |
 | image | <code>let</code> | No | <code>string</code> | <code>''</code> | -- |
 | id | <code>let</code> | No | <code>string&#124;number</code> | <code>''</code> | -- |
 | passThrough | <code>let</code> | No | <code>boolean</code> | <code>false</code> | -- |
@@ -358,10 +358,10 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                         | Default value          | Description |
-| :-------- | :--------------- | :------- | :------------------------------------------- | ---------------------- | ----------- |
-| rect2D    | <code>let</code> | No       | <code>import("./").Rect2D</code>             | <code>{}</code>        | --          |
-| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>undefined</code> | --          |
+| Prop name | Kind             | Reactive | Type                                          | Default value          | Description |
+| :-------- | :--------------- | :------- | :-------------------------------------------- | ---------------------- | ----------- |
+| rect2D    | <code>let</code> | No       | <code>import("./DraggableRect").Rect2D</code> | <code>undefined</code> | --          |
+| svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code>  | <code>undefined</code> | --          |
 
 ### Slots
 
@@ -422,13 +422,13 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                                  | Default value          | Description |
-| :-------- | :--------------- | :------- | :------------------------------------ | ---------------------- | ----------- |
-| editing   | <code>let</code> | Yes      | <code>boolean</code>                  | <code>undefined</code> | --          |
-| text      | <code>let</code> | Yes      | <code>string</code>                   | <code>''</code>        | --          |
-| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>        | --          |
-| rect2D    | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{}</code>        | --          |
-| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code> | <code>{                |
+| Prop name | Kind             | Reactive | Type                                                | Default value          | Description |
+| :-------- | :--------------- | :------- | :-------------------------------------------------- | ---------------------- | ----------- |
+| editing   | <code>let</code> | Yes      | <code>boolean</code>                                | <code>undefined</code> | --          |
+| text      | <code>let</code> | Yes      | <code>string</code>                                 | <code>''</code>        | --          |
+| coord2D   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>               | <code>{}</code>        | --          |
+| rect2D    | <code>let</code> | No       | <code>import("../Rect/DraggableRect").Rect2D</code> | <code>{}</code>        | --          |
+| padding   | <code>let</code> | No       | <code>import("../Svg").Coord2D</code>               | <code>{                |
 
      x: 5,
      y: 5,
