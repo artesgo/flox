@@ -185,6 +185,24 @@
     return ret;
   }
 
+  function createResizingPointOffsets(rect) {
+    let ret = {
+      'top-left': {x: 0, y: 0},
+      'top-right': {x: 0, y: 0},
+      'bottom-left': {x: 0, y: 0},
+      'bottom-right': {x: 0, y: 0},
+    };
+    if (!(rect.coord2D && rect.rect2D)) {
+      console.error('')
+    } else {
+      ret['top-left'] = { x: 0, y: 0};
+      ret['top-right'] = { x: rect.rect2D.width, y: 0};
+      ret['bottom-left'] = { x: 0, y: rect.rect2D.height};
+      ret['bottom-right'] = { x: rect.rect2D.width, y: rect.rect2D.height};
+    }
+    return ret;
+  }
+
   // onMount > init > createConnector > findClosestConnection
   function getDistance(coordA, coordB) {
     let xDiff = Math.abs(coordA.x - coordB.x);
@@ -200,20 +218,26 @@
   //#endregion
 
   //#region dragging
-  function dragUpdate(rect, e) {
+  function dragUpdate(rect, event) {
     dragging = true;
+    updateRectPosition(rect, event);
+    updateClosest();
+    updateConnection(rect, event);
+  }
+
+  function updateRectPosition(rect, event) {
     $store = [
       ...$store.map(r => {
         // this moves the rectangle being dragged
         if (rect.id === r.id) {
-          r.coord2D.x += (e.detail.dx * zoom / 100);
-          r.coord2D.y += (e.detail.dy * zoom / 100);
+          r.coord2D.x += (event.detail.dx * zoom / 100);
+          r.coord2D.y += (event.detail.dy * zoom / 100);
         }
         return r;
       })
     ];
-
-    // get the connections and update closest
+  }
+  function updateClosest() {
     $connections = [...$connections.map((conn) => {
       // get rects
       let startRect = $store.find(r => r.id === conn.begin.id);
@@ -223,16 +247,16 @@
       end.id = conn.end.id;
       return {begin, end};
     })];
-
-    // check if closest has changed
+  }
+  function updateConnection(rect, event) {
     $connections = [
       ...$connections.map(conn => {
         if (conn.begin.id === rect.id) {
-          conn.begin.x += (e.detail.dx * zoom / 100);
-          conn.begin.y += (e.detail.dy * zoom / 100);
+          conn.begin.x += (event.detail.dx * zoom / 100);
+          conn.begin.y += (event.detail.dy * zoom / 100);
         } else if (conn.end.id === rect.id) {
-          conn.end.x += (e.detail.dx * zoom / 100);
-          conn.end.y += (e.detail.dy * zoom / 100);
+          conn.end.x += (event.detail.dx * zoom / 100);
+          conn.end.y += (event.detail.dy * zoom / 100);
         }
         return conn;
       })
@@ -264,6 +288,10 @@
         _nextId++;
       }
       r.connectionPoints = createConnectionPointOffsets(r);
+      r.resizePoints = {
+        ...r.connectionPoints,
+        ...createResizingPointOffsets(r)
+      };
     })];
     $store = [...rects.map(r => {
       // connect the connections
@@ -304,7 +332,10 @@
         ry: template.rect2D.ry * 5,
       },
     }
-    newRect.connectionPoints = createConnectionPointOffsets(newRect);
+    newRect = {
+      ...newRect,
+      ...updatePoints(newRect)
+    }
     newRect.coord2D = coord;
     newRect.id = _nextId++;
     // resets template back to origin;
@@ -364,10 +395,9 @@
     ];
   }
 
-  function forwardEvent(rect, event) {
+  function dblOnRect(rect, event) {
     event.stopPropagation();
     event.preventDefault();
-    rect.editing = true;
   }
   //#endregion
 
@@ -606,7 +636,10 @@
       ...$store.map(r => {
         if (r.id === rect.id) {
           r.rect2D = size.detail;
-          r.connectionPoints = createConnectionPointOffsets(r);
+          r = {
+            ...r,
+            ...updatePoints(r)
+          }
         }
         return r;
       })
@@ -649,29 +682,35 @@
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
                 if (rect.rect2D.height - e.detail.dy > 100) {
-                  // this still moves the rect when it scales too small
                   rect.coord2D.y = coord.y;
-                  if (rect.rect2D.height - e.detail.dy > 100) {
-                    rect.rect2D.height -= e.detail.dy * zoom / 100;
-                  }
-                  rect.connectionPoints = createConnectionPointOffsets(rect);
+                  rect.rect2D.height -= e.detail.dy * zoom / 100;
+                }
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
                 }
               }
               return rect;
             })
           ]
           break;
+        case 'top-left':
+          break;
+        case 'top-right':
+          break;
         case 'left':
           // resize coord.x + width
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                // this still moves the rect when it scales too small
-                rect.coord2D.x = coord.x;
                 if (rect.rect2D.width - e.detail.dx > 100) {
+                  rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
                 }
-                rect.connectionPoints = createConnectionPointOffsets(rect);
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
               }
               return rect;
             })
@@ -688,11 +727,18 @@
                 } else {
                   rect.rect2D.height = 100;
                 }
-                rect.connectionPoints = createConnectionPointOffsets(rect);
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
               }
               return rect;
             })
           ]
+          break;
+        case 'bottom-left':
+          break;
+        case 'bottom-right':
           break;
         default:
           // resize width only
@@ -705,13 +751,29 @@
                 } else {
                   rect.rect2D.width = 100;
                 }
-                rect.connectionPoints = createConnectionPointOffsets(rect);
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
               }
               return rect;
             })
           ]
           break;
       }
+      updateConnection(rect, e);
+    }
+  }
+
+  function updatePoints(rect) {
+    const connectionPoints = createConnectionPointOffsets(rect);
+    const resizePoints = {
+      ...connectionPoints,
+      ...createResizingPointOffsets(rect)
+    };
+    return {
+      connectionPoints,
+      resizePoints
     }
   }
 
@@ -785,7 +847,7 @@
         {/each}
         {#each $store as rect (rect.id)}
           <DraggableRect {...rect} draggable={true}
-            on:dblclick={(e) => forwardEvent(rect, e)}
+            on:dblclick={(e) => dblOnRect(rect, e)}
             on:drag={(e) => dragUpdate(rect, e)}
             on:dragEnd={dragEnd}
             on:mouseover={() => over(rect)}
@@ -803,29 +865,32 @@
             {#if !!rect.connectionPoints}
               {#if showConnections}
                 {#each Object.keys(rect.connectionPoints) as point}
-                  <Circle
-                    on:mousedown={(e) => {createNewConnection(e, rect, point)}}
-                    svgProps={{fill: '#222222aa'}}
-                    circle2D={{
-                      cx: rect.connectionPoints[point].x + rect.coord2D.x,
-                      cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                      r: getRadius(rect) * zoom / 125}} />
+                  {@const radius = getRadius(rect) * zoom / 125}}
+                  {#if radius > 0}
+                    <Circle
+                      on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                      svgProps={{fill: '#222222aa'}}
+                      circle2D={{
+                        cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                        cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                        r: radius 
+                      }} />
+                  {/if}
                 {/each}
               {/if}
               {#if showResizing}
-                {#each Object.keys(rect.connectionPoints) as point}
-                  {@const radius = getRadius(rect) * zoom / 125}
-                  <Rect
-                    on:mousedown={(e) => startResize(e, rect, point)}
-                    svgProps={{fill: '#222222aa'}}
-                    rect2D={{
-                      coord2D: {
-                        x: rect.connectionPoints[point].x + rect.coord2D.x - (radius / 2),
-                        y: rect.connectionPoints[point].y + rect.coord2D.y - (radius / 2),
-                      },
-                      height: radius,
-                      width: radius
-                    }} />
+                {#each Object.keys(rect.resizePoints) as point}
+                  {@const radius = getRadius(rect) * zoom / 125}}
+                  {#if radius > 0}
+                    <Circle
+                      on:mousedown={(e) => startResize(e, rect, point)}
+                      svgProps={{fill: '#222222aa'}}
+                      circle2D={{
+                        cx: rect.resizePoints[point].x + rect.coord2D.x,
+                        cy: rect.resizePoints[point].y + rect.coord2D.y,
+                        r: getRadius(rect) * zoom / 125,
+                      }} />
+                  {/if}
                 {/each}
               {/if}
             {/if}

@@ -9,7 +9,7 @@
   /** @type {import("../Svg").NativeSvgProps} */
   export let svgProps;
   
-  let _circle = spring({ cx: 0, cy: 0, r: 0 });
+  let _circle = spring({ cx: circle2D.cx, cy: circle2D.cy, r: 0 });
   $: _circle.update($_circle => (circle2D));
 </script>
 
