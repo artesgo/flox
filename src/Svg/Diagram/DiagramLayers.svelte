@@ -54,7 +54,7 @@
         </div>
         <div>Text: {rect.text || ''}</div>
         {#if rect.coord2D}
-          <div>Coords: x{Math.floor(rect.coord2D.x)} y{Math.floor(rect.coord2D.y)}</div>
+          <div>x: {Math.floor(rect.coord2D.x)} y: {Math.floor(rect.coord2D.y)}</div>
         {/if}
         <div>Image: {rect.image || ''}</div>
       </div>

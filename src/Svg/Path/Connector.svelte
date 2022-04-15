@@ -15,8 +15,8 @@
   let _end = spring(end);
 
   // this listens on updates from outside component and animates changes
-  $: _begin.update(($animatedBegin) => begin);
-  $: _end.update(($animatedEnd) => end);
+  $: _begin.update(() => begin);
+  $: _end.update(() => end);
 
   let oneHalfX;
   let oneHalfY;

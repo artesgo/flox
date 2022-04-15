@@ -666,7 +666,7 @@
         y: (offset.y - (e.detail.dy * zoom / 100)),
       }
     }
-
+    
     monitorResizing(e);
   }
 
@@ -695,8 +695,48 @@
           ]
           break;
         case 'top-left':
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                if (rect.rect2D.height - e.detail.dy > 100) {
+                  rect.coord2D.y = coord.y;
+                  rect.rect2D.height -= e.detail.dy * zoom / 100;
+                }
+                if (rect.rect2D.width - e.detail.dx > 100) {
+                  rect.coord2D.x = coord.x;
+                  rect.rect2D.width -= e.detail.dx * zoom / 100;
+                }
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
+              }
+              return rect;
+            })
+          ];
           break;
         case 'top-right':
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                if (rect.rect2D.height - e.detail.dy > 100) {
+                  rect.coord2D.y = coord.y;
+                  rect.rect2D.height -= e.detail.dy * zoom / 100;
+                }
+                const width = coord.x - resizeTarget.coord2D.x;
+                if (width > 100) {
+                  rect.rect2D.width = width;
+                } else {
+                  rect.rect2D.width = 100;
+                }
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
+              }
+              return rect;
+            })
+          ];
           break;
         case 'left':
           // resize coord.x + width
@@ -737,8 +777,52 @@
           ]
           break;
         case 'bottom-left':
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                if (rect.rect2D.width - e.detail.dx > 100) {
+                  rect.coord2D.x = coord.x;
+                  rect.rect2D.width -= e.detail.dx * zoom / 100;
+                }
+                const height = coord.y - rect.coord2D.y;
+                if (height > 100) {
+                  rect.rect2D.height = height;
+                } else {
+                  rect.rect2D.height = 100;
+                }
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
+              }
+              return rect;
+            })
+          ]
           break;
         case 'bottom-right':
+          $store = [
+            ...$store.map(rect => {
+              if (rect.id === resizeTarget.id) {
+                const width = coord.x - resizeTarget.coord2D.x;
+                if (width > 100) {
+                  rect.rect2D.width = width;
+                } else {
+                  rect.rect2D.width = 100;
+                }
+                const height = coord.y - rect.coord2D.y;
+                if (height > 100) {
+                  rect.rect2D.height = height;
+                } else {
+                  rect.rect2D.height = 100;
+                }
+                rect = {
+                  ...rect,
+                  ...updatePoints(rect)
+                }
+              }
+              return rect;
+            })
+          ]
           break;
         default:
           // resize width only
@@ -761,7 +845,6 @@
           ]
           break;
       }
-      updateConnection(rect, e);
     }
   }
 
