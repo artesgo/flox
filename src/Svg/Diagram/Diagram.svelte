@@ -248,6 +248,7 @@
       return {begin, end};
     })];
   }
+
   function updateConnection(rect, event) {
     $connections = [
       ...$connections.map(conn => {
@@ -600,6 +601,9 @@
       ...template,
       coord2D: {
         ...template.coord2D
+      },
+      rect2D: {
+        ...template.rect2D
       }
     }
   }
@@ -864,7 +868,6 @@
     panning = false;
   }
   //#endregion
-
 </script>
 
 <section on:mousemove={syncPosition}>
@@ -886,7 +889,7 @@
   <div class="diagram-wrapper">
     {#if show.template}
       <div class="diagram-templates" transition:fly={{duration: 300, y: -100}}>
-        <Svg width={50}>
+        <Svg width={50} height={'600'}>
           {#each _templates as template, index}
             {#if selectedTemplate === index}
               <DraggableRect {...template}

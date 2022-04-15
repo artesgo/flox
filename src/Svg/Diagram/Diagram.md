@@ -13,6 +13,10 @@ paste image urls
 shape layer list
 shape props
 + Add Resize Handles
+Reorder Elements, Layer Menu
+
+### General Functionality
+layers and object search
 
 ### Clicks
 double click to add at mouse position
@@ -23,12 +27,15 @@ drag attachment points to existing Rect
 drag attachment point creates new connection preview
 create drag and drop template for new objects
 drag and drop new objects from template
+minimum size for shapes
 
 ### Editing
 ---
 
 ## Fixes
-minimum size for shapes
+Edit Text Resizes Font Size
++ Edit Text Constrain Width: Multiline
+  - Multiline constrain width, do not overflow container
 
 ## keyboard events
 delete key, deletes shape / connection
@@ -37,17 +44,16 @@ delete key, deletes shape / connection
 + Type to edit text
 + Ctrl C
 + Ctrl V
+  - pasted image resizing from clone
 Ctrl Z
+  - TODO: keep reference to last item
+  - TODO: keep state list
 Ctrl Shift Z
 
 ## MVP
-Edit Text Resizes Font Size
-+ Edit Text Constrain Width: Multiline
-  - Multiline constrain width, do not overflow container
 Edit Text Constrain Height: Single Line
 Resize Snap to Grid
 Redo / Undo
-Reorder Elements, Layer Menu
     
 ## Next Version
 drag and adjust connection midpoints
@@ -55,9 +61,6 @@ right click context menu
 right click context menu settings
 settings menu
 settings menu radius, text entry
-snap to grid
-layers and object search
-object search
 
 ## Nice to have
 Custom Svg Objects

@@ -20,7 +20,10 @@ export function pannable(node) {
 		x = event.clientX;
 		y = event.clientY;
 		node.dispatchEvent(new CustomEvent('panmove', {
-			detail: { x, y, dx, dy }
+			detail: {
+				x, y, dx, dy,
+				button: event.buttons
+			}
 		}));
 	}
 

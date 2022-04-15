@@ -3,11 +3,14 @@
   export let rects;
   export let svgPathProps;
   let clientWidth;
+  let clientHeight;
+
+  $: max = Math.max(clientWidth, clientHeight);
 </script>
 
-<section bind:clientWidth>
+<section bind:clientWidth bind:clientHeight>
   <!-- height / width need to be the same to scale correctly... -->
-  <Diagram width={clientWidth} height={clientWidth} {rects} {svgPathProps} />
+  <Diagram width={max} height={max} {rects} {svgPathProps} />
 </section>
 
 
