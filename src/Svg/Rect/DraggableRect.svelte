@@ -22,16 +22,26 @@
   export let zoom;
   /** @type {string}*/
   export let text;
+  /** @type {number}*/
+  export let grid = 0;
 
   let dragging;
   let editing;
   let _coord = spring(coord2D);
   let _rect = spring(rect2D);
 
-  $: _coord.update($_coord => ({
-    x: coord2D.x,
-    y: coord2D.y
-  }));
+  $: _coord.update($_coord => {
+    if (grid > 0) {
+      return {
+        x: Math.floor(coord2D.x / grid) * grid,
+        y: Math.floor(coord2D.y / grid) * grid
+      }
+    }
+    return {
+      x: coord2D.x,
+      y: coord2D.y
+    }
+  });
   $: _rect.update($_rect => ({
     width: rect2D.width,
     height: rect2D.height

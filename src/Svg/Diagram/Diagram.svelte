@@ -1,7 +1,6 @@
 <script>
 	import { fly } from 'svelte/transition';
 	import DiagramLayers from './DiagramLayers.svelte';
-	import Rect from './../Rect/Rect.svelte';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { spring } from 'svelte/motion';
@@ -18,6 +17,8 @@
   import Link from '../../assets/mono-icons/svg/link.svelte';
   import Expand from '../../assets/mono-icons/svg/expand.svelte';
   import Grid from '../../assets/mono-icons/svg/grid.svelte';
+  import Options from '../../assets/mono-icons/svg/options-vertical.svelte';
+  import Help from '../../assets/mono-icons/svg/circle-help.svelte';
 
   /** @typedef {import("../Rect/Rect").Rect2D} Rect2D*/
   /** @typedef {import("../Svg").Coord2D} Coord2D*/
@@ -49,6 +50,7 @@
     template: true,
     controls: true,
     layers: false,
+    descriptions: true,
   };
   export let templates = [{
     connections: [],
@@ -102,6 +104,7 @@
       'stroke-width': 2,
     }
   }];
+  export let grid = 0;
   //#endregion
 
   //#region private props
@@ -176,11 +179,12 @@
     if (!(rect.coord2D && rect.rect2D)) {
       console.error('')
     } else {
+      let { width, height } = updateGridPoints(rect);
       // connectionPointOffsets
-      ret.left = { x: 0, y: rect.rect2D.height / 2};
-      ret.right = { x: rect.rect2D.width, y: rect.rect2D.height / 2};
-      ret.top = { x: rect.rect2D.width / 2, y: 0};
-      ret.bottom = { x: rect.rect2D.width / 2, y: rect.rect2D.height};
+      ret.left = { x: 0, y: height / 2};
+      ret.right = { x: width, y: height / 2};
+      ret.top = { x: width / 2, y: 0};
+      ret.bottom = { x: width / 2, y: height};
     }
     return ret;
   }
@@ -195,12 +199,25 @@
     if (!(rect.coord2D && rect.rect2D)) {
       console.error('')
     } else {
+      let { width, height } = updateGridPoints(rect);
       ret['top-left'] = { x: 0, y: 0};
-      ret['top-right'] = { x: rect.rect2D.width, y: 0};
-      ret['bottom-left'] = { x: 0, y: rect.rect2D.height};
-      ret['bottom-right'] = { x: rect.rect2D.width, y: rect.rect2D.height};
+      ret['top-right'] = { x: width, y: 0};
+      ret['bottom-left'] = { x: 0, y: height};
+      ret['bottom-right'] = { x: width, y: height};
     }
     return ret;
+  }
+
+  function updateGridPoints(rect) {
+    let width = rect.rect2D.width;
+    let height = rect.rect2D.height;
+    if (grid > 0) {
+      width = Math.floor(width / grid) * grid;
+      height = Math.floor(height / grid) * grid;
+    }
+    return {
+      width, height
+    }
   }
 
   // onMount > init > createConnector > findClosestConnection
@@ -518,6 +535,10 @@
   }
   function endResize() {
     resizing = false;
+    overSize = {
+      x: 0,
+      y: 0,
+    }
     resizeTarget = null;
   }
 
@@ -594,6 +615,9 @@
         copiedTemplate = cloneTemplate(found);
       }
     }
+    // if (e.code === "Space" || e.key === ' ') {
+    //   console.log('space')
+    // }
   }
 
   function cloneTemplate(template) {
@@ -674,6 +698,10 @@
     monitorResizing(e);
   }
 
+  let overSize = {
+    x: 0,
+    y: 0,
+  }
   // use mouse position and check for resizing event
   function monitorResizing(e) {
     if (resizing) {
@@ -685,9 +713,11 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100) {
+                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
+                } else {
+                  overSize.y += e.detail.dy;
                 }
                 rect = {
                   ...rect,
@@ -702,13 +732,17 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100) {
+                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
+                } else {
+                  overSize.y += e.detail.dy;
                 }
-                if (rect.rect2D.width - e.detail.dx > 100) {
+                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
+                } else {
+                  overSize.x += e.detail.dx;
                 }
                 rect = {
                   ...rect,
@@ -723,9 +757,11 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100) {
+                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
+                } else {
+                  overSize.y += e.detail.dy;
                 }
                 const width = coord.x - resizeTarget.coord2D.x;
                 if (width > 100) {
@@ -747,9 +783,11 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - e.detail.dx > 100) {
+                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
+                } else {
+                  overSize.x += e.detail.dx;
                 }
                 rect = {
                   ...rect,
@@ -784,9 +822,11 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - e.detail.dx > 100) {
+                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
+                } else {
+                  overSize.x += e.detail.dx;
                 }
                 const height = coord.y - rect.coord2D.y;
                 if (height > 100) {
@@ -874,16 +914,27 @@
   {#if show.controls}
     <div class="diagram-controls" class:controls-hidden={!show.controls}>
       <button class:active={show.template} on:click={() => show.template =! show.template} aria-label="Toggle Templates">
-        <Grid />
+        <Options />
+        <div class:sr-only={show.descriptions}>Toggle Templates</div>
       </button>
-      <button class:active={showResizing} on:click={setResize} aria-label="Resize"><Expand /></button>
-      <button class:active={showConnections} on:click={setConnections} aria-label="Connections"><Link /></button>
-      <button class:active={zoom === 100} on:click={resetZoom} aria-label="Reset Zoom"><Magnifier /></button>
-      <button on:click={() => onWheel({ deltaY: -1})} aria-label="Zoom in"><ZoomIn /></button>
-      <button on:click={() => onWheel({ deltaY: 1})} aria-label="Zoom out"><ZoomOut /></button>
-      <button class:active={show.layers} on:click={() => show.layers =! show.layers} aria-label="Toggle Layers">
+      <button class:active={showResizing} on:click={setResize} aria-label="Resize"><Expand />
+        <div class:sr-only={show.descriptions}>Resize</div></button>
+      <button class:active={showConnections} on:click={setConnections} aria-label="Connections"><Link />
+        <div class:sr-only={show.descriptions}>Connect</div></button>
+      <button class:active={zoom === 100} on:click={resetZoom} aria-label="Reset Zoom"><Magnifier />
+        <div class:sr-only={show.descriptions}>Reset Zoom</div></button>
+      <button on:click={() => onWheel({ deltaY: -1})} aria-label="Zoom in"><ZoomIn />
+        <div class:sr-only={show.descriptions}>Zoom In</div></button>
+      <button on:click={() => onWheel({ deltaY: 1})} aria-label="Zoom out"><ZoomOut />
+        <div class:sr-only={show.descriptions}>Zoom Out</div></button>
+      <button class:active={show.layers} on:click={() => show.layers = !show.layers} aria-label="Toggle Layers">
         <Layers />
+        <div class:sr-only={show.descriptions}>Toggle Layers {show.layers ? 'Off' : 'On'}</div>
       </button>
+      <button class:active={grid} on:click={() => grid = !grid} aria-label="Snap to Grid"><Grid />
+        <div class:sr-only={show.descriptions}>Toggle Grid</div></button>
+      <button class:active={!show.descriptions} on:click={() => show.descriptions = !show.descriptions} aria-label="Snap to Grid"><Help />
+        <div class:sr-only={show.descriptions}>Toggle Descriptions</div></button>
     </div>
   {/if}
   <div class="diagram-wrapper">
@@ -943,6 +994,7 @@
             on:contextmenu={(e) => deleteRect(rect, e)}
             on:mouseup={() => endNewConnection(rect)}
             on:updateText={(e) => updateText(rect, e)}
+            {grid}
           >
             {#if !!rect.image}
               <Image {...rect} passThrough={true} trueSize={false} on:resize={(e) => resize(e, rect)} />
@@ -954,6 +1006,7 @@
                   {@const radius = getRadius(rect) * zoom / 125}}
                   {#if radius > 0}
                     <Circle
+                      {grid}
                       on:mousedown={(e) => {createNewConnection(e, rect, point)}}
                       svgProps={{fill: '#222222aa'}}
                       circle2D={{
@@ -971,6 +1024,7 @@
                     <Circle
                       on:mousedown={(e) => startResize(e, rect, point)}
                       svgProps={{fill: '#222222aa'}}
+                      {grid}
                       circle2D={{
                         cx: rect.resizePoints[point].x + rect.coord2D.x,
                         cy: rect.resizePoints[point].y + rect.coord2D.y,
@@ -1024,7 +1078,10 @@
   }
   .diagram-controls {
     border-bottom: 1px solid black;
-    border-right: 1px solid black;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
   }
   .diagram-templates {
     top: 48px;
@@ -1036,8 +1093,20 @@
   .diagram-controls button {
     background: none;
     border: none;
+    width: 160px;
+    background: white;
   }
   button.active {
     background: lightgrey;
+  }
+  .sr-only {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+    transition: 300ms;
   }
 </style>
