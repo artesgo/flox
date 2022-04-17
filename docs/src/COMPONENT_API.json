@@ -22,6 +22,16 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "grid",
+          "kind": "let",
+          "type": "number",
+          "value": "0",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
         }
       ],
       "moduleExports": [],
@@ -128,7 +138,7 @@
           "name": "show",
           "kind": "let",
           "type": "{template: boolean; controls: boolean; layers: boolean}",
-          "value": "{\r     template: true,\r     controls: true,\r     layers: false,\r   }",
+          "value": "{\r     template: true,\r     controls: true,\r     layers: false,\r     descriptions: true,\r   }",
           "isFunction": false,
           "isFunctionDeclaration": false,
           "constant": false,
@@ -143,6 +153,16 @@
           "isFunctionDeclaration": false,
           "constant": false,
           "reactive": false
+        },
+        {
+          "name": "grid",
+          "kind": "let",
+          "type": "number",
+          "value": "0",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": true
         },
         {
           "name": "zoom",

@@ -17,6 +17,11 @@ export interface CircleProps {
    * @default undefined
    */
   svgProps?: import("../Svg").NativeSvgProps;
+
+  /**
+   * @default 0
+   */
+  grid?: number;
 }
 
 export default class Circle extends SvelteComponentTyped<

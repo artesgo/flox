@@ -34,7 +34,7 @@ export interface DiagramProps {
   svgPathProps?: NativeSvgProps;
 
   /**
-   * @default { template: true, controls: true, layers: false, }
+   * @default { template: true, controls: true, layers: false, descriptions: true, }
    */
   show?: { template: boolean; controls: boolean; layers: boolean };
 
@@ -97,6 +97,11 @@ export interface DiagramProps {
       };
     }
   ];
+
+  /**
+   * @default 0
+   */
+  grid?: number;
 
   /**
    * @default 100

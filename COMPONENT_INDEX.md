@@ -35,6 +35,7 @@ export interface Circle2D {
 | :-------- | :--------------- | :------- | :------------------------------------------- | ---------------------- | ----------- |
 | circle2D  | <code>let</code> | No       | <code>Circle2D</code>                        | <code>undefined</code> | --          |
 | svgProps  | <code>let</code> | No       | <code>import("../Svg").NativeSvgProps</code> | <code>undefined</code> | --          |
+| grid      | <code>let</code> | No       | <code>number</code>                          | <code>0</code>         | --          |
 
 ### Slots
 
@@ -96,6 +97,7 @@ export interface DiagramRect {
 | Prop name    | Kind             | Reactive | Type                                                                 | Default value          | Description |
 | :----------- | :--------------- | :------- | :------------------------------------------------------------------- | ---------------------- | ----------- |
 | zoom         | <code>let</code> | Yes      | <code>number</code>                                                  | <code>100</code>       | --          |
+| grid         | <code>let</code> | Yes      | <code>number</code>                                                  | <code>0</code>         | --          |
 | rects        | <code>let</code> | No       | <code>DiagramRect[]</code>                                           | <code>[]</code>        | --          |
 | width        | <code>let</code> | No       | <code>number</code>                                                  | <code>0</code>         | --          |
 | svgPathProps | <code>let</code> | No       | <code>NativeSvgProps</code>                                          | <code>undefined</code> | --          |
@@ -104,6 +106,7 @@ export interface DiagramRect {
      template: true,
      controls: true,
      layers: false,
+     descriptions: true,
 
 }</code> | -- |
 | templates | <code>let</code> | No | <code>[{
