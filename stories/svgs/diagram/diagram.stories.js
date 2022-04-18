@@ -364,14 +364,14 @@ export const Resizing = () => ({
         connections: [],
         id: 1,
         rect2D: {
-          width: 100,
-          height: 100,
+          width: 200,
+          height: 200,
           rx: 4,
           ry: 4,
         },
         coord2D: {
-          x: 60,
-          y: 60,
+          x: 200,
+          y: 200,
         },
         svgProps: {
           fill: '#FC0',

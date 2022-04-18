@@ -546,13 +546,13 @@
 
   //#region control toggles
   function setResize() {
-    showResizing = true;
+    showResizing = !showResizing;
     showConnections = false;
   }
 
   function setConnections() {
     showResizing = false;
-    showConnections = true;
+    showConnections = !showConnections;
   }
   //#endregion
 
@@ -713,7 +713,7 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
+                if (rect.rect2D.height - overSize.y > 100) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
                 } else {
@@ -732,13 +732,13 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
+                if (rect.rect2D.height - overSize.y > 100) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
                 } else {
                   overSize.y += e.detail.dy;
                 }
-                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
+                if (rect.rect2D.width - overSize.x > 100) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
                 } else {
@@ -757,7 +757,7 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - e.detail.dy > 100 && overSize.y < 0) {
+                if (rect.rect2D.height - overSize.y > 100) {
                   rect.coord2D.y = coord.y;
                   rect.rect2D.height -= e.detail.dy * zoom / 100;
                 } else {
@@ -783,7 +783,7 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
+                if (rect.rect2D.width - overSize.x > 100) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
                 } else {
@@ -822,7 +822,7 @@
           $store = [
             ...$store.map(rect => {
               if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - e.detail.dx > 100 && overSize.x < 0) {
+                if (rect.rect2D.width - overSize.x > 100) {
                   rect.coord2D.x = coord.x;
                   rect.rect2D.width -= e.detail.dx * zoom / 100;
                 } else {
