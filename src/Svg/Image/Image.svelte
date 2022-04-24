@@ -6,7 +6,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { spring } from 'svelte/motion';
   
-  const resizeEvent = createEventDispatcher();
+  const dispatch = createEventDispatcher();
   
   /** @type {import("../Svg").Coord2D} */
   export let coord2D = {
@@ -38,18 +38,21 @@
   onMount(() => {
     _coord.set({...coord2D});
 
-    // 
-    if (trueSize) {
-      resizeToTrueSize();
-    }
+    loadAspect();
   });
 
-  function resizeToTrueSize() {
+  function loadAspect() {
     const img = new Image();
     img.onload = (e) => {
       hasImage = true;
       let { width, height } = e.path[0];
-      resizeEvent('resize', {
+      if (trueSize) {
+        dispatch('resize', {
+          width,
+          height
+        });
+      }
+      dispatch('load', {
         width,
         height
       });

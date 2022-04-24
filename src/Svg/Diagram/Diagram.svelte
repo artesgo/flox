@@ -31,6 +31,7 @@
    * text?: string,
    * image?: string,
    * rect2D: Rect2D,
+   * aspectRatio: Rect2D,
    * coord2D: Coord2D,
    * svgProps?: NativeSvgProps,
    * }} DiagramRect
@@ -122,6 +123,7 @@
   let showConnections = true;
   let showResizing = false;
   let resizing = false;
+  let stage;
   //#endregion
 
   //#region initialization
@@ -191,16 +193,17 @@
 
   function createResizingPointOffsets(rect) {
     let ret = {
-      'top-left': {x: 0, y: 0},
-      'top-right': {x: 0, y: 0},
-      'bottom-left': {x: 0, y: 0},
+      // 'top-left': {x: 0, y: 0},
+      // 'top-right': {x: 0, y: 0},
+      // 'bottom-left': {x: 0, y: 0},
       'bottom-right': {x: 0, y: 0},
     };
     if (!(rect.coord2D && rect.rect2D)) {
       console.error('')
     } else {
       let { width, height } = updateGridPoints(rect);
-      ret['top-left'] = { x: 0, y: 0};
+      // TODO: find a way to allow top left resize that maps closer to actual cursor position
+      // ret['top-left'] = { x: 0, y: 0};
       ret['top-right'] = { x: width, y: 0};
       ret['bottom-left'] = { x: 0, y: height};
       ret['bottom-right'] = { x: width, y: height};
@@ -254,6 +257,7 @@
       })
     ];
   }
+
   function updateClosest() {
     $connections = [...$connections.map((conn) => {
       // get rects
@@ -307,7 +311,7 @@
       }
       r.connectionPoints = createConnectionPointOffsets(r);
       r.resizePoints = {
-        ...r.connectionPoints,
+        // ...r.connectionPoints,
         ...createResizingPointOffsets(r)
       };
     })];
@@ -383,7 +387,7 @@
   }
   
   function blurRect() {
-    if (!dragging) {
+    if (!dragging && !copiedTemplate) {
       $focused = null;
     }
   }
@@ -420,17 +424,20 @@
   //#endregion
 
   //#region shape deletion
-  function deleteRect(rect, event) {
+  function deleteRect(id, remove = true) {
     $store = [
       ...$store.filter(r => {
-        return r.id !== rect.id;
+        return r.id !== id;
       })
     ];
     $connections = [
       ...$connections.filter(conn => {
-        return conn.begin.id !== rect.id && conn.end.id !== rect.id;
+        return conn.begin.id !== id && conn.end.id !== id;
       })
-    ]
+    ];
+    if (remove) {
+      $focused = null;
+    }
   }
 
   function deleteConnection(conn) {
@@ -533,6 +540,7 @@
     resizeTarget = rect;
     resizePoint = point;
   }
+
   function endResize() {
     resizing = false;
     overSize = {
@@ -541,7 +549,6 @@
     }
     resizeTarget = null;
   }
-
   //#endregion
 
   //#region control toggles
@@ -581,13 +588,10 @@
   //#endregion
 
   //#region copy / paste
-  /**
-   * @type {Rect2D}
-   */
   let copiedTemplate;
   function onKey(e) {
     if (e.ctrlKey) {
-      if (e.key === "v") {
+      if (e.key === "v" && $focused) {
         if (!!copiedTemplate) {
           // TODO: get mouse position
           copiedTemplate.coord2D = getAdjustedCoords();
@@ -609,15 +613,26 @@
             })
         }
       }
-      if (e.key === "c") {
+      if (e.key === "c" && $focused) {
         // use selected shape as new template
         const found = $store.find(r => r.id === $focused);
         copiedTemplate = cloneTemplate(found);
       }
+      if (e.key === "x" && $focused) {
+        // use selected shape as new template
+        const found = $store.find(r => r.id === $focused);
+        copiedTemplate = cloneTemplate(found);
+        deleteRect($focused, false);
+        // refocus stage as deletions unfocus it
+        stage.focus();
+      }
     }
-    // if (e.code === "Space" || e.key === ' ') {
-    //   console.log('space')
-    // }
+    if (e.code === "Space" || e.key === ' ') {
+      // console.log('space')
+    }
+    if (e.code === 'Backspace') {
+      deleteRect($focused);
+    }
   }
 
   function cloneTemplate(template) {
@@ -673,6 +688,17 @@
       })
     ]
   }
+
+  function loadImageAspectRatio(rect, e) {
+    $store = [
+      ...$store.map(r => {
+        if (r.id === rect.id) {
+          r.aspectRatio = e.detail;
+        }
+        return r;
+      })
+    ]
+  }
   //#endregion
 
   //#region panning workspace
@@ -702,200 +728,93 @@
     x: 0,
     y: 0,
   }
+  function resizeTop(rect, coord) {
+    if (rect.rect2D.height - overSize.y > 100) {
+      rect.coord2D.y = coord.y;
+      rect.rect2D.height -= e.detail.dy * zoom / 100;
+    } else {
+      overSize.y += e.detail.dy;
+    }
+  }
   // use mouse position and check for resizing event
   function monitorResizing(e) {
     if (resizing) {
       // resize needs to take zoom into account
       const coord = getAdjustedCoords();
-      switch (resizePoint) {
-        case 'top':
-          // resize coord.y + height
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - overSize.y > 100) {
-                  rect.coord2D.y = coord.y;
-                  rect.rect2D.height -= e.detail.dy * zoom / 100;
-                } else {
-                  overSize.y += e.detail.dy;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
+      $store = [
+        ...$store.map(rect => {
+          if (rect.id === resizeTarget.id) {
+            const stayAtX = rect.coord2D.x + rect.rect2D.width;
+            const stayAtY = rect.coord2D.y + rect.rect2D.height;
+            if (resizePoint.indexOf('top') > -1) {
+              if (rect.rect2D.height - overSize.y > 100) {
+                rect.coord2D.y = coord.y;
+                rect.rect2D.height -= e.detail.dy * zoom / 100;
+              } else {
+                overSize.y += e.detail.dy;
+              }
+            }
+            if (resizePoint.indexOf('left') > -1) {
+              if (rect.rect2D.width - overSize.x > 100) {
+                rect.coord2D.x = coord.x;
+                rect.rect2D.width -= e.detail.dx * zoom / 100;
+              } else {
+                overSize.x += e.detail.dx;
+              }
+            }
+            if (resizePoint.indexOf('right') > -1) {
+              const width = coord.x - resizeTarget.coord2D.x;
+              if (width > 100) {
+                rect.rect2D.width = width;
+              } else {
+                rect.rect2D.width = 100;
+              }
+            }
+            if (resizePoint.indexOf('bottom') > -1) {
+              const height = coord.y - rect.coord2D.y;
+              if (height > 100) {
+                rect.rect2D.height = height;
+              } else {
+                rect.rect2D.height = 100;
+              }
+            }
+            // get aspect ratio
+            if (rect.aspectRatio) {
+              // this works well from bottom right, not so much from other resize handles
+              rect.rect2D = calculateAspectRatioFit(rect.aspectRatio, rect.rect2D);
+              if (resizePoint.indexOf('top') > -1) {
+                rect.coord2D = {
+                  ...rect.coord2D,
+                  y: stayAtY - rect.rect2D.height
                 }
               }
-              return rect;
-            })
-          ]
-          break;
-        case 'top-left':
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - overSize.y > 100) {
-                  rect.coord2D.y = coord.y;
-                  rect.rect2D.height -= e.detail.dy * zoom / 100;
-                } else {
-                  overSize.y += e.detail.dy;
-                }
-                if (rect.rect2D.width - overSize.x > 100) {
-                  rect.coord2D.x = coord.x;
-                  rect.rect2D.width -= e.detail.dx * zoom / 100;
-                } else {
-                  overSize.x += e.detail.dx;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
+              if (resizePoint.indexOf('left') > -1) {
+                rect.coord2D = {
+                  ...rect.coord2D,
+                  x: stayAtX - rect.rect2D.width
                 }
               }
-              return rect;
-            })
-          ];
-          break;
-        case 'top-right':
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.height - overSize.y > 100) {
-                  rect.coord2D.y = coord.y;
-                  rect.rect2D.height -= e.detail.dy * zoom / 100;
-                } else {
-                  overSize.y += e.detail.dy;
-                }
-                const width = coord.x - resizeTarget.coord2D.x;
-                if (width > 100) {
-                  rect.rect2D.width = width;
-                } else {
-                  rect.rect2D.width = 100;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ];
-          break;
-        case 'left':
-          // resize coord.x + width
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - overSize.x > 100) {
-                  rect.coord2D.x = coord.x;
-                  rect.rect2D.width -= e.detail.dx * zoom / 100;
-                } else {
-                  overSize.x += e.detail.dx;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ]
-          break;
-        case 'bottom':
-          // resize height only
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                const height = coord.y - rect.coord2D.y;
-                if (height > 100) {
-                  rect.rect2D.height = height;
-                } else {
-                  rect.rect2D.height = 100;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ]
-          break;
-        case 'bottom-left':
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                if (rect.rect2D.width - overSize.x > 100) {
-                  rect.coord2D.x = coord.x;
-                  rect.rect2D.width -= e.detail.dx * zoom / 100;
-                } else {
-                  overSize.x += e.detail.dx;
-                }
-                const height = coord.y - rect.coord2D.y;
-                if (height > 100) {
-                  rect.rect2D.height = height;
-                } else {
-                  rect.rect2D.height = 100;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ]
-          break;
-        case 'bottom-right':
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                const width = coord.x - resizeTarget.coord2D.x;
-                if (width > 100) {
-                  rect.rect2D.width = width;
-                } else {
-                  rect.rect2D.width = 100;
-                }
-                const height = coord.y - rect.coord2D.y;
-                if (height > 100) {
-                  rect.rect2D.height = height;
-                } else {
-                  rect.rect2D.height = 100;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ]
-          break;
-        default:
-          // resize width only
-          $store = [
-            ...$store.map(rect => {
-              if (rect.id === resizeTarget.id) {
-                const width = coord.x - resizeTarget.coord2D.x;
-                if (width > 100) {
-                  rect.rect2D.width = width;
-                } else {
-                  rect.rect2D.width = 100;
-                }
-                rect = {
-                  ...rect,
-                  ...updatePoints(rect)
-                }
-              }
-              return rect;
-            })
-          ]
-          break;
-      }
+            }
+            rect = {
+              ...rect,
+              ...updatePoints(rect)
+            }
+          }
+          return rect;
+        })
+      ];
     }
+  }
+
+  function calculateAspectRatioFit(src, max) {
+    const ratio = Math.min(max.width / src.width, max.height / src.height);
+    return { width: src.width * ratio, height: src.height * ratio };
   }
 
   function updatePoints(rect) {
     const connectionPoints = createConnectionPointOffsets(rect);
     const resizePoints = {
-      ...connectionPoints,
+      // ...connectionPoints,
       ...createResizingPointOffsets(rect)
     };
     return {
@@ -908,32 +827,32 @@
     panning = false;
   }
   //#endregion
+
+  function updateGrid(_grid) {
+    grid = _grid;
+  }
 </script>
 
 <section on:mousemove={syncPosition}>
   {#if show.controls}
     <div class="diagram-controls" class:controls-hidden={!show.controls}>
-      <button class:active={show.template} on:click={() => show.template =! show.template} aria-label="Toggle Templates">
-        <Options />
-        <div class:sr-only={show.descriptions}>Toggle Templates</div>
-      </button>
-      <button class:active={showResizing} on:click={setResize} aria-label="Resize"><Expand />
+      <button class:active={show.template} on:click={() => show.template =! show.template}><Options />
+        <div class:sr-only={show.descriptions}>Toggle Templates</div></button>
+      <button class:active={showResizing} on:click={setResize}><Expand />
         <div class:sr-only={show.descriptions}>Resize</div></button>
-      <button class:active={showConnections} on:click={setConnections} aria-label="Connections"><Link />
+      <button class:active={showConnections} on:click={setConnections}><Link />
         <div class:sr-only={show.descriptions}>Connect</div></button>
-      <button class:active={zoom === 100} on:click={resetZoom} aria-label="Reset Zoom"><Magnifier />
+      <button class:active={zoom === 100} on:click={resetZoom}><Magnifier />
         <div class:sr-only={show.descriptions}>Reset Zoom</div></button>
-      <button on:click={() => onWheel({ deltaY: -1})} aria-label="Zoom in"><ZoomIn />
+      <button on:click={() => onWheel({ deltaY: -1})}><ZoomIn />
         <div class:sr-only={show.descriptions}>Zoom In</div></button>
-      <button on:click={() => onWheel({ deltaY: 1})} aria-label="Zoom out"><ZoomOut />
+      <button on:click={() => onWheel({ deltaY: 1})}><ZoomOut />
         <div class:sr-only={show.descriptions}>Zoom Out</div></button>
-      <button class:active={show.layers} on:click={() => show.layers = !show.layers} aria-label="Toggle Layers">
-        <Layers />
-        <div class:sr-only={show.descriptions}>Toggle Layers {show.layers ? 'Off' : 'On'}</div>
-      </button>
-      <button class:active={grid} on:click={() => grid = !grid} aria-label="Snap to Grid"><Grid />
-        <div class:sr-only={show.descriptions}>Toggle Grid</div></button>
-      <button class:active={!show.descriptions} on:click={() => show.descriptions = !show.descriptions} aria-label="Snap to Grid"><Help />
+      <button class:active={show.layers} on:click={() => show.layers = !show.layers}><Layers />
+        <div class:sr-only={show.descriptions}>Toggle Layers {show.layers ? 'Off' : 'On'}</div></button>
+      <!-- <button class:active={grid} on:click={() => updateGrid(25)}><Grid />
+        <div class:sr-only={show.descriptions}>Toggle Grid</div></button> -->
+      <button class:active={!show.descriptions} on:click={() => show.descriptions = !show.descriptions}><Help />
         <div class:sr-only={show.descriptions}>Toggle Descriptions</div></button>
     </div>
   {/if}
@@ -954,7 +873,9 @@
                 stroke: '#F00'
               }}></DraggableRect>
             {/if}
-            <DraggableRect rect2D={template.rect2D} coord2D={template.coord2D}
+            <DraggableRect
+              rect2D={template.rect2D}
+              coord2D={template.coord2D}
               svgProps={template.svgProps}
               draggable={false}
               editable={false}
@@ -967,6 +888,7 @@
     {/if}
     <span
       use:pannable
+      bind:this={stage}
       on:panstart={startPan}
       on:panmove={monitorPan}
       on:panend={endPan}
@@ -974,7 +896,7 @@
       on:contextmenu|preventDefault
       on:mousemove={checkNewConnection}
       on:mouseup={endNewConnection}
-      on:mouseup={() => endResize()}
+      on:mouseup={endResize}
       on:wheel|preventDefault={onWheel}
       on:keydown={onKey}
       tabindex="0">
@@ -991,13 +913,13 @@
             on:mouseleave={() => out(rect)}
             on:focus={() => focusRect(rect)}
             on:blur={() => blurRect(rect)}
-            on:contextmenu={(e) => deleteRect(rect, e)}
             on:mouseup={() => endNewConnection(rect)}
+            on:touchend={() => endNewConnection(rect)}
             on:updateText={(e) => updateText(rect, e)}
             {grid}
           >
             {#if !!rect.image}
-              <Image {...rect} passThrough={true} trueSize={false} on:resize={(e) => resize(e, rect)} />
+              <Image {...rect} passThrough={true} trueSize={false} on:resize={(e) => resize(e, rect)} on:load={(e) => loadImageAspectRatio(rect, e)} />
             {/if}
             
             {#if !!rect.connectionPoints}
@@ -1061,8 +983,8 @@
     position: absolute;
     overflow-y: scroll;
     overflow-x: hidden;
-    top: 48px;
-    max-height: calc(100% - 48px);
+    top: 60px;
+    max-height: calc(100% - 60px);
     right: 0;
   }
   .diagram-layers::-webkit-scrollbar {
@@ -1084,7 +1006,7 @@
     justify-content: center;
   }
   .diagram-templates {
-    top: 48px;
+    top: 60px;
   }
   /* .controls-hidden.diagram-templates, */
   .controls-hidden.diagram-controls {

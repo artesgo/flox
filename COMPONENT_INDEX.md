@@ -87,6 +87,7 @@ export interface DiagramRect {
   text?: string;
   image?: string;
   rect2D: Rect2D;
+  aspectRatio: Rect2D;
   coord2D: Coord2D;
   svgProps?: NativeSvgProps;
 }
@@ -319,6 +320,7 @@ None.
 | Event name | Type       | Detail |
 | :--------- | :--------- | :----- |
 | resize     | dispatched | --     |
+| load       | dispatched | --     |
 
 ## `InView`
 
@@ -437,6 +439,7 @@ None.
      y: 5,
 
 }</code> | -- |
+| scale | <code>let</code> | No | <code>number</code> | <code>100</code> | -- |
 
 ### Slots
 
@@ -446,4 +449,7 @@ None.
 
 | Event name | Type       | Detail |
 | :--------- | :--------- | :----- |
+| keydown    | forwarded  | --     |
+| keyup      | forwarded  | --     |
+| keypress   | forwarded  | --     |
 | updateText | dispatched | --     |

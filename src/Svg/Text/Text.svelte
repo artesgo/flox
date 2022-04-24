@@ -13,6 +13,8 @@
     x: 5,
     y: 5,
   };
+  /** @type {number} */
+  export let scale = 100;
   /** @type {boolean} */
   export let editing;
   $: if (editing) {
@@ -42,10 +44,10 @@
   x={$_coord.x} y={$_coord.y - (rect2D.height / 2)}
   width={rect2D.width - (padding.x * 2)} height={rect2D.height - (padding.y * 2)}>
   {#if editing}
-    <textarea
+    <textarea style="font-size: {scale}%;" on:keydown|stopPropagation on:keyup|stopPropagation on:keypress|stopPropagation
       type="text" bind:value={text} bind:this={_input} on:blur={blur}/>
   {:else}
-    <pre>{text}</pre>
+    <pre style="font-size: {scale}%;">{text}</pre>
   {/if}
 </foreignObject>
 
@@ -69,6 +71,7 @@
     margin: 0;
     background: none;
     white-space: pre-wrap;
+    text-overflow: ellipsis;
   }
   textarea {
     pointer-events: all;

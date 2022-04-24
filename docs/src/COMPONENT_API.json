@@ -197,9 +197,9 @@
           "ts": "type NativeSvgProps = import(\"../Svg\").NativeSvgProps"
         },
         {
-          "type": "{\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}",
+          "type": "{\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}",
           "name": "DiagramRect",
-          "ts": "interface DiagramRect {\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}"
+          "ts": "interface DiagramRect {\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}"
         }
       ]
     },
@@ -395,7 +395,10 @@
       ],
       "moduleExports": [],
       "slots": [],
-      "events": [{ "type": "dispatched", "name": "resize" }],
+      "events": [
+        { "type": "dispatched", "name": "resize" },
+        { "type": "dispatched", "name": "load" }
+      ],
       "typedefs": []
     },
     {
@@ -607,6 +610,16 @@
           "reactive": false
         },
         {
+          "name": "scale",
+          "kind": "let",
+          "type": "number",
+          "value": "100",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
+        {
           "name": "editing",
           "kind": "let",
           "type": "boolean",
@@ -618,7 +631,12 @@
       ],
       "moduleExports": [],
       "slots": [],
-      "events": [{ "type": "dispatched", "name": "updateText" }],
+      "events": [
+        { "type": "forwarded", "name": "keydown", "element": "textarea" },
+        { "type": "forwarded", "name": "keyup", "element": "textarea" },
+        { "type": "forwarded", "name": "keypress", "element": "textarea" },
+        { "type": "dispatched", "name": "updateText" }
+      ],
       "typedefs": []
     }
   ]

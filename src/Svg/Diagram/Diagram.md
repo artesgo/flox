@@ -14,6 +14,8 @@ shape layer list
 shape props
 + Add Resize Handles
 Reorder Elements, Layer Menu
+Resize
+- resize images keep aspect ratio
 
 ### General Functionality
 layers and object search
@@ -29,22 +31,31 @@ create drag and drop template for new objects
 drag and drop new objects from template
 minimum size for shapes
 
+### Keyboard Events
+delete key, deletes shape / connection
+double click, edit mode for item
+Ctrl C
+Ctrl V
+  pasted image resizing from clone
+
 ### Editing
 ---
+
+## ^ Done
 
 ## Fixes
 Edit Text Resizes Font Size
 + Edit Text Constrain Width: Multiline
-  - Multiline constrain width, do not overflow container
+- Multiline constrain width, do not overflow container
+Resize Snap to Grid
++ move on grid
+- resize on grid
+
+## v Unfinished
 
 ## keyboard events
-delete key, deletes shape / connection
 + enter key, edit mode for item
-+ double click, edit mode for item
 + Type to edit text
-+ Ctrl C
-+ Ctrl V
-  - pasted image resizing from clone
 Ctrl Z
   - TODO: keep reference to last item
   - TODO: keep state list
@@ -52,9 +63,12 @@ Ctrl Shift Z
 
 ## MVP
 Edit Text Constrain Height: Single Line
-Resize Snap to Grid
+  - resize rect scales text
+  - resize off canvas resets resize, should end resize
 Redo / Undo
-    
+Touch Interaction
+  - 
+
 ## Next Version
 drag and adjust connection midpoints
 right click context menu

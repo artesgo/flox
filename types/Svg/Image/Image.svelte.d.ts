@@ -35,6 +35,6 @@ export interface ImageProps {
 
 export default class Image extends SvelteComponentTyped<
   ImageProps,
-  { resize: CustomEvent<any> },
+  { resize: CustomEvent<any>; load: CustomEvent<any> },
   {}
 > {}

@@ -23,6 +23,11 @@ export interface TextProps {
   padding?: import("../Svg").Coord2D;
 
   /**
+   * @default 100
+   */
+  scale?: number;
+
+  /**
    * @default undefined
    */
   editing?: boolean;
@@ -30,6 +35,11 @@ export interface TextProps {
 
 export default class Text extends SvelteComponentTyped<
   TextProps,
-  { updateText: CustomEvent<any> },
+  {
+    keydown: WindowEventMap["keydown"];
+    keyup: WindowEventMap["keyup"];
+    keypress: WindowEventMap["keypress"];
+    updateText: CustomEvent<any>;
+  },
   {}
 > {}

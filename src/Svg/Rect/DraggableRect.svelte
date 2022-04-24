@@ -91,6 +91,8 @@
   on:keydown
   on:keyup
   on:keypress
+  on:touchstart
+  on:touchend
   on:contextmenu>
   <g
     use:pannable

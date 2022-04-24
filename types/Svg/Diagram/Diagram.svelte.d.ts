@@ -13,6 +13,7 @@ export interface DiagramRect {
   text?: string;
   image?: string;
   rect2D: Rect2D;
+  aspectRatio: Rect2D;
   coord2D: Coord2D;
   svgProps?: NativeSvgProps;
 }
