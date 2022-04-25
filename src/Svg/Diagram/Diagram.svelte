@@ -196,14 +196,14 @@
       // 'top-left': {x: 0, y: 0},
       // 'top-right': {x: 0, y: 0},
       // 'bottom-left': {x: 0, y: 0},
-      'bottom-right': {x: 0, y: 0},
+      // 'bottom-right': {x: 0, y: 0},
     };
     if (!(rect.coord2D && rect.rect2D)) {
       console.error('')
     } else {
       let { width, height } = updateGridPoints(rect);
       // TODO: find a way to allow top left resize that maps closer to actual cursor position
-      // ret['top-left'] = { x: 0, y: 0};
+      ret['top-left'] = { x: 0, y: 0};
       ret['top-right'] = { x: width, y: 0};
       ret['bottom-left'] = { x: 0, y: height};
       ret['bottom-right'] = { x: width, y: height};
@@ -340,7 +340,7 @@
   }
 
   function addAt(template) {
-    let coord = getAdjustedCoords();
+    const coord = getAdjustedCoords();
     //#region prevents fuzzy connections
     if (coord.x % 2 === 1) coord.x--;
     if (coord.y % 2 === 1) coord.y--;
@@ -780,8 +780,11 @@
             }
             // get aspect ratio
             if (rect.aspectRatio) {
-              // this works well from bottom right, not so much from other resize handles
-              rect.rect2D = calculateAspectRatioFit(rect.aspectRatio, rect.rect2D);
+              rect.rect2D = calculateAspectRatioFit(rect.aspectRatio, {
+                // 10k makes it so that we prioritize height
+                width: rect.rect2D.width + 10000,
+                height: rect.rect2D.height,
+              });
               if (resizePoint.indexOf('top') > -1) {
                 rect.coord2D = {
                   ...rect.coord2D,
