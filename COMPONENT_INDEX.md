@@ -220,9 +220,7 @@ None.
 
 ### Events
 
-| Event name  | Type      | Detail |
-| :---------- | :-------- | :----- |
-| contextmenu | forwarded | --     |
+None.
 
 ## `Ellipse`
 
@@ -276,12 +274,13 @@ None.
 
 ### Props
 
-| Prop name | Kind             | Reactive | Type                | Default value  | Description |
-| :-------- | :--------------- | :------- | :------------------ | -------------- | ----------- |
-| col       | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
-| row       | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
-| colSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
-| rowSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code> | --          |
+| Prop name | Kind             | Reactive | Type                | Default value   | Description |
+| :-------- | :--------------- | :------- | :------------------ | --------------- | ----------- |
+| id        | <code>let</code> | No       | <code>string</code> | <code>''</code> | --          |
+| col       | <code>let</code> | No       | <code>number</code> | <code>1</code>  | --          |
+| row       | <code>let</code> | No       | <code>number</code> | <code>1</code>  | --          |
+| colSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code>  | --          |
+| rowSpan   | <code>let</code> | No       | <code>number</code> | <code>1</code>  | --          |
 
 ### Slots
 

@@ -3,6 +3,11 @@ import { SvelteComponentTyped } from "svelte";
 
 export interface GridItemProps {
   /**
+   * @default ''
+   */
+  id?: string;
+
+  /**
    * @default 1
    */
   col?: number;

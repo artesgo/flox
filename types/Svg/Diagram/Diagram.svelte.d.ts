@@ -112,6 +112,6 @@ export interface DiagramProps {
 
 export default class Diagram extends SvelteComponentTyped<
   DiagramProps,
-  { contextmenu: WindowEventMap["contextmenu"] },
+  {},
   {}
 > {}

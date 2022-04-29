@@ -44,8 +44,11 @@
   x={$_coord.x} y={$_coord.y - (rect2D.height / 2)}
   width={rect2D.width - (padding.x * 2)} height={rect2D.height - (padding.y * 2)}>
   {#if editing}
-    <textarea style="font-size: {scale}%;" on:keydown|stopPropagation on:keyup|stopPropagation on:keypress|stopPropagation
-      type="text" bind:value={text} bind:this={_input} on:blur={blur}/>
+    <textarea style="font-size: {scale}%;"
+      on:keydown|stopPropagation
+      on:keyup|stopPropagation
+      on:keypress|stopPropagation
+      type="text" bind:value={text} bind:this={_input} on:blur={blur} />
   {:else}
     <pre style="font-size: {scale}%;">{text}</pre>
   {/if}

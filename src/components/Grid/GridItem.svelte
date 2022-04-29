@@ -1,5 +1,5 @@
 <script>
-  
+  export let id = '';
   /**
    * @type {number}
    */
@@ -27,6 +27,6 @@
   `;
 </script>
 
-<div {style}>
+<div {style} data-testid={id}>
   <slot></slot>
 </div>

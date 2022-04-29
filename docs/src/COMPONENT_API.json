@@ -177,9 +177,7 @@
       ],
       "moduleExports": [],
       "slots": [],
-      "events": [
-        { "type": "forwarded", "name": "contextmenu", "element": "span" }
-      ],
+      "events": [],
       "typedefs": [
         {
           "type": "import(\"../Rect/Rect\").Rect2D",
@@ -283,6 +281,16 @@
       "moduleName": "GridItem",
       "filePath": "src/components/Grid/GridItem.svelte",
       "props": [
+        {
+          "name": "id",
+          "kind": "let",
+          "type": "string",
+          "value": "''",
+          "isFunction": false,
+          "isFunctionDeclaration": false,
+          "constant": false,
+          "reactive": false
+        },
         {
           "name": "col",
           "kind": "let",

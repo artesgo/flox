@@ -49,7 +49,6 @@ Edit Text Resizes Font Size
 - Multiline constrain width, do not overflow container
 Resize Snap to Grid
 + move on grid
-- resize on grid
 
 ## v Unfinished
 
@@ -66,15 +65,12 @@ Edit Text Constrain Height: Single Line
   - resize rect scales text
   - resize off canvas resets resize, should end resize
 Redo / Undo
-Touch Interaction
-  - 
 
 ## Next Version
 drag and adjust connection midpoints
 right click context menu
 right click context menu settings
-settings menu
-settings menu radius, text entry
+Touch Interaction
 
 ## Nice to have
 Custom Svg Objects

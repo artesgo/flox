@@ -417,7 +417,7 @@
     ];
   }
 
-  function dblOnRect(rect, event) {
+  function preventDoubleClickThrough(event) {
     event.stopPropagation();
     event.preventDefault();
   }
@@ -834,6 +834,17 @@
   function updateGrid(_grid) {
     grid = _grid;
   }
+
+  /**
+   * 
+   * @param e
+   * @param rect
+   */
+  function createContextMenu(e, rect) {
+    if (rect.rect2D) {
+
+    }
+  }
 </script>
 
 <section on:mousemove={syncPosition}>
@@ -889,6 +900,7 @@
         </Svg>
       </div>
     {/if}
+    <!-- main stage span -->
     <span
       use:pannable
       bind:this={stage}
@@ -896,7 +908,7 @@
       on:panmove={monitorPan}
       on:panend={endPan}
       on:dblclick={() => addAt(templates[selectedTemplate])}
-      on:contextmenu|preventDefault
+      on:contextmenu|preventDefault={(e) => createContextMenu(e, {})}
       on:mousemove={checkNewConnection}
       on:mouseup={endNewConnection}
       on:mouseup={endResize}
@@ -908,8 +920,9 @@
           <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
         {/each}
         {#each $store as rect (rect.id)}
-          <DraggableRect {...rect} draggable={true}
-            on:dblclick={(e) => dblOnRect(rect, e)}
+          <DraggableRect {...rect} draggable={true} scale={rect.scale}
+            on:contextmenu={(e) => createContextMenu(e, rect)}
+            on:dblclick={(e) => preventDoubleClickThrough(e)}
             on:drag={(e) => dragUpdate(rect, e)}
             on:dragEnd={dragEnd}
             on:mouseover={() => over(rect)}

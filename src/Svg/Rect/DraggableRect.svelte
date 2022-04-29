@@ -24,6 +24,8 @@
   export let text;
   /** @type {number}*/
   export let grid = 0;
+  /** @type {number}*/
+  export let scale = 100;
 
   let dragging;
   let editing;
@@ -102,7 +104,7 @@
     <rect {...rect2D} x={$_coord.x} y={$_coord.y} width={$_rect.width} height={$_rect.height} {...svgProps} />
   </g>
   <slot />
-  <Text {rect2D} {coord2D} bind:editing={editing} text={text} on:updateText/>
+  <Text {rect2D} {coord2D} bind:editing={editing} text={text} on:updateText {scale}/>
 </g>
 
 <style>
