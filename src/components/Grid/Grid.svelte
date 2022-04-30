@@ -1,6 +1,15 @@
 <script>
+  /**
+   * @type {string}
+   */
   export let rowTemplate = '1fr';
+  /**
+   * @type {string}
+   */
   export let colTemplate = '1fr';
+  /**
+   * @type {string}
+   */
   export let height = 'auto';
 </script>
 

@@ -1,14 +1,16 @@
 <script>
 	import { fly } from 'svelte/transition';
-	import DiagramLayers from './DiagramLayers.svelte';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   import { spring } from 'svelte/motion';
   import Svg from '../Svg.svelte';
-  import Connector from '../Path/Connector.svelte';
-  import DraggableRect from '../Rect/DraggableRect.svelte';
-  import Image from '../Image/Image.svelte';
   import Circle from '../Arc/Circle.svelte';
+  import Image from '../Image/Image.svelte';
+  import Connector from '../Path/Connector.svelte';
+	import DiagramLayers from './DiagramLayers.svelte';
+  import DraggableRect from '../Rect/DraggableRect.svelte';
+  import { createDiagramStore } from './Diagram.store';
+  import { createConnectionsStore } from './Connections.store';
 	import { pannable } from '../pannable';
   import Magnifier from '../../assets/mono-icons/svg/search.svelte';
   import ZoomIn from '../../assets/mono-icons/svg/zoom-in.svelte';
@@ -16,7 +18,6 @@
   import Layers from '../../assets/mono-icons/svg/layers.svelte';
   import Link from '../../assets/mono-icons/svg/link.svelte';
   import Expand from '../../assets/mono-icons/svg/expand.svelte';
-  import Grid from '../../assets/mono-icons/svg/grid.svelte';
   import Options from '../../assets/mono-icons/svg/options-vertical.svelte';
   import Help from '../../assets/mono-icons/svg/circle-help.svelte';
 
@@ -112,10 +113,8 @@
   let selectedTemplate = 0;
   let _templates = [];
   // creates a component instance store for each diagram
-  const store = writable([
-    ...rects
-  ]);
-  let connections = writable([]);
+  const store = createDiagramStore(rects);
+  let connections = createConnectionsStore($store);
   let dragging = false;
   let focused = writable(null);
   let mouseover = writable(null);
@@ -124,165 +123,18 @@
   let showResizing = false;
   let resizing = false;
   let stage;
-  //#endregion
-
-  //#region initialization
-  // onMount > init > 1
-  function getEndRect(connectorId) {
-    return rects.find(r => r.id === connectorId);
-  }
-
-  // onMount > init > 2
-  function createConnector(startRect, endRect) {
-    let { begin, end } = findClosestConnection(startRect, endRect);
-    return {
-      begin: { ...begin, id: startRect.id},
-      end: { ...end, id: endRect.id},
-    }
-  }
-
-  // onMount > init > createConnector
-  function findClosestConnection(startRect, endRect) {
-    let shortest;
-    for (let key of Object.keys(startRect.connectionPoints)) {
-      for (let otherKey of Object.keys(endRect.connectionPoints)) {
-        let begin = addCoord2D(startRect.coord2D, startRect.connectionPoints[key]);
-        let end = addCoord2D(endRect.coord2D, endRect.connectionPoints[otherKey]);
-        let distance = getDistance(begin, end);
-        if (!shortest || distance < shortest.distance) {
-          shortest = {
-            begin,
-            end,
-            distance,
-          }
-        }
-      }
-    }
-    delete shortest.distance;
-    return shortest;
-  }
-
-  // onMount > init > createConnector > findClosestConnection
-  function addCoord2D(coordA, coordB) {
-    return {
-      x: coordA.x + coordB.x,
-      y: coordA.y + coordB.y
-    }
-  }
-
-  // onMount > 1
-  function createConnectionPointOffsets(rect) {
-    let ret = {
-      left: {x: 0, y: 0},
-      right: {x: 0, y: 0},
-      top: {x: 0, y: 0},
-      bottom: {x: 0, y: 0},
-    };
-    if (!(rect.coord2D && rect.rect2D)) {
-      console.error('')
-    } else {
-      let { width, height } = updateGridPoints(rect);
-      // connectionPointOffsets
-      ret.left = { x: 0, y: height / 2};
-      ret.right = { x: width, y: height / 2};
-      ret.top = { x: width / 2, y: 0};
-      ret.bottom = { x: width / 2, y: height};
-    }
-    return ret;
-  }
-
-  function createResizingPointOffsets(rect) {
-    let ret = {
-      // 'top-left': {x: 0, y: 0},
-      // 'top-right': {x: 0, y: 0},
-      // 'bottom-left': {x: 0, y: 0},
-      // 'bottom-right': {x: 0, y: 0},
-    };
-    if (!(rect.coord2D && rect.rect2D)) {
-      console.error('')
-    } else {
-      let { width, height } = updateGridPoints(rect);
-      // TODO: find a way to allow top left resize that maps closer to actual cursor position
-      ret['top-left'] = { x: 0, y: 0};
-      ret['top-right'] = { x: width, y: 0};
-      ret['bottom-left'] = { x: 0, y: height};
-      ret['bottom-right'] = { x: width, y: height};
-    }
-    return ret;
-  }
-
-  function updateGridPoints(rect) {
-    let width = rect.rect2D.width;
-    let height = rect.rect2D.height;
-    if (grid > 0) {
-      width = Math.floor(width / grid) * grid;
-      height = Math.floor(height / grid) * grid;
-    }
-    return {
-      width, height
-    }
-  }
-
-  // onMount > init > createConnector > findClosestConnection
-  function getDistance(coordA, coordB) {
-    let xDiff = Math.abs(coordA.x - coordB.x);
-    let yDiff = Math.abs(coordA.y - coordB.y);
-    return xDiff + yDiff;
-  }
-
-  // onMount > 2
-  function initConnectors(rect, connectionId) {
-    let endRect = getEndRect(connectionId);
-    return createConnector(rect, endRect);
+  let mouse = {
+    x: 0,
+    y: 0,
   }
   //#endregion
 
   //#region dragging
   function dragUpdate(rect, event) {
     dragging = true;
-    updateRectPosition(rect, event);
-    updateClosest();
-    updateConnection(rect, event);
-  }
-
-  function updateRectPosition(rect, event) {
-    $store = [
-      ...$store.map(r => {
-        // this moves the rectangle being dragged
-        if (rect.id === r.id) {
-          r.coord2D.x += (event.detail.dx * zoom / 100);
-          r.coord2D.y += (event.detail.dy * zoom / 100);
-        }
-        return r;
-      })
-    ];
-  }
-
-  function updateClosest() {
-    $connections = [...$connections.map((conn) => {
-      // get rects
-      let startRect = $store.find(r => r.id === conn.begin.id);
-      let endRect = $store.find(r => r.id === conn.end.id);
-      let {begin, end} = findClosestConnection(startRect, endRect);
-      begin.id = conn.begin.id;
-      end.id = conn.end.id;
-      return {begin, end};
-    })];
-  }
-
-  function updateConnection(rect, event) {
-    $connections = [
-      ...$connections.map(conn => {
-        if (conn.begin.id === rect.id) {
-          conn.begin.x += (event.detail.dx * zoom / 100);
-          conn.begin.y += (event.detail.dy * zoom / 100);
-        } else if (conn.end.id === rect.id) {
-          conn.end.x += (event.detail.dx * zoom / 100);
-          conn.end.y += (event.detail.dy * zoom / 100);
-        }
-        return conn;
-      })
-    ];
+    store.moveRect(rect, event, zoom);
+    connections.updateClosest($store);
+    connections.updateConnection(rect, event, zoom);
   }
 
   function dragEnd() {
@@ -301,34 +153,7 @@
   }
   //#endregion
 
-  let _nextId = 0;
   onMount(() => {
-    $store = [...rects.map(r => {
-      // create connection points for rects
-      if (r.id >= _nextId) {
-        _nextId = r.id;
-        _nextId++;
-      }
-      r.connectionPoints = createConnectionPointOffsets(r);
-      r.resizePoints = {
-        // ...r.connectionPoints,
-        ...createResizingPointOffsets(r)
-      };
-    })];
-    $store = [...rects.map(r => {
-      // connect the connections
-      if (r.connections && r.connections.length > 0) {
-        $connections = [
-          ...$connections,
-          ...r.connections.map(connection => initConnectors(r, connection))
-        ];
-        // discard connections now that they are created and tracked via $connections;
-        r.connections = [];
-      }
-
-      return r;
-    })];
-
     _templates = [...templates];
   });
 
@@ -341,42 +166,13 @@
 
   function addAt(template) {
     const coord = getAdjustedCoords();
-    //#region prevents fuzzy connections
-    if (coord.x % 2 === 1) coord.x--;
-    if (coord.y % 2 === 1) coord.y--;
-    //#endregion
-    let newRect = {
-      ...template,
-      rect2D: {
-        width: template.rect2D.width * 5,
-        height: template.rect2D.height * 5,
-        rx: template.rect2D.rx * 5,
-        ry: template.rect2D.ry * 5,
-      },
-    }
-    newRect = {
-      ...newRect,
-      ...updatePoints(newRect)
-    }
-    newRect.coord2D = coord;
-    newRect.id = _nextId++;
     // resets template back to origin;
-    $store = [...$store, newRect];
+    store.addRect(coord, template);
   }
 
   function syncPosition(e) {
     mouse.x = e.offsetX;
     mouse.y = e.offsetY;
-  }
-
-  $: getRadius = (rect) => {
-    if ($focused === rect.id) {
-      return 10;
-    }
-    if ($mouseover === rect.id) {
-      return 5;
-    }
-    return 0;
   }
 
   //#region focus indicator
@@ -407,14 +203,7 @@
 
   //#region text edit
   function updateText(rect, {detail}) {
-    $store = [
-      ...$store.map(r => {
-        if (r.id === rect.id) {
-          r.text = detail;
-        }
-        return r;
-      })
-    ];
+    store.updateText(rect, detail);
   }
 
   function preventDoubleClickThrough(event) {
@@ -425,28 +214,15 @@
 
   //#region shape deletion
   function deleteRect(id, remove = true) {
-    $store = [
-      ...$store.filter(r => {
-        return r.id !== id;
-      })
-    ];
-    $connections = [
-      ...$connections.filter(conn => {
-        return conn.begin.id !== id && conn.end.id !== id;
-      })
-    ];
+    store.deleteRect(id);
+    connections.deleteConnections(id);
     if (remove) {
       $focused = null;
     }
   }
 
   function deleteConnection(conn) {
-    $connections = [
-      ...$connections.filter(c => {
-        return !(c.begin.id === conn.begin.id &&
-          c.end.id === conn.end.id)
-      })
-    ];
+    connections.deleteConnection(conn);
   }
   //#endregion
 
@@ -454,77 +230,21 @@
   let newConnectionStartRect;
   function createNewConnection(e, rect, point) {
     newConnectionStartRect = rect;
-    let connectionPreview = {
-      begin: {
-        ...addCoord2D(rect.connectionPoints[point], rect.coord2D),
-        id: rect.id
-      },
-      end: {
-        x: (e.offsetX * zoom / 100) + offset.x,
-        y: (e.offsetY * zoom / 100) + offset.y,
-        id: -999,
-      }
-    }
-    $connections = [
-      ...$connections,
-      connectionPreview
-    ]
+    connections.createPreview(rect, point, zoom, offset, e);
   }
   
   function endNewConnection(rect) {
     if (!!newConnectionStartRect) {
-      $connections = [
-        ...$connections.filter(conn => {
-          return conn.end.id !== -999;
-        })
-      ];
-
-      // check for existing connections to the same rects
-      let found = $connections.find(conn => {
-        if (
-          (conn.begin.id === newConnectionStartRect.id && 
-          conn.end.id === rect.id) ||
-          (conn.begin.id === rect.id && 
-          conn.end.id === newConnectionStartRect.id)
-        ) {
-          return conn;
-        }
-      });
-
-      if (!!found) {
-        newConnectionStartRect = null;
-        return;
-      }
-  
-      // cannot connect to self
-      if (!!rect && rect.id !== newConnectionStartRect.id) {
-        let connection = createConnector(newConnectionStartRect, rect);
-        $connections = [
-          ...$connections,
-          connection
-        ];
-      }
+      connections.removePlaceholder();
+      connections.createConnection(newConnectionStartRect, rect);
       newConnectionStartRect = null;
     }
   }
 
-  let mouse = {
-    x: 0,
-    y: 0,
-  }
-
-  function checkNewConnection(e) {
+  function updateConnectionPreview(e) {
+    // checks that a newConnectionStart exists before updating preview
     if (!!newConnectionStartRect) {
-      // find the preview connection and update it
-      $connections = [
-        ...$connections.map(conn => {
-          if (conn.end.id === -999) {
-            conn.end.x = ((e.offsetX) * zoom / 100) + offset.x
-            conn.end.y = ((e.offsetY) * zoom / 100) + offset.y
-          }
-          return conn;
-        })
-      ]
+      connections.updatePreview(e, zoom, offset);
     }
   }
   //#endregion
@@ -535,7 +255,7 @@
    */
   let resizeTarget;
   let resizePoint;
-  function startResize(e, rect, point) {
+  function startResize(rect, point) {
     resizing = true;
     resizeTarget = rect;
     resizePoint = point;
@@ -543,10 +263,7 @@
 
   function endResize() {
     resizing = false;
-    overSize = {
-      x: 0,
-      y: 0,
-    }
+    store.resetOversize();
     resizeTarget = null;
   }
   //#endregion
@@ -596,10 +313,7 @@
           // TODO: get mouse position
           copiedTemplate.coord2D = getAdjustedCoords();
           copiedTemplate.id = _nextId++;
-          $store = [
-            ...$store,
-            copiedTemplate
-          ]
+          store.addRect(copiedTemplate);
           copiedTemplate = cloneTemplate(copiedTemplate);
         } else {
           navigator.clipboard.readText()
@@ -649,55 +363,19 @@
 
   function pasteImage(url) {
     if (!!$focused) {
-      $store = [
-        ...$store.map(r => {
-          if (r.id === $focused) {
-            r.image = url;
-          }
-          return r;
-        })
-      ]
+      store.updateImage({id: $focused}, url)
     }
   }
 
   function pasteText(text) {
     if (!!$focused) {
-      $store = [
-        ...$store.map(r => {
-          if (r.id === $focused) {
-            r.text = text;
-          }
-          return r;
-        })
-      ]
+      store.updateText({id: $focused}, text)
     }
   }
 
   // img resize listener
-  function resize(size, rect) {
-    $store = [
-      ...$store.map(r => {
-        if (r.id === rect.id) {
-          r.rect2D = size.detail;
-          r = {
-            ...r,
-            ...updatePoints(r)
-          }
-        }
-        return r;
-      })
-    ]
-  }
-
   function loadImageAspectRatio(rect, e) {
-    $store = [
-      ...$store.map(r => {
-        if (r.id === rect.id) {
-          r.aspectRatio = e.detail;
-        }
-        return r;
-      })
-    ]
+    store.setRectAspectRatio(rect, e.detail);
   }
   //#endregion
 
@@ -724,105 +402,12 @@
     monitorResizing(e);
   }
 
-  let overSize = {
-    x: 0,
-    y: 0,
-  }
-  function resizeTop(rect, coord) {
-    if (rect.rect2D.height - overSize.y > 100) {
-      rect.coord2D.y = coord.y;
-      rect.rect2D.height -= e.detail.dy * zoom / 100;
-    } else {
-      overSize.y += e.detail.dy;
-    }
-  }
   // use mouse position and check for resizing event
   function monitorResizing(e) {
     if (resizing) {
       // resize needs to take zoom into account
       const coord = getAdjustedCoords();
-      $store = [
-        ...$store.map(rect => {
-          if (rect.id === resizeTarget.id) {
-            const stayAtX = rect.coord2D.x + rect.rect2D.width;
-            const stayAtY = rect.coord2D.y + rect.rect2D.height;
-            if (resizePoint.indexOf('top') > -1) {
-              if (rect.rect2D.height - overSize.y > 100) {
-                rect.coord2D.y = coord.y;
-                rect.rect2D.height -= e.detail.dy * zoom / 100;
-              } else {
-                overSize.y += e.detail.dy;
-              }
-            }
-            if (resizePoint.indexOf('left') > -1) {
-              if (rect.rect2D.width - overSize.x > 100) {
-                rect.coord2D.x = coord.x;
-                rect.rect2D.width -= e.detail.dx * zoom / 100;
-              } else {
-                overSize.x += e.detail.dx;
-              }
-            }
-            if (resizePoint.indexOf('right') > -1) {
-              const width = coord.x - resizeTarget.coord2D.x;
-              if (width > 100) {
-                rect.rect2D.width = width;
-              } else {
-                rect.rect2D.width = 100;
-              }
-            }
-            if (resizePoint.indexOf('bottom') > -1) {
-              const height = coord.y - rect.coord2D.y;
-              if (height > 100) {
-                rect.rect2D.height = height;
-              } else {
-                rect.rect2D.height = 100;
-              }
-            }
-            // get aspect ratio
-            if (rect.aspectRatio) {
-              rect.rect2D = calculateAspectRatioFit(rect.aspectRatio, {
-                // 10k makes it so that we prioritize height
-                width: rect.rect2D.width + 10000,
-                height: rect.rect2D.height,
-              });
-              if (resizePoint.indexOf('top') > -1) {
-                rect.coord2D = {
-                  ...rect.coord2D,
-                  y: stayAtY - rect.rect2D.height
-                }
-              }
-              if (resizePoint.indexOf('left') > -1) {
-                rect.coord2D = {
-                  ...rect.coord2D,
-                  x: stayAtX - rect.rect2D.width
-                }
-              }
-            }
-            rect = {
-              ...rect,
-              ...updatePoints(rect)
-            }
-          }
-          return rect;
-        })
-      ];
-    }
-  }
-
-  function calculateAspectRatioFit(src, max) {
-    const ratio = Math.min(max.width / src.width, max.height / src.height);
-    return { width: src.width * ratio, height: src.height * ratio };
-  }
-
-  function updatePoints(rect) {
-    const connectionPoints = createConnectionPointOffsets(rect);
-    const resizePoints = {
-      // ...connectionPoints,
-      ...createResizingPointOffsets(rect)
-    };
-    return {
-      connectionPoints,
-      resizePoints
+      store.resizeRect(resizeTarget, resizePoint, coord, zoom, e);
     }
   }
 
@@ -844,6 +429,16 @@
     if (rect.rect2D) {
 
     }
+  }
+
+  $: getRadius = (rect) => {
+    if ($focused === rect.id) {
+      return 10;
+    }
+    if ($mouseover === rect.id) {
+      return 5;
+    }
+    return 0;
   }
 </script>
 
@@ -909,7 +504,7 @@
       on:panend={endPan}
       on:dblclick={() => addAt(templates[selectedTemplate])}
       on:contextmenu|preventDefault={(e) => createContextMenu(e, {})}
-      on:mousemove={checkNewConnection}
+      on:mousemove={updateConnectionPreview}
       on:mouseup={endNewConnection}
       on:mouseup={endResize}
       on:wheel|preventDefault={onWheel}
@@ -919,6 +514,7 @@
         {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
           <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
         {/each}
+
         {#each $store as rect (rect.id)}
           <DraggableRect {...rect} draggable={true} scale={rect.scale}
             on:contextmenu={(e) => createContextMenu(e, rect)}
@@ -935,7 +531,7 @@
             {grid}
           >
             {#if !!rect.image}
-              <Image {...rect} passThrough={true} trueSize={false} on:resize={(e) => resize(e, rect)} on:load={(e) => loadImageAspectRatio(rect, e)} />
+              <Image {...rect} passThrough={true} trueSize={false} on:load={(e) => loadImageAspectRatio(rect, e)} />
             {/if}
             
             {#if !!rect.connectionPoints}
@@ -960,7 +556,7 @@
                   {@const radius = getRadius(rect) * zoom / 125}}
                   {#if radius > 0}
                     <Circle
-                      on:mousedown={(e) => startResize(e, rect, point)}
+                      on:mousedown={(e) => startResize(rect, point)}
                       svgProps={{fill: '#222222aa'}}
                       {grid}
                       circle2D={{
