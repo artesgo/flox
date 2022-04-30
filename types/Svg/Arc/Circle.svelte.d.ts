@@ -1,5 +1,5 @@
 /// <reference types="svelte" />
-import { SvelteComponentTyped } from "svelte";
+import type { SvelteComponentTyped } from "svelte";
 
 export interface Circle2D {
   cx: number;

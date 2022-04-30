@@ -567,9 +567,9 @@
           "ts": "type Linecap =  'round' | 'butt' | 'square'"
         },
         {
-          "type": "{\nfill?: string;\n'stroke-width'?: number;\n'stroke-linecap'?: Linecap;\nstroke?: string;\n}",
+          "type": "{ \nfill?: string; \n'stroke-width'?: number; \n'stroke-linecap'?: Linecap; \nstroke?: string;\n}",
           "name": "NativeSvgProps",
-          "ts": "interface NativeSvgProps {\nfill?: string;\n'stroke-width'?: number;\n'stroke-linecap'?: Linecap;\nstroke?: string;\n}"
+          "ts": "interface NativeSvgProps { \nfill?: string; \n'stroke-width'?: number; \n'stroke-linecap'?: Linecap; \nstroke?: string;\n}"
         }
       ]
     },

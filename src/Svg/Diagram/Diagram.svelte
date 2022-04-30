@@ -9,8 +9,8 @@
   import Connector from '../Path/Connector.svelte';
 	import DiagramLayers from './DiagramLayers.svelte';
   import DraggableRect from '../Rect/DraggableRect.svelte';
-  import { createDiagramStore } from './Diagram.store';
-  import { createConnectionsStore } from './Connections.store';
+  import { createDiagramStore } from './Diagram.store.ts';
+  import { createConnectionsStore } from './Connections.store.ts';
 	import { pannable } from '../pannable';
   import Magnifier from '../../assets/mono-icons/svg/search.svelte';
   import ZoomIn from '../../assets/mono-icons/svg/zoom-in.svelte';
