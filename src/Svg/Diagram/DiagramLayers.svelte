@@ -4,33 +4,11 @@
   let value;
 
   function up(rect) {
-    const index = $store.findIndex(r => r.id === rect.id);
-    if (index > 0) {
-      const end = $store.splice(index + 1, $store.length - 1);
-      const front = $store.splice(0, index);
-      const swap = front.pop();
-      $store = [
-        ...front,
-        rect,
-        swap,
-        ...end,
-      ]
-    }
+    store.moveRectUpLayer(rect);
   }
 
   function down(rect) {
-    const index = $store.findIndex(r => r.id === rect.id);
-    if (index < $store.length) {
-      const end = $store.splice(index + 1, $store.length - 1);
-      const front = $store.splice(0, index);
-      const swap = end.shift();
-      $store = [
-        ...front,
-        swap,
-        rect,
-        ...end,
-      ]
-    }
+    store.moveRectDownLayer(rect);
   }
 </script>
 

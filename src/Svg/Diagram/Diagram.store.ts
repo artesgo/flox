@@ -221,5 +221,35 @@ export function createDiagramStore(rects) {
       x: 0,
       y: 0,
     },
+    moveRectUpLayer: (move) => update((rects) => {
+      const index = rects.findIndex(r => r.id === move.id);
+      if (index > 0) {
+        const end = rects.splice(index + 1, rects.length - 1);
+        const front = rects.splice(0, index);
+        const swap = front.pop();
+        return [
+          ...front,
+          move,
+          swap,
+          ...end,
+        ]
+      }
+      return rects;
+    }),
+    moveRectDownLayer: (move) => update((rects) => {
+      const index = rects.findIndex(r => r.id === move.id);
+      if (index < rects.length) {
+        const end = rects.splice(index + 1, rects.length - 1);
+        const front = rects.splice(0, index);
+        const swap = end.shift();
+        return [
+          ...front,
+          swap,
+          move,
+          ...end,
+        ]
+      }
+      return rects;
+    }),
   }
 }
