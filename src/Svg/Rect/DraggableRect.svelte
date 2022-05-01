@@ -17,6 +17,8 @@
   /** @type {boolean} */
   export let draggable;
   /** @type {boolean} */
+  export let passThrough = false;
+  /** @type {boolean} */
   export let editable = true;
   /** @type {number} */
   export let zoom;
@@ -77,6 +79,7 @@
 
 <g
   tabindex=0
+  class:no-events={passThrough}
   on:mouseover
   on:focus
   on:mouseleave
@@ -110,5 +113,15 @@
 <style>
   g:focus {
     outline: none;
+  }
+  .no-events {
+    pointer-events: none; /* prevent capturing clicks */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
   }
 </style>

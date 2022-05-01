@@ -127,6 +127,7 @@
     x: 0,
     y: 0,
   }
+  let passThrough;
   //#endregion
 
   //#region dragging
@@ -358,10 +359,16 @@
       }
     }
     if (e.code === "Space" || e.key === ' ') {
-      // console.log('space')
+      passThrough = true;
     }
     if (e.code === 'Backspace') {
       deleteRect($focused);
+    }
+  }
+
+  function onRelease(e) {
+    if (e.code === "Space" || e.key === ' ') {
+      passThrough = false;
     }
   }
 
@@ -458,7 +465,7 @@
   }
 </script>
 
-<section on:mousemove={syncPosition}>
+<section on:mousemove={syncPosition} class:passThrough>
   {#if show.controls}
     <div class="diagram-controls" class:controls-hidden={!show.controls}>
       <button class:active={show.template} on:click={() => show.template =! show.template}><Options />
@@ -525,6 +532,7 @@
       on:mouseup={endResize}
       on:wheel|preventDefault={onWheel}
       on:keydown={onKey}
+      on:keyup={onRelease}
       tabindex="0">
       <Svg height={width} {width} zoom={($_zoom / 100) * width} {offset}>
         {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
@@ -532,7 +540,7 @@
         {/each}
 
         {#each $store as rect (rect.id)}
-          <DraggableRect {...rect} draggable={true} scale={rect.scale}
+          <DraggableRect {...rect} draggable={true} scale={rect.scale} {passThrough}
             on:contextmenu={(e) => createContextMenu(e, rect)}
             on:dblclick={(e) => preventDoubleClickThrough(e)}
             on:drag={(e) => dragUpdate(rect, e)}
@@ -658,5 +666,8 @@
     white-space: nowrap;
     width: 1px;
     transition: 300ms;
+  }
+  .passThrough {
+    cursor: pointer;
   }
 </style>
