@@ -82,7 +82,6 @@ export function createConnectionsStore(diagramStore) {
     }),
     updateClosest: (store) => update((conns) => {
       return conns.map(conn => {
-        debugger;
         let startRect = store.find(r => r.id === conn.begin.id);
         let endRect = store.find(r => r.id === conn.end.id);
         let {begin, end} = findClosestConnection(startRect, endRect);

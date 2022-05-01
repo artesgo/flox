@@ -284,7 +284,11 @@
   /** @type {number} */
   export let zoom = 100;
   function onWheel(e) {
-    // scale smallest to 50% largest to 200%
+    let coord = getAdjustedCoords();
+    let _unscaled = {
+      x: Math.floor(offset.x + coord.x),
+      y: Math.floor(offset.y + coord.y),
+    }
     if (e.deltaY < 0) {
       if (zoom > 40) {
         zoom -= 20;
@@ -293,6 +297,18 @@
       if (zoom < 600) {
         zoom += 20;
       }
+    }
+    scaleToNewOffset(_unscaled);
+  }
+
+  function scaleToNewOffset(_unscaled) {
+    let _scaled = {
+      x: Math.floor(offset.x + (mouse.x * zoom / 100)),
+      y: Math.floor(offset.y + (mouse.y * zoom / 100)),
+    }
+    offset = {
+      x: _unscaled.x - _scaled.x,
+      y: _unscaled.y - _scaled.y,
     }
   }
 
@@ -574,8 +590,8 @@
     </span>
     {#if show.layers}
     <div class="diagram-layers" transition:fly={{duration: 300, y: -100}}>
-      <!-- <div>Offset: X: {offset.x} Y: {offset.y}</div>
-      <div>Mouse: X: {mouse.x} Y: {mouse.y}</div> -->
+      <!-- <div>Offset: X: {offset.x} Y: {offset.y}</div> -->
+      <!-- <div>Mouse: X: {mouse.x} Y: {mouse.y}</div> -->
       <DiagramLayers {store} bind:focused />
     </div>
     {/if}

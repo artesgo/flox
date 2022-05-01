@@ -1,4 +1,5 @@
 <script>
+	import { spring } from 'svelte/motion';
   /**
    * @typedef {{ x: number; y: number; }} Coord2D
    * @typedef { 'round' | 'butt' | 'square'} Linecap
@@ -21,8 +22,15 @@
     x: 0,
     y: 0,
   };
+
+  let _offset = spring(offset);
+  
+  $: _offset.update(() => ({
+    x: offset.x,
+    y: offset.y
+  }));
 </script>
 
-<svg {width} {height} viewbox={`${offset.x} ${offset.y} ${zoom < 0 ? 0 : zoom} ${zoom < 0 ? 0 : zoom}`}>
+<svg {width} {height} viewbox={`${$_offset.x} ${$_offset.y} ${zoom < 0 ? 0 : zoom} ${zoom < 0 ? 0 : zoom}`}>
   <slot></slot>
 </svg>
