@@ -469,23 +469,23 @@
   {#if show.controls}
     <div class="diagram-controls" class:controls-hidden={!show.controls}>
       <button class:active={show.template} on:click={() => show.template =! show.template}><Options />
-        <div class:sr-only={show.descriptions}>Toggle Templates</div></button>
+        <div class:sr-only={!show.descriptions}>Toggle Templates</div></button>
       <button class:active={showResizing} on:click={setResize}><Expand />
-        <div class:sr-only={show.descriptions}>Resize</div></button>
+        <div class:sr-only={!show.descriptions}>Resize</div></button>
       <button class:active={showConnections} on:click={setConnections}><Link />
-        <div class:sr-only={show.descriptions}>Connect</div></button>
+        <div class:sr-only={!show.descriptions}>Connect</div></button>
       <button class:active={zoom === 100} on:click={resetZoom}><Magnifier />
-        <div class:sr-only={show.descriptions}>Reset Zoom</div></button>
+        <div class:sr-only={!show.descriptions}>Reset Zoom</div></button>
       <button on:click={() => onWheel({ deltaY: -1})}><ZoomIn />
-        <div class:sr-only={show.descriptions}>Zoom In</div></button>
+        <div class:sr-only={!show.descriptions}>Zoom In</div></button>
       <button on:click={() => onWheel({ deltaY: 1})}><ZoomOut />
-        <div class:sr-only={show.descriptions}>Zoom Out</div></button>
+        <div class:sr-only={!show.descriptions}>Zoom Out</div></button>
       <button class:active={show.layers} on:click={() => show.layers = !show.layers}><Layers />
-        <div class:sr-only={show.descriptions}>Toggle Layers {show.layers ? 'Off' : 'On'}</div></button>
+        <div class:sr-only={!show.descriptions}>Toggle Layers {show.layers ? 'Off' : 'On'}</div></button>
       <!-- <button class:active={grid} on:click={() => updateGrid(25)}><Grid />
         <div class:sr-only={show.descriptions}>Toggle Grid</div></button> -->
-      <button class:active={!show.descriptions} on:click={() => show.descriptions = !show.descriptions}><Help />
-        <div class:sr-only={show.descriptions}>Toggle Descriptions</div></button>
+      <button class:active={show.descriptions} on:click={() => show.descriptions = !show.descriptions}><Help />
+        <div class:sr-only={!show.descriptions}>Toggle Descriptions</div></button>
     </div>
   {/if}
   <div class="diagram-wrapper">
