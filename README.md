@@ -1,65 +1,86 @@
-*Psst — looking for an app template? Go here --> [sveltejs/template](https://github.com/sveltejs/template)*
+# Artesgo-flox
 
----
+## Installation
 
-# svelt-component-library-template
+ `npm install -D artesgo-flox`
 
-A base for building shareable Svelte component library. Clone it with [degit](https://github.com/Rich-Harris/degit):
+## Usage
 
-```bash
-npx degit nirmaoz/svelte-component-library-template my-new-component
-cd my-new-component
-npm install # or yarn
-```
+[flox svelte REPL](https://svelte.dev/repl/48a0334cd2d249b185e97f9fbbd19f40?version=3.48.0)
 
-Your component's source code lives in `src/Component.svelte`.
+## Completed Features
 
-You can create a package that exports multiple components by adding them to the `src` directory and editing `src/index.js` to reexport them as named exports.
+### Rendering
 
-## This template includes:
+* Shapes from data binding
+* Display Images
+* Display Text
+* Edit Text
+* Dynamic Connections
+* Zoom in and out
+* Layers
+  * Display shape list
+  * Reorder shapes in list
+  * Display shape props
+* Resize
+  * Resize images keeps container aspect ratio
 
-* Svelte Component
-* Testing using svelte-testing-library + Jest
-* Storybook
-* Rollup, configured to build .js (umd), .min.js (iife), .mjs (es)
+### Mouse / Clicks
 
-## Setting up
+* Navigate Canvas via Click and Drag
+* Double Click to add shape at mouse position
+* Resize
+  * Hover over shapes to view resize points
+  * Drag corners around to resize a shape
+  * prioritize height when resizing container to img aspect ratio
+* Connections
+  * Hover over shapes to view connection points
+  * Drag connection points to existing Rect
+  * Drag connection point creates new connection preview
+  * Right Click connections to delete
+Minimum size for shapes
 
-* Run `npm init` (or `yarn init`)
-* Replace this README with your own
+### Keyboard Events
+* Deletes a selected shape and its connection with Delete/Backspace keys
+* Double click, edit mode for item
+* Copy and Paste Shapes
+* Shapes are in tab order
 
-## Consuming components
+## Fixes
+* Resize Snap to Grid
+  * move on grid
+  * resize images keeps container aspect ratio (not working in firefox)
+* Shapes are in tab order
+  * Need to adjust what is read out by screen readers
 
-Your package.json has a `"svelte"` field pointing to `src/index.js`, which allows Svelte apps to import the source code directly, if they are using a bundler plugin like [rollup-plugin-svelte](https://github.com/sveltejs/rollup-plugin-svelte) or [svelte-loader](https://github.com/sveltejs/svelte-loader) (where [`resolve.mainFields`](https://webpack.js.org/configuration/resolve/#resolve-mainfields) in your webpack config includes `"svelte"`). **This is recommended.**
+## TODO:
 
-For everyone else, `npm run build` will bundle your component's source code into a plain JavaScript module (`dist/index.mjs`) and a UMD script (`dist/index.js`). This will happen automatically when you publish your component to npm, courtesy of the `prepublishOnly` hook in package.json.
+## keyboard events
+Ctrl Z
+- keep reference to last item
+- keep state list
+Ctrl Shift Z
 
-### Based on sveltejs/component-template
-I couldn't find an opinionated components library template to my liking, so I used [sveltejs/component-template](https://github.com/sveltejs/component-template) as base. And then I added minified build configuration using terser plugin + tests + storybook.
+## Rendering
 
-### Testing
-Comes with tests out of the box using [svelte-testing-library](https://github.com/testing-library/svelte-testing-library) + [Jest](https://github.com/facebook/jest).
+* Change Font Size
+* Context Menu (Challenge, not to be affected by zoom)
+  * Send to Back
+  * Bring to Front
+  * Paste Img Url
+  * Paste Text
+  * Delete
 
-To Run tests:
-```bash
-npm test # or yarn
-```
+## Next Version
+* Drag and adjust connection midpoints
+* Right click context menu
+* Touch Interaction (mobile)
+* Select multiple shapes with selection box
+  * Remove Click and Drag on background canvas
+  * Pan canvas with Spacebar only
 
-### Storybook
-To serve development build:
-```bash
-npm run storybook
-```
+## Nice to have
+Custom Svg Objects
 
-To build static storybook site (default output folder is /docs for easly sharing on github pages):
-```bash
-npm run build-storybook
-```
-
-Dependencies need to be explicitly added for windows
-
-## Jest Testing
-
-`SyntaxError: Cannot use import statement outside a module`
-
-@babel/cli @babel/core @babel/preset-env
+## Nice Surprises
+PNGs have transparency

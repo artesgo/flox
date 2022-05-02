@@ -361,7 +361,7 @@
     if (e.code === "Space" || e.key === ' ') {
       passThrough = true;
     }
-    if (e.code === 'Backspace') {
+    if (e.code === 'Backspace' || e.code === 'Delete') {
       deleteRect($focused);
     }
   }
