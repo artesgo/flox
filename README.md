@@ -45,6 +45,11 @@ Minimum size for shapes
 * Double click, edit mode for item
 * Copy and Paste Shapes
 * Shapes are in tab order
+* Ctrl Z / Ctrl Shift Z
+  * keep state list
+  * undo / redo a move
+  * undo / redo a resize
+  * undo / redo text edit
 
 ## Fixes
 * Resize Snap to Grid
@@ -55,13 +60,13 @@ Minimum size for shapes
 
 ## TODO:
 
-## keyboard events
-Ctrl Z
-- keep reference to last item
-- keep state list
-Ctrl Shift Z
+### keyboard events
 
-## Rendering
+* Ctrl Z / Ctrl Shift Z
+  * undo / redo img paste
+  * undo / redo add shape
+
+### Rendering
 
 * Change Font Size
 * Context Menu (Challenge, not to be affected by zoom)
@@ -82,5 +87,5 @@ Ctrl Shift Z
 ## Nice to have
 Custom Svg Objects
 
-## Nice Surprises
+### Nice Surprises
 PNGs have transparency

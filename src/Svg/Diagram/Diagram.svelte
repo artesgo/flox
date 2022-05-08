@@ -11,6 +11,7 @@
   import DraggableRect from '../Rect/DraggableRect.svelte';
   import { createDiagramStore } from './Diagram.store.ts';
   import { createConnectionsStore } from './Connections.store.ts';
+  import { createActionsStore } from './Actions.store.ts';
 	import { pannable } from '../pannable';
   import Magnifier from '../../assets/mono-icons/svg/search.svelte';
   import ZoomIn from '../../assets/mono-icons/svg/zoom-in.svelte';
@@ -114,7 +115,8 @@
   let _templates = [];
   // creates a component instance store for each diagram
   const store = createDiagramStore(rects);
-  let connections = createConnectionsStore($store);
+  const connections = createConnectionsStore($store);
+  const actions = createActionsStore();
   let dragging = false;
   let focused = writable(null);
   let mouseover = writable(null);
@@ -131,22 +133,50 @@
   //#endregion
 
   //#region dragging
-  function dragUpdate(rect, event) {
-    dragging = true;
+  let action;
+  function dragStart(rect) {
+    action = {
+      before: {
+        id: rect.id,
+        coord2D: {...rect.coord2D }
+      }
+    }
+  }
+
+  function dragUpdate(rect, event, isDragging) {
+    dragging = isDragging;
     store.moveRect(rect, event, zoom);
     connections.updateClosest($store);
     connections.updateConnection(rect, event, zoom);
   }
 
-  function dragEnd() {
+  function dragEnd(rect) {
+    action = {
+      ...action,
+      after: {
+        id: rect.id,
+        coord2D: { ...rect.coord2D }
+      }
+    }
+    if (action.before.coord2D.x !== action.after.coord2D.x || action.before.coord2D.y !== action.after.coord2D.y) {
+      actions.add(action);
+    }
     dragging = false;
   }
 
   // deprecated
   function dragEndTemplate(e, template) {
     dragging = false;
-    addAt(template);
-    _templates = [...templates];
+    const rect = {
+      ...template,
+      rect2D: {
+        width: template.rect2D.width * 5,
+        height: template.rect2D.height * 5,
+        rx: template.rect2D.rx * 5,
+        ry: template.rect2D.ry * 5,
+      }
+    }
+    addAt(rect);
   }
 
   function selectTemplate(index) {
@@ -168,7 +198,16 @@
   function addAt(template) {
     const coord = getAdjustedCoords();
     // resets template back to origin;
-    store.addRect(coord, template);
+    const rect = {
+      ...template,
+      rect2D: {
+        width: template.rect2D.width * 5,
+        height: template.rect2D.height * 5,
+        rx: template.rect2D.rx * 5,
+        ry: template.rect2D.ry * 5,
+      }
+    }
+    store.addRect(coord, rect);
   }
 
   function syncPosition(e) {
@@ -179,12 +218,12 @@
   //#region focus indicator
   function focusRect(rect) {
     if (!dragging) {
-      $focused = rect.id;
+      $focused = rect;
     }
   }
   
   function blurRect() {
-    if (!dragging && !copiedTemplate) {
+    if (!dragging) {
       $focused = null;
     }
   }
@@ -204,6 +243,19 @@
 
   //#region text edit
   function updateText(rect, {detail}) {
+    action = {
+      before: {
+        id: rect.id,
+        text: rect.text ? rect.text : '',
+      },
+      after: {
+        id: rect.id,
+        text: detail ? detail : '',
+      }
+    }
+    if (action.before !== action.after) {
+      actions.add(action);
+    }
     store.updateText(rect, detail);
   }
 
@@ -259,13 +311,33 @@
   function startResize(rect, point) {
     resizing = true;
     resizeTarget = rect;
+    action = {
+      before: {
+        id: resizeTarget.id,
+        coord2D: { ...resizeTarget.coord2D },
+        rect2D: { ...resizeTarget.rect2D }
+      }
+    }
     resizePoint = point;
   }
 
-  function endResize() {
-    resizing = false;
-    store.resetOversize();
-    resizeTarget = null;
+  function resizeEnd() {
+    if (resizeTarget) {
+      resizing = false;
+      store.resetOversize();
+      action = {
+        ...action,
+        after: {
+          id: resizeTarget.id,
+          coord2D: { ...resizeTarget.coord2D },
+          rect2D: { ...resizeTarget.rect2D }
+        }
+      }
+      if (action.before !== action.after) {
+        actions.add(action);
+      }
+      resizeTarget = null;
+    }
   }
   //#endregion
 
@@ -323,46 +395,70 @@
 
   //#region copy / paste
   let copiedTemplate;
+  function paste() {
+    if (!!copiedTemplate) {
+      copiedTemplate.coord2D = getAdjustedCoords();
+      copiedTemplate = cloneTemplate(copiedTemplate);
+      store.addRect(copiedTemplate.coord2D, copiedTemplate);
+    } else {
+      console.log(navigator.clipboard.lastModified)
+      navigator.clipboard.readText()
+        .then(data => {
+          // check the copied text
+          if (data.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
+            pasteImage(data);
+          } else {
+            updateText({id: $focused.id}, {detail: data});
+          }
+        });
+    }
+  }
+
   function onKey(e) {
-    if (e.ctrlKey) {
-      if (e.key === "v" && $focused) {
-        if (!!copiedTemplate) {
-          // TODO: get mouse position
-          copiedTemplate.coord2D = getAdjustedCoords();
-          copiedTemplate.id = _nextId++;
-          store.addRect(copiedTemplate);
-          copiedTemplate = cloneTemplate(copiedTemplate);
-        } else {
-          navigator.clipboard.readText()
-            .then(data => {
-              // check the copied text
-              if (data.match(/\.(jpeg|jpg|gif|png)$/)) {
-                pasteImage(data);
-              } else {
-                pasteText(data);
-              }
-            })
-        }
+    if (e.ctrlKey && !e.shiftKey) {
+
+      if (e.key === "v") {
+        paste();
       }
       if (e.key === "c" && $focused) {
         // use selected shape as new template
-        const found = $store.find(r => r.id === $focused);
+        const found = $store.find(r => r.id === $focused.id);
         copiedTemplate = cloneTemplate(found);
       }
       if (e.key === "x" && $focused) {
         // use selected shape as new template
-        const found = $store.find(r => r.id === $focused);
+        const found = $store.find(r => r.id === $focused.id);
         copiedTemplate = cloneTemplate(found);
-        deleteRect($focused, false);
+        deleteRect($focused.id, false);
         // refocus stage as deletions unfocus it
         stage.focus();
+      }
+      if (e.key === "z") {
+        actions.undo();
+        if ($actions.action) {
+          store.applyAction($actions.action.before);
+          dragUpdate($actions.action.before, {
+            detail: {dx: 0, dy: 0}
+          }, false)
+        }
+      }
+    }
+    if (e.shiftKey && e.ctrlKey) {
+      if (e.key === "Z") {
+        actions.redo();
+        if ($actions.action) {
+          store.applyAction($actions.action.after);
+          dragUpdate($actions.action.after, {
+            detail: {dx: 0, dy: 0}
+          }, false)
+        }
       }
     }
     if (e.code === "Space" || e.key === ' ') {
       passThrough = true;
     }
     if (e.code === 'Backspace' || e.code === 'Delete') {
-      deleteRect($focused);
+      deleteRect($focused.id);
     }
   }
 
@@ -375,9 +471,6 @@
   function cloneTemplate(template) {
     return {
       ...template,
-      coord2D: {
-        ...template.coord2D
-      },
       rect2D: {
         ...template.rect2D
       }
@@ -386,13 +479,18 @@
 
   function pasteImage(url) {
     if (!!$focused) {
-      store.updateImage({id: $focused}, url)
-    }
-  }
-
-  function pasteText(text) {
-    if (!!$focused) {
-      store.updateText({id: $focused}, text)
+      action = {
+        before: {
+          id: $focused.id,
+          image: $focused.image,
+        },
+        after: {
+          id: $focused.id,
+          image: url
+        }
+      }
+      $actions.add(action);
+      store.updateImage({id: $focused.id}, url)
     }
   }
 
@@ -431,6 +529,10 @@
       // resize needs to take zoom into account
       const coord = getAdjustedCoords();
       store.resizeRect(resizeTarget, resizePoint, coord, zoom, e);
+      
+      dragUpdate(resizeTarget, {
+        detail: {dx: 0, dy: 0}
+      });
     }
   }
 
@@ -455,7 +557,7 @@
   }
 
   $: getRadius = (rect) => {
-    if ($focused === rect.id) {
+    if ($focused && $focused.id === rect.id) {
       return 10;
     }
     if ($mouseover === rect.id) {
@@ -529,7 +631,7 @@
       on:contextmenu|preventDefault={(e) => createContextMenu(e, {})}
       on:mousemove={updateConnectionPreview}
       on:mouseup={endNewConnection}
-      on:mouseup={endResize}
+      on:mouseup={resizeEnd}
       on:wheel|preventDefault={onWheel}
       on:keydown={onKey}
       on:keyup={onRelease}
@@ -543,8 +645,9 @@
           <DraggableRect {...rect} draggable={true} scale={rect.scale} {passThrough}
             on:contextmenu={(e) => createContextMenu(e, rect)}
             on:dblclick={(e) => preventDoubleClickThrough(e)}
-            on:drag={(e) => dragUpdate(rect, e)}
-            on:dragEnd={dragEnd}
+            on:dragStart={() => dragStart(rect)}
+            on:drag={(e) => dragUpdate(rect, e, true)}
+            on:dragEnd={() => dragEnd(rect)}
             on:mouseover={() => over(rect)}
             on:mouseleave={() => out(rect)}
             on:focus={() => focusRect(rect)}

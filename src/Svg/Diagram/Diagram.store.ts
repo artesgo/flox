@@ -93,7 +93,6 @@ export function createDiagramStore(rects) {
 
   return {
     subscribe,
-    set,
     moveRect: (rect, event, zoom) => update((rects) => {
       return rects.map(r => {
         if (rect.id === r.id) {
@@ -111,10 +110,10 @@ export function createDiagramStore(rects) {
       let newRect = {
         ...template,
         rect2D: {
-          width: template.rect2D.width * 5,
-          height: template.rect2D.height * 5,
-          rx: template.rect2D.rx * 5,
-          ry: template.rect2D.ry * 5,
+          width: template.rect2D.width,
+          height: template.rect2D.height,
+          rx: template.rect2D.rx,
+          ry: template.rect2D.ry,
         },
       }
       newRect = {
@@ -145,6 +144,9 @@ export function createDiagramStore(rects) {
       return rects.filter(r => r.id !== id)
     }),
     resizeRect: (target, resizeFrom, mouseCoord, zoom, e) => update((rects) => {
+      if (!resizeFrom) {
+        return rects;
+      }
       return rects.map(rect => {
         if (rect.id === target.id) {
           const stayAtX = rect.coord2D.x + rect.rect2D.width;
@@ -250,6 +252,24 @@ export function createDiagramStore(rects) {
         ]
       }
       return rects;
+    }),
+    applyAction: (action) => update((rects) => {
+      if (!action) {
+        return rects;
+      }
+      return rects.map(rect => {
+        if (rect.id === action.id) {
+          let updated = {
+            ...rect,
+            ...action
+          };
+          return {
+            ...updated,
+            ...updatePoints(updated)
+          };
+        }
+        return rect;
+      })
     }),
   }
 }

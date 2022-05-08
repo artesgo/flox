@@ -10,6 +10,8 @@
   $: _rect2D.update($_rect2D => (rect2D));
 </script>
 
-<rect x={$_rect2D.coord2D.x} y={$_rect2D.coord2D.y} {...rect2D} {...svgProps} 
+<rect {...rect2D} {...svgProps} x={$_rect2D.coord2D.x} y={$_rect2D.coord2D.y}
+  width={rect2D.width > 0 ? rect2D.width : 0} height={rect2D.height > 0 ? rect2D.height : 0} 
   on:mousedown
-  on:mouseup />
+  on:mouseup
+/>
