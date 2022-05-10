@@ -208,6 +208,7 @@
       }
     }
     store.addRect(coord, rect);
+    lastAddedShape()
   }
 
   function syncPosition(e) {
@@ -396,22 +397,35 @@
   //#region copy / paste
   let copiedTemplate;
   function paste() {
-    if (!!copiedTemplate) {
-      copiedTemplate.coord2D = getAdjustedCoords();
-      copiedTemplate = cloneTemplate(copiedTemplate);
-      store.addRect(copiedTemplate.coord2D, copiedTemplate);
-    } else {
-      console.log(navigator.clipboard.lastModified)
-      navigator.clipboard.readText()
-        .then(data => {
-          // check the copied text
-          if (data.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
-            pasteImage(data);
-          } else {
-            updateText({id: $focused.id}, {detail: data});
-          }
-        });
-    }
+    navigator.clipboard.readText()
+      .then(data => {
+        // check the copied text
+        if (data.match(/\.(jpeg|jpg|gif|png|webp)$/)) {
+          pasteImage(data);
+        } else if (data !== '') {
+          updateText({id: $focused.id}, {detail: data});
+        } else if (!!copiedTemplate) {
+          copiedTemplate.coord2D = getAdjustedCoords();
+          copiedTemplate = cloneTemplate(copiedTemplate);
+          store.addRect(copiedTemplate.coord2D, copiedTemplate);
+          lastAddedShape();
+        }
+        navigator.clipboard.writeText('');
+      });
+  }
+
+  function lastAddedShape() {
+    const [last] = [...$store].reverse();
+    actions.add({
+      before: {
+        id: last.id,
+        deleted: true,
+      },
+      after: {
+        id: last.id,
+        deleted: false
+      }
+    });
   }
 
   function onKey(e) {
@@ -437,6 +451,7 @@
         actions.undo();
         if ($actions.action) {
           store.applyAction($actions.action.before);
+          stage.focus();
           dragUpdate($actions.action.before, {
             detail: {dx: 0, dy: 0}
           }, false)
@@ -448,6 +463,7 @@
         actions.redo();
         if ($actions.action) {
           store.applyAction($actions.action.after);
+          stage.focus();
           dragUpdate($actions.action.after, {
             detail: {dx: 0, dy: 0}
           }, false)
@@ -458,7 +474,19 @@
       passThrough = true;
     }
     if (e.code === 'Backspace' || e.code === 'Delete') {
-      deleteRect($focused.id);
+      action = {
+        before: {
+          id: $focused.id,
+          deleted: false,
+        },
+        after: {
+          id: $focused.id,
+          deleted: true,
+        }
+      }
+      actions.add(action);
+      store.applyAction(action.after);
+      stage.focus();
     }
   }
 
@@ -489,7 +517,7 @@
           image: url
         }
       }
-      $actions.add(action);
+      actions.add(action);
       store.updateImage({id: $focused.id}, url)
     }
   }
@@ -642,60 +670,62 @@
         {/each}
 
         {#each $store as rect (rect.id)}
-          <DraggableRect {...rect} draggable={true} scale={rect.scale} {passThrough}
-            on:contextmenu={(e) => createContextMenu(e, rect)}
-            on:dblclick={(e) => preventDoubleClickThrough(e)}
-            on:dragStart={() => dragStart(rect)}
-            on:drag={(e) => dragUpdate(rect, e, true)}
-            on:dragEnd={() => dragEnd(rect)}
-            on:mouseover={() => over(rect)}
-            on:mouseleave={() => out(rect)}
-            on:focus={() => focusRect(rect)}
-            on:blur={() => blurRect(rect)}
-            on:mouseup={() => endNewConnection(rect)}
-            on:touchend={() => endNewConnection(rect)}
-            on:updateText={(e) => updateText(rect, e)}
-            {grid}
-          >
-            {#if !!rect.image}
-              <Image {...rect} passThrough={true} trueSize={false} on:load={(e) => loadImageAspectRatio(rect, e)} />
-            {/if}
-            
-            {#if !!rect.connectionPoints}
-              {#if showConnections}
-                {#each Object.keys(rect.connectionPoints) as point}
-                  {@const radius = getRadius(rect) * zoom / 125}}
-                  {#if radius > 0}
-                    <Circle
-                      {grid}
-                      on:mousedown={(e) => {createNewConnection(e, rect, point)}}
-                      svgProps={{fill: '#222222aa'}}
-                      circle2D={{
-                        cx: rect.connectionPoints[point].x + rect.coord2D.x,
-                        cy: rect.connectionPoints[point].y + rect.coord2D.y,
-                        r: radius 
-                      }} />
-                  {/if}
-                {/each}
+          {#if !rect.deleted}
+            <DraggableRect {...rect} draggable={true} scale={rect.scale} {passThrough}
+              on:contextmenu={(e) => createContextMenu(e, rect)}
+              on:dblclick={(e) => preventDoubleClickThrough(e)}
+              on:dragStart={() => dragStart(rect)}
+              on:drag={(e) => dragUpdate(rect, e, true)}
+              on:dragEnd={() => dragEnd(rect)}
+              on:mouseover={() => over(rect)}
+              on:mouseleave={() => out(rect)}
+              on:focus={() => focusRect(rect)}
+              on:blur={() => blurRect(rect)}
+              on:mouseup={() => endNewConnection(rect)}
+              on:touchend={() => endNewConnection(rect)}
+              on:updateText={(e) => updateText(rect, e)}
+              {grid}
+            >
+              {#if !!rect.image}
+                <Image {...rect} passThrough={true} trueSize={false} on:load={(e) => loadImageAspectRatio(rect, e)} />
               {/if}
-              {#if showResizing}
-                {#each Object.keys(rect.resizePoints) as point}
-                  {@const radius = getRadius(rect) * zoom / 125}}
-                  {#if radius > 0}
-                    <Circle
-                      on:mousedown={(e) => startResize(rect, point)}
-                      svgProps={{fill: '#222222aa'}}
-                      {grid}
-                      circle2D={{
-                        cx: rect.resizePoints[point].x + rect.coord2D.x,
-                        cy: rect.resizePoints[point].y + rect.coord2D.y,
-                        r: getRadius(rect) * zoom / 125,
-                      }} />
-                  {/if}
-                {/each}
+              
+              {#if !!rect.connectionPoints}
+                {#if showConnections}
+                  {#each Object.keys(rect.connectionPoints) as point}
+                    {@const radius = getRadius(rect) * zoom / 125}}
+                    {#if radius > 0}
+                      <Circle
+                        {grid}
+                        on:mousedown={(e) => {createNewConnection(e, rect, point)}}
+                        svgProps={{fill: '#222222aa'}}
+                        circle2D={{
+                          cx: rect.connectionPoints[point].x + rect.coord2D.x,
+                          cy: rect.connectionPoints[point].y + rect.coord2D.y,
+                          r: radius 
+                        }} />
+                    {/if}
+                  {/each}
+                {/if}
+                {#if showResizing}
+                  {#each Object.keys(rect.resizePoints) as point}
+                    {@const radius = getRadius(rect) * zoom / 125}}
+                    {#if radius > 0}
+                      <Circle
+                        on:mousedown={(e) => startResize(rect, point)}
+                        svgProps={{fill: '#222222aa'}}
+                        {grid}
+                        circle2D={{
+                          cx: rect.resizePoints[point].x + rect.coord2D.x,
+                          cy: rect.resizePoints[point].y + rect.coord2D.y,
+                          r: getRadius(rect) * zoom / 125,
+                        }} />
+                    {/if}
+                  {/each}
+                {/if}
               {/if}
-            {/if}
-          </DraggableRect>
+            </DraggableRect>
+          {/if}
         {/each}
       </Svg>
     </span>

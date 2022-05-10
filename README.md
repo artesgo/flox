@@ -50,6 +50,10 @@ Minimum size for shapes
   * undo / redo a move
   * undo / redo a resize
   * undo / redo text edit
+  * undo / redo img paste
+  * undo / redo add shape
+  * undo / redo deleting a shape
+  * undo / redo copied shapes
 
 ## Fixes
 * Resize Snap to Grid
@@ -61,10 +65,6 @@ Minimum size for shapes
 ## TODO:
 
 ### keyboard events
-
-* Ctrl Z / Ctrl Shift Z
-  * undo / redo img paste
-  * undo / redo add shape
 
 ### Rendering
 

@@ -122,7 +122,8 @@ export function createDiagramStore(rects) {
       }
       newRect.coord2D = coord;
       newRect.id = _nextId++;
-      return [...rects, newRect];
+      // filter out deleted rects from undo list
+      return [...rects.filter(r => !r.deleted), newRect];
     }),
     updateText: (rect, text) => update((rects) => {
       return rects.map(r => {
