@@ -441,8 +441,7 @@
   }
 
   function onKey(e) {
-    if (e.ctrlKey && !e.shiftKey) {
-
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
       if (e.key === "v") {
         paste();
         return;
@@ -481,7 +480,7 @@
         return;
       }
     }
-    if (e.shiftKey && e.ctrlKey) {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
       if (e.key === "Z") {
         actions.redo();
         if ($actions.action) {
