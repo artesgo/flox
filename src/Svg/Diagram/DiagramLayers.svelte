@@ -1,7 +1,7 @@
 <script lang="ts">
   export let store;
   export let focused;
-  let value;
+  let value = '';
 
   function up(rect) {
     store.moveRectUpLayer(rect);
@@ -13,28 +13,35 @@
 </script>
 
 <section>
-  <div>Layers / Props Search:{value}</div>
+  <label for="search">Search: {value}</label>
 
   <div class="flex">
-    <input bind:value />
+    <input bind:value id="search" />
     <button on:click={() => value = ''}>Clear</button>
   </div>
   
-  {#each $store as rect (rect.id)}
+  {#each $store as rect, i (rect.id)}
     {#if !value || (rect.text && rect.text.indexOf(value) > -1)}
-      <div class="rect" class:focused={$focused === rect.id} on:click={() => $focused = rect.id}>
+      <div class="rect" class:focused={$focused === rect} on:click={() => $focused = rect}>
         <div class="flex">
-          ID: {rect.id || ''}
-          <div>
+          {#if i > 0}
             <button on:click={() => up(rect)}>Up</button>
+          {:else}
+            <div class="spacer"></div>
+          {/if}
+          {#if i < $store.length - 1}
             <button on:click={() => down(rect)}>Down</button>
-          </div>
+          {/if}
         </div>
-        <div>Text: {rect.text || ''}</div>
+        {#if rect.text}
+          <div>Text: {rect.text}</div>
+        {/if}
         {#if rect.coord2D}
           <div>x: {Math.floor(rect.coord2D.x)} y: {Math.floor(rect.coord2D.y)}</div>
         {/if}
-        <div>Image: {rect.image || ''}</div>
+        {#if rect.image}
+          <div>Image: {rect.image}</div>
+        {/if}
       </div>
     {/if}
   {/each}

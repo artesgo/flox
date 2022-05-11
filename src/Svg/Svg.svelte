@@ -31,8 +31,9 @@
   }));
 </script>
 
-{#if width && zoom}
-  <svg {width} {height} viewbox={`${$_offset.x} ${$_offset.y} ${zoom < 0 ? 0 : zoom} ${zoom < 0 ? 0 : zoom}`}>
+{#if width}
+  <svg {width} {height}
+    viewbox={`${$_offset.x} ${$_offset.y} ${!zoom || zoom < 0 ? width : zoom} ${!zoom || zoom < 0 ? height : zoom}`}>
     <slot></slot>
   </svg>
 {/if}

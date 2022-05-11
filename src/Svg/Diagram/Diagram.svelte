@@ -654,7 +654,7 @@
   <div class="diagram-wrapper">
     {#if show.template}
       <div class="diagram-templates" transition:fly={{duration: 300, y: -100}}>
-        <Svg width={50} height={'600'}>
+        <Svg width={50} height={600}>
           {#each _templates as template, index}
             {#if selectedTemplate === index}
               <DraggableRect {...template}
@@ -765,11 +765,11 @@
       </Svg>
     </span>
     {#if show.layers}
-    <div class="diagram-layers" transition:fly={{duration: 300, y: -100}}>
-      <!-- <div>Offset: X: {offset.x} Y: {offset.y}</div> -->
-      <!-- <div>Mouse: X: {mouse.x} Y: {mouse.y}</div> -->
-      <DiagramLayers {store} bind:focused />
-    </div>
+      <div class="diagram-layers" transition:fly={{duration: 300, y: -100}}>
+        <!-- <div>Offset: X: {offset.x} Y: {offset.y}</div> -->
+        <!-- <div>Mouse: X: {mouse.x} Y: {mouse.y}</div> -->
+        <DiagramLayers {store} bind:focused />
+      </div>
     {/if}
   </div>
 </section>
