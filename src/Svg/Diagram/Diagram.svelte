@@ -269,14 +269,26 @@
   //#region shape deletion
   function deleteRect(id, remove = true) {
     store.deleteRect(id);
-    connections.deleteConnections(id);
+    connections.markConnectionsDeleted(id);
     if (remove) {
       $focused = null;
     }
   }
 
   function deleteConnection(conn) {
-    connections.deleteConnection(conn);
+    connections.markConnectionDeleted(conn);
+    actions.add({
+      connection: true,
+      before: {
+        conn,
+        deleted: false,
+      },
+      after: {
+        conn,
+        deleted: true,
+      }
+    });
+    stage.focus();
   }
   //#endregion
 
@@ -433,11 +445,13 @@
 
       if (e.key === "v") {
         paste();
+        return;
       }
       if (e.key === "c" && $focused) {
         // use selected shape as new template
         const found = $store.find(r => r.id === $focused.id);
         copiedTemplate = cloneTemplate(found);
+        return;
       }
       if (e.key === "x" && $focused) {
         // use selected shape as new template
@@ -446,32 +460,50 @@
         deleteRect($focused.id, false);
         // refocus stage as deletions unfocus it
         stage.focus();
+        return;
       }
       if (e.key === "z") {
         actions.undo();
         if ($actions.action) {
-          store.applyAction($actions.action.before);
-          stage.focus();
-          dragUpdate($actions.action.before, {
-            detail: {dx: 0, dy: 0}
-          }, false)
+          if ($actions.action.connection) {
+            connections.unmarkConnectionDeleted($actions.action.before.conn);
+          } else {
+            store.applyAction($actions.action.before);
+            stage.focus();
+            if ($actions.action.before.deleted) {
+              connections.markConnectionsDeleted($actions.action.before.id);
+            }
+            dragUpdate($actions.action.before, {
+              detail: {dx: 0, dy: 0}
+            }, false)
+          }
         }
+        return;
       }
     }
     if (e.shiftKey && e.ctrlKey) {
       if (e.key === "Z") {
         actions.redo();
         if ($actions.action) {
-          store.applyAction($actions.action.after);
-          stage.focus();
-          dragUpdate($actions.action.after, {
-            detail: {dx: 0, dy: 0}
-          }, false)
+          if ($actions.action.connection) {
+            connections.markConnectionDeleted($actions.action.before.conn)
+          } else {
+            store.applyAction($actions.action.after);
+            stage.focus();
+            if ($actions.action.before.deleted) {
+              connections.unmarkConnectionsDeleted($actions.action.before.id);
+            }
+            dragUpdate($actions.action.after, {
+              detail: {dx: 0, dy: 0}
+            }, false)
+          }
         }
+        return;
       }
     }
     if (e.code === "Space" || e.key === ' ') {
       passThrough = true;
+      return;
     }
     if (e.code === 'Backspace' || e.code === 'Delete') {
       action = {
@@ -484,9 +516,11 @@
           deleted: true,
         }
       }
+      connections.markConnectionsDeleted($focused.id);
       actions.add(action);
       store.applyAction(action.after);
       stage.focus();
+      return;
     }
   }
 
@@ -665,8 +699,10 @@
       on:keyup={onRelease}
       tabindex="0">
       <Svg height={width} {width} zoom={($_zoom / 100) * width} {offset}>
-        {#each $connections as connection (`${connection.begin.id}${connection.end.id}`)}
-          <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
+        {#each $connections as connection (`${connection.begin.id}-${connection.end.id}`)}
+          {#if !connection.deleted}
+            <Connector on:contextmenu={() => deleteConnection(connection)} {...connection} svgProps={svgPathProps} />
+          {/if}
         {/each}
 
         {#each $store as rect (rect.id)}

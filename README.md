@@ -54,6 +54,7 @@ Minimum size for shapes
   * undo / redo add shape
   * undo / redo deleting a shape
   * undo / redo copied shapes
+  * undo / redo connection edits
 
 ## Fixes
 * Resize Snap to Grid

@@ -87,7 +87,7 @@ export function createConnectionsStore(diagramStore) {
         let {begin, end} = findClosestConnection(startRect, endRect);
         begin.id = conn.begin.id;
         end.id = conn.end.id;
-        return {begin, end};
+        return {...conn, begin, end};
       })
     }),
     removePlaceholder: () => update((conns) => {
@@ -147,11 +147,50 @@ export function createConnectionsStore(diagramStore) {
       })
     }),
     deleteConnections: (id) => update((conns) => {
-      return conns.filter(conn => conn.begin.id !== id && conn.end.id !== id);
+      return conns.filter(conn => conn.begin.id !== id || conn.end.id !== id);
     }),
     deleteConnection: (deletedConnection) => update((conns) => {
-      return conns.filter(conn => !(conn.begin.id === deletedConnection.begin.id 
-        && conn.end.id === conn.end.id))
+      return conns.filter(conn => conn.begin.id !== deletedConnection.begin.id)
     }),
+    markConnectionsDeleted: (id) => {
+      update(conns => {
+        return conns.map(conn => {
+          if (conn.begin.id === id || conn.end.id === id) {
+            conn.deleted = true;
+          }
+          return conn;
+        })
+      })
+    },
+    unmarkConnectionsDeleted: (id) => {
+      update(conns => {
+        return conns.map(conn => {
+          if (conn.begin.id === id || conn.end.id === id) {
+            conn.deleted = false;
+          }
+          return conn;
+        })
+      })
+    },
+    markConnectionDeleted: (deletedConnection) => {
+      update(conns => {
+        return conns.map(conn => {
+          if (conn.begin.id === deletedConnection.begin.id && conn.end.id === deletedConnection.end.id) {
+            conn.deleted = true;
+          }
+          return conn;
+        })
+      })
+    },
+    unmarkConnectionDeleted: (deletedConnection) => {
+      update(conns => {
+        return conns.map(conn => {
+          if (conn.begin.id === deletedConnection.begin.id && conn.end.id === deletedConnection.end.id) {
+            conn.deleted = false;
+          }
+          return conn;
+        })
+      })
+    },
   }
 }
