@@ -16,6 +16,7 @@ export interface DiagramRect {
   aspectRatio: Rect2D;
   coord2D: Coord2D;
   svgProps?: NativeSvgProps;
+  deleted: boolean;
 }
 
 export interface DiagramProps {

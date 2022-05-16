@@ -195,9 +195,9 @@
           "ts": "type NativeSvgProps = import(\"../Svg\").NativeSvgProps"
         },
         {
-          "type": "{\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}",
+          "type": "{\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\ndeleted: boolean,\n}",
           "name": "DiagramRect",
-          "ts": "interface DiagramRect {\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\n}"
+          "ts": "interface DiagramRect {\nconnections?: number[],\nid: number,\ntext?: string,\nimage?: string,\nrect2D: Rect2D,\naspectRatio: Rect2D,\ncoord2D: Coord2D,\nsvgProps?: NativeSvgProps,\ndeleted: boolean,\n}"
         }
       ]
     },
